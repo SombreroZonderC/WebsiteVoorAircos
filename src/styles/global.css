@@ -5,6 +5,9 @@
   /* Huisstijl (uit het bestaande logo) */
   --orange: #ea5b0c;
   --orange-hot: #ff7a2f;
+  /* Donkerder oranje voor knoppen met witte tekst (contrast ≥4.5:1, WCAG AA) */
+  --orange-btn: #c94a06;
+  --orange-btn-hover: #b54205;
   --blue: #427db8;
   --blue-ice: #7fb4ea;
   --petrol: #00303c;
@@ -164,7 +167,7 @@ p {
 
 /* Knoppen */
 .btn {
-  --bg: var(--orange);
+  --bg: var(--orange-btn);
   --fg: #fff;
   display: inline-flex;
   align-items: center;
@@ -189,7 +192,7 @@ p {
   box-shadow: 0 8px 24px -10px rgb(234 91 12 / 0.7);
 }
 .btn:hover {
-  background: var(--orange-hot);
+  background: var(--orange-btn-hover);
   transform: translateY(-1px);
 }
 .btn svg {

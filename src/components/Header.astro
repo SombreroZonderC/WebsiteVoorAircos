@@ -29,7 +29,7 @@ const path = Astro.url.pathname.replace(/\.html$/, '');
     </nav>
 
     <div class="right">
-      <a class="phone" href={telLink}>
+      <a class="phone" href={telLink} aria-label={`Bel ${bedrijf.telefoon.weergave}`}>
         <Icon name="phone" size={18} />
         <span>{bedrijf.telefoon.weergave}</span>
       </a>
