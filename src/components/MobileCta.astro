@@ -1,0 +1,68 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+
+<div class="mobile-cta">
+  <a href={site.phone.href} class="call">
+    <Icon name="phone" size={18} /> Bellen
+  </a>
+  {
+    site.whatsapp ? (
+      <a href={site.whatsappHref} class="alt">
+        <Icon name="whatsapp" size={18} /> WhatsApp
+      </a>
+    ) : (
+      <a href="/contact" class="alt">
+        <Icon name="chat" size={18} /> Offerte
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .mobile-cta {
+    display: none;
+  }
+  @media (max-width: 720px) {
+    .mobile-cta {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 40;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 18px;
+      background: rgb(6 20 25 / 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--line-dark);
+      box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.5);
+    }
+    .mobile-cta a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-stretch: 108%;
+      font-weight: 700;
+      color: #fff;
+    }
+    .call {
+      background: var(--orange);
+    }
+    .alt {
+      background: rgb(255 255 255 / 0.08);
+    }
+    :global(body) {
+      padding-bottom: 88px;
+    }
+  }
+</style>

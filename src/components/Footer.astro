@@ -1,0 +1,137 @@
+---
+import Icon from './Icon.astro';
+import { nav, site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer dark">
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <img src="/images/logo-op-donker.svg" alt={site.name} width="170" height="94" loading="lazy" />
+        <p class="muted">
+          Vakmanschap en betrouwbare service, rechtstreeks vanuit Heeten. Specialist in {site.brand}.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="h">Diensten</h2>
+        <ul>
+          {
+            nav.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+          <li><a href="/contact">Contact & offerte</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="h">Contact</h2>
+        <ul class="contact">
+          <li>
+            <Icon name="phone" size={18} /><a href={site.phone.href}>{site.phone.display}</a>
+          </li>
+          <li>
+            <Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <Icon name="pin" size={18} />
+            <span>
+              {site.address.street}<br />{site.address.postalCode} {site.address.city}
+            </span>
+          </li>
+          {
+            site.openingHours && (
+              <li>
+                <Icon name="clock" size={18} />
+                <span>{site.openingHours}</span>
+              </li>
+            )
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom">
+      <span>© {year} {site.name}</span>
+      {site.kvk && <span>KvK {site.kvk}</span>}
+      {site.btw && <span>Btw {site.btw}</span>}
+      <a href="/privacy">Privacyverklaring</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: 80px 32px;
+    border-top: 1px solid var(--line-dark);
+  }
+  .top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1.2fr;
+    gap: 48px;
+  }
+  .brand img {
+    width: 170px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  .brand p {
+    max-width: 34ch;
+    font-size: 0.95rem;
+  }
+  .h {
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-on-dark);
+    margin-bottom: 18px;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  a {
+    text-decoration: none;
+    color: var(--text-on-dark);
+  }
+  a:hover {
+    color: var(--orange);
+  }
+  .contact li {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .contact svg {
+    color: var(--orange);
+    margin-top: 4px;
+  }
+  .bottom {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-dark);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    font-size: 0.85rem;
+    color: var(--muted-on-dark);
+  }
+  .bottom a {
+    color: var(--muted-on-dark);
+  }
+  @media (max-width: 820px) {
+    .top {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+  }
+</style>
