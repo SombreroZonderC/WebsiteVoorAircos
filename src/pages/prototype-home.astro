@@ -1,0 +1,32 @@
+---
+// PROTOTYPE – wegwerp. Drie ontwerprichtingen voor de homepage, wisselbaar via ?variant=A|B|C.
+// Na de keuze: winnaar verwerken in de echte homepage, deze route en src/components/prototype/ weg uit main.
+import '../styles/global.css';
+import VariantA from '../components/prototype/VariantA.astro';
+import VariantB from '../components/prototype/VariantB.astro';
+import VariantC from '../components/prototype/VariantC.astro';
+import PrototypeSwitcher from '../components/prototype/PrototypeSwitcher.astro';
+
+const varianten = [
+  { sleutel: 'A', naam: 'Specificatieblad' },
+  { sleutel: 'B', naam: 'Zomer/Winter' },
+  { sleutel: 'C', naam: 'Groot & vet' },
+];
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Prototype homepage | The CoolFactory</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body style="background:#fff">
+    <div data-variant="A"><VariantA /></div>
+    <div data-variant="B" hidden><VariantB /></div>
+    <div data-variant="C" hidden><VariantC /></div>
+    <PrototypeSwitcher varianten={varianten} />
+  </body>
+</html>

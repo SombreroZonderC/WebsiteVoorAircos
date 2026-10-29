@@ -1,0 +1,579 @@
+---
+// PROTOTYPE – wegwerp. Richting A: "Specificatieblad" (technisch/industrieel).
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import { getCollection } from 'astro:content';
+import { bedrijf, telLink } from '../../lib/bedrijf';
+
+const diensten = (await getCollection('diensten')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+const reviews = await getCollection('reviews');
+const codes: Record<string, string> = { airconditioning: 'AC-01', warmtepompen: 'WP-02', onderhoud: 'SV-03' };
+---
+
+<div class="va">
+  <header class="va-top">
+    <a href="#" class="va-logo"><img src="/images/logo-origineel.svg" alt="The CoolFactory" /></a>
+    <nav>
+      <a href="#">Airco</a><a href="#">Warmtepompen</a><a href="#">Onderhoud</a><a href="#">Over Sjoerd</a>
+    </nav>
+    <a class="va-call" href={telLink}>T {bedrijf.telefoon.weergave}</a>
+  </header>
+
+  <section class="va-hero">
+    <div class="va-cols" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="va-hero-copy">
+      <p class="mono tag">§ 01 — Airconditioning &amp; warmtepompen · Heeten</p>
+      <h1>Koelen.<br />Verwarmen.<br /><span>Vakwerk.</span></h1>
+      <p class="lead">
+        Ruim 20 jaar ervaring. Uitsluitend Mitsubishi Electric. Advies aan huis, een nette installatie en
+        onderhoud door Sjoerd zelf.
+      </p>
+      <div class="va-actions">
+        <a class="va-btn" href="#">Offerte aanvragen →</a>
+        <a class="va-btn ghost" href={telLink}>Bel {bedrijf.telefoon.weergave}</a>
+      </div>
+    </div>
+
+    <figure class="va-drawing">
+      <svg viewBox="0 0 560 520" role="img" aria-label="Opengewerkte technische tekening van een buitenunit">
+        <defs>
+          <marker id="pijl" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0L10 5L0 10z" fill="currentColor"></path>
+          </marker>
+        </defs>
+        <!-- behuizing achter -->
+        <g class="draw d1">
+          <path d="M150 150 L390 110 L470 160 L470 380 L230 420 L150 370 Z" />
+          <path d="M230 200 L470 160 M230 200 L230 420 M230 200 L150 150" class="thin" />
+        </g>
+        <!-- frontpaneel, naar voren getrokken -->
+        <g class="draw d2" transform="translate(-60 40)">
+          <path d="M150 170 L390 130 L390 350 L150 390 Z" class="panel" />
+          <g class="fan">
+            <circle cx="268" cy="262" r="78" />
+            <circle cx="268" cy="262" r="62" class="thin" />
+            <circle cx="268" cy="262" r="10" class="hub" />
+            <path d="M268 200 V324 M206 262 H330 M224 218 L312 306 M312 218 L224 306" class="thin" />
+          </g>
+        </g>
+        <!-- voet -->
+        <g class="draw d3">
+          <path d="M160 440 L240 452 L480 412 M240 452 V470 M480 412 V430 M160 440 V458" />
+        </g>
+        <!-- maatlijnen -->
+        <g class="dim">
+          <path d="M150 480 L470 430" marker-start="url(#pijl)" marker-end="url(#pijl)" />
+          <text x="300" y="478" transform="rotate(-9 300 478)">breedte</text>
+          <path d="M505 160 V380" marker-start="url(#pijl)" marker-end="url(#pijl)" />
+          <text x="516" y="275" transform="rotate(90 516 275)">hoogte</text>
+        </g>
+      </svg>
+      <ul class="callouts mono">
+        <li style="top:8%; left:0"><b>A</b> Ventilator — stil en zuinig</li>
+        <li style="top:22%; right:0"><b>B</b> Behuizing — {bedrijf.merk}</li>
+        <li style="bottom:22%; left:0"><b>C</b> Montage — strak en waterpas</li>
+      </ul>
+      <figcaption class="mono">Fig. 1 — Buitenunit, opengewerkt. Illustratief.</figcaption>
+    </figure>
+
+    <aside class="titleblock mono" aria-label="Kenmerken">
+      <div><span>Opdrachtnemer</span><b>{bedrijf.eigenaar}</b></div>
+      <div><span>Ervaring</span><b>{bedrijf.jarenErvaring} jaar</b></div>
+      <div><span>Merk</span><b>{bedrijf.merk}</b></div>
+      <div><span>Locatie</span><b>{bedrijf.adres.plaats}</b></div>
+      <div><span>Blad</span><b>01 / 04</b></div>
+    </aside>
+  </section>
+
+  <section class="va-specs">
+    <div class="va-sec-head">
+      <p class="mono tag">§ 02 — Diensten</p>
+      <h2>Wat ik voor je doe</h2>
+    </div>
+    <div class="table" role="table">
+      <div class="row head mono" role="row">
+        <span role="columnheader">Code</span><span role="columnheader">Dienst</span><span role="columnheader">Omschrijving</span><span role="columnheader"></span>
+      </div>
+      {
+        diensten.map((d) => (
+          <a class="row" role="row" href="#">
+            <span class="mono code" role="cell">{codes[d.id]}</span>
+            <span class="name" role="cell">{d.data.menuLabel}</span>
+            <span class="desc" role="cell">{d.data.intro}</span>
+            <span class="go mono" role="cell">Bekijk →</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="va-process">
+    <div class="va-sec-head">
+      <p class="mono tag">§ 03 — Werkwijze</p>
+      <h2>Van eerste belletje tot werkend systeem</h2>
+    </div>
+    <ol>
+      <li><span class="mono">T+0</span><b>Kennismaking</b><p>Je belt of mailt, we bespreken kort wat je zoekt.</p></li>
+      <li><span class="mono">T+1</span><b>Opname aan huis</b><p>Ik kom langs en bekijk de situatie.</p></li>
+      <li><span class="mono">T+2</span><b>Offerte</b><p>Helder en vrijblijvend.</p></li>
+      <li><span class="mono">T+3</span><b>Installatie</b><p>Netjes geplaatst, getest en uitgelegd.</p></li>
+    </ol>
+  </section>
+
+  <section class="va-reviews">
+    <div class="va-sec-head">
+      <p class="mono tag">§ 04 — Opleverrapport</p>
+      <h2>Wat klanten zeggen</h2>
+    </div>
+    <div class="reports">
+      {
+        reviews.map((r, i) => (
+          <article class="report">
+            <header class="mono">
+              <span>Rapport #{String(i + 1).padStart(3, '0')}</span>
+              <span>{r.data.datum.toLocaleDateString('nl-NL')}</span>
+            </header>
+            <p>{r.data.tekst}</p>
+            <footer class="mono">
+              <span>{r.data.naam}</span>
+              <span class="stamp">Goedgekeurd</span>
+            </footer>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</div>
+
+<style>
+  .va {
+    --paper: #eceee8;
+    --ink: #0d2229;
+    --line: rgb(13 34 41 / 0.18);
+    --blue: #2f6aa3;
+    --orange: #d9520a;
+    background:
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 32px,
+      var(--paper);
+    background-image:
+      linear-gradient(rgb(13 34 41 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(13 34 41 / 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    letter-spacing: 0.02em;
+  }
+  .tag {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 18px;
+  }
+  .va-top {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 14px clamp(16px, 4vw, 48px);
+    border-bottom: 1.5px solid var(--ink);
+    background: var(--paper);
+  }
+  .va-logo img {
+    height: 48px;
+    width: auto;
+  }
+  .va-top nav {
+    display: flex;
+    gap: 24px;
+    margin-left: auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+  .va-top nav a {
+    text-decoration: none;
+  }
+  .va-top nav a:hover {
+    color: var(--orange);
+  }
+  .va-call {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 14px;
+    border: 1.5px solid var(--ink);
+  }
+
+  .va-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: clamp(48px, 7vw, 96px) clamp(16px, 4vw, 48px) 0;
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .va-cols {
+    position: absolute;
+    inset: 0 clamp(16px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    pointer-events: none;
+  }
+  .va-cols i {
+    border-left: 1px dashed var(--line);
+  }
+  .va-cols i:last-child {
+    border-right: 1px dashed var(--line);
+  }
+  .va-hero-copy {
+    position: relative;
+    padding-bottom: 48px;
+  }
+  .va h1 {
+    font-family: var(--font-display);
+    font-stretch: 75%;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: clamp(3.4rem, 9vw, 8.4rem);
+    line-height: 0.88;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+  .va h1 span {
+    color: var(--orange);
+  }
+  .lead {
+    max-width: 44ch;
+    font-size: 1.12rem;
+    line-height: 1.6;
+  }
+  .va-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+  .va-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.88rem;
+    text-decoration: none;
+    padding: 16px 20px;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1.5px solid var(--ink);
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+  .va-btn:hover {
+    background: var(--orange);
+    border-color: var(--orange);
+  }
+  .va-btn.ghost {
+    background: transparent;
+    color: var(--ink);
+  }
+  .va-btn.ghost:hover {
+    color: var(--paper);
+  }
+
+  .va-drawing {
+    position: relative;
+    margin: 0;
+    color: var(--blue);
+  }
+  .va-drawing svg {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .va-drawing .thin {
+    stroke-width: 1;
+    opacity: 0.6;
+  }
+  .va-drawing .panel {
+    fill: rgb(236 238 232 / 0.85);
+  }
+  .va-drawing .hub {
+    fill: var(--orange);
+    stroke: none;
+  }
+  .va-drawing .fan {
+    transform-origin: 268px 262px;
+    transform-box: view-box;
+    animation: va-spin 6s linear infinite;
+  }
+  .va-drawing .dim {
+    stroke: var(--blue);
+    stroke-width: 1.2;
+  }
+  .va-drawing .dim text {
+    fill: var(--blue);
+    stroke: none;
+    font: 12px 'IBM Plex Mono', monospace;
+  }
+  .va-drawing .call {
+    stroke: var(--orange);
+    stroke-width: 1.2;
+  }
+  .va-drawing .call circle {
+    fill: var(--orange);
+  }
+  .draw path,
+  .draw circle {
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: va-draw 1.8s ease forwards;
+  }
+  .d2 path,
+  .d2 circle {
+    animation-delay: 0.4s;
+  }
+  .d3 path {
+    animation-delay: 0.8s;
+  }
+  @keyframes va-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes va-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .callouts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .callouts li {
+    position: absolute;
+    font-size: 0.78rem;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 6px 10px;
+  }
+  .callouts b {
+    display: inline-grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    background: var(--orange);
+    color: #fff;
+    font-size: 0.7rem;
+  }
+  .va-drawing figcaption {
+    font-size: 0.72rem;
+    opacity: 0.7;
+    margin-top: 8px;
+    color: var(--ink);
+  }
+  .titleblock {
+    grid-column: 1 / -1;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1.5px solid var(--ink);
+    margin: 32px calc(-1 * clamp(16px, 4vw, 48px)) 0;
+    background: var(--paper);
+  }
+  .titleblock div {
+    display: grid;
+    gap: 4px;
+    padding: 14px clamp(16px, 2vw, 24px);
+    border-right: 1px solid var(--ink);
+  }
+  .titleblock div:last-child {
+    border-right: 0;
+  }
+  .titleblock span {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .titleblock b {
+    font-size: 0.95rem;
+  }
+
+  .va-specs,
+  .va-process,
+  .va-reviews {
+    padding: clamp(64px, 8vw, 104px) clamp(16px, 4vw, 48px);
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .va-sec-head h2 {
+    font-family: var(--font-display);
+    font-stretch: 75%;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 0.95;
+    margin: 0 0 40px;
+  }
+  .table {
+    border-top: 1.5px solid var(--ink);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 110px 1.1fr 2fr 120px;
+    gap: 24px;
+    align-items: baseline;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--ink);
+    text-decoration: none;
+    transition:
+      background 0.2s,
+      padding 0.2s;
+  }
+  .row.head {
+    padding: 10px 0;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  a.row:hover {
+    background: var(--ink);
+    color: var(--paper);
+    padding-inline: 16px;
+  }
+  .code {
+    color: var(--orange);
+    font-weight: 600;
+  }
+  .name {
+    font-family: var(--font-display);
+    font-stretch: 80%;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 1.7rem;
+  }
+  .desc {
+    font-size: 0.98rem;
+    opacity: 0.8;
+  }
+  .go {
+    text-align: right;
+    font-size: 0.85rem;
+  }
+
+  .va-process ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1.5px solid var(--ink);
+  }
+  .va-process li {
+    padding: 24px;
+    border-right: 1px solid var(--ink);
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .va-process li:last-child {
+    border-right: 0;
+  }
+  .va-process li span {
+    color: var(--blue);
+    font-size: 0.8rem;
+  }
+  .va-process li b {
+    font-family: var(--font-display);
+    font-stretch: 80%;
+    text-transform: uppercase;
+    font-size: 1.3rem;
+  }
+  .va-process li p {
+    margin: 0;
+    font-size: 0.95rem;
+    opacity: 0.8;
+  }
+
+  .reports {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .report {
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+  }
+  .report header,
+  .report footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+  }
+  .report header {
+    border-bottom: 1px solid var(--ink);
+  }
+  .report footer {
+    border-top: 1px solid var(--ink);
+  }
+  .report p {
+    padding: 20px 16px;
+    margin: 0;
+    flex: 1;
+    line-height: 1.6;
+  }
+  .stamp {
+    color: var(--orange);
+    border: 1.5px solid var(--orange);
+    padding: 3px 8px;
+    transform: rotate(-4deg);
+    font-weight: 600;
+  }
+
+  @media (max-width: 900px) {
+    .va-top nav {
+      display: none;
+    }
+    .va-call {
+      margin-left: auto;
+    }
+    .va-hero {
+      grid-template-columns: 1fr;
+    }
+    .titleblock {
+      grid-template-columns: 1fr 1fr;
+    }
+    .titleblock div {
+      border-bottom: 1px solid var(--ink);
+    }
+    .row {
+      grid-template-columns: 70px 1fr;
+    }
+    .row .desc {
+      grid-column: 2;
+    }
+    .row .go,
+    .row.head span:nth-child(n + 3) {
+      display: none;
+    }
+    .va-process ol,
+    .reports {
+      grid-template-columns: 1fr;
+    }
+    .va-process li {
+      border-right: 0;
+      border-bottom: 1px solid var(--ink);
+    }
+  }
+</style>

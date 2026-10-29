@@ -1,0 +1,520 @@
+---
+// PROTOTYPE – wegwerp. Richting B: "Zomer/Winter" – één schakelaar zet de hele pagina om.
+import { getCollection } from 'astro:content';
+import { bedrijf, telLink } from '../../lib/bedrijf';
+
+const reviews = await getCollection('reviews');
+const review = reviews.find((r) => r.id === 'ann-josien') ?? reviews[0];
+---
+
+<div class="vb" data-seizoen="zomer">
+  <header class="vb-top">
+    <img class="logo" src="/images/logo-origineel.svg" alt="The CoolFactory" />
+    <nav><a href="#">Airco</a><a href="#">Warmtepompen</a><a href="#">Onderhoud</a><a href="#">Over Sjoerd</a></nav>
+    <a class="vb-call" href={telLink}>{bedrijf.telefoon.weergave}</a>
+  </header>
+
+  <section class="vb-hero">
+    <div class="vb-air" aria-hidden="true">
+      <svg viewBox="0 0 1200 600" preserveAspectRatio="none">
+        <path d="M-50 160 C 200 100, 400 220, 650 160 S 1100 100, 1300 170" />
+        <path d="M-50 260 C 250 200, 450 320, 700 260 S 1100 200, 1300 270" />
+        <path d="M-50 360 C 200 300, 420 420, 680 360 S 1100 300, 1300 370" />
+        <path d="M-50 460 C 260 400, 460 520, 720 460 S 1100 400, 1300 470" />
+      </svg>
+    </div>
+    <div class="vb-embers" aria-hidden="true">
+      {Array.from({ length: 18 }, (_, i) => <i style={`--i:${i}`} />)}
+    </div>
+
+    <div class="vb-hero-inner">
+      <div class="switch" role="radiogroup" aria-label="Seizoen">
+        <button role="radio" aria-checked="true" data-zet="zomer">☀ Zomer</button>
+        <button role="radio" aria-checked="false" data-zet="winter">❄ Winter</button>
+        <span class="knob" aria-hidden="true"></span>
+      </div>
+
+      <h1>
+        <span class="z">Buiten heet.<br />Binnen heerlijk koel.</span>
+        <span class="w">Buiten koud.<br />Binnen lekker warm.</span>
+      </h1>
+
+      <div class="thermo" aria-hidden="true">
+        <div class="buiten">
+          <span class="lbl">Buiten</span>
+          <span class="val"><span class="z">31°</span><span class="w">−4°</span></span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="binnen">
+          <span class="lbl">Binnen</span>
+          <span class="val big">21°</span>
+        </div>
+      </div>
+
+      <p class="lead">
+        <span class="z">Een stille airco van Mitsubishi Electric die koelt in de zomer, en in het voorjaar en najaar zuinig verwarmt.</span>
+        <span class="w">Een warmtepomp die je huis verwarmt met veel minder gas. Hybride naast je cv-ketel, of volledig elektrisch.</span>
+      </p>
+
+      <div class="actions">
+        <a class="vb-btn" href="#">Vrijblijvende offerte</a>
+        <a class="vb-btn ghost" href={telLink}>Bel Sjoerd</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="vb-diensten">
+    <div class="wrap">
+      <p class="eyebrow"><span class="z">Deze zomer</span><span class="w">Deze winter</span></p>
+      <h2>Comfort, het hele jaar door</h2>
+      <div class="cards">
+        <a class="card airco" href="#">
+          <span class="badge">Koelen &amp; verwarmen</span>
+          <h3>Airconditioning</h3>
+          <p>Koel in de zomer, snel warm in het tussenseizoen. Advies aan huis en strakke montage.</p>
+          <span class="more">Meer over airco →</span>
+        </a>
+        <a class="card wp" href="#">
+          <span class="badge">Minder gas</span>
+          <h3>Warmtepompen</h3>
+          <p>Hybride of all-electric. Ik kijk eerlijk wat past bij jouw huis en isolatie.</p>
+          <span class="more">Meer over warmtepompen →</span>
+        </a>
+        <a class="card oh" href="#">
+          <span class="badge">Het hele jaar</span>
+          <h3>Onderhoud</h3>
+          <p>Zuiniger, stiller en langer zorgeloos. Ook na de installatie ben ik je aanspreekpunt.</p>
+          <span class="more">Meer over onderhoud →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="vb-quote">
+    <div class="wrap">
+      <blockquote>“{review.data.tekst}”</blockquote>
+      <p class="who">{review.data.naam} · Google-review</p>
+      <ul class="facts">
+        <li><b>{bedrijf.jarenErvaring}</b> jaar ervaring</li>
+        <li><b>1</b> merk: {bedrijf.merk}</li>
+        <li><b>1</b> aanspreekpunt: Sjoerd</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.vb')!;
+  const maand = new Date().getMonth();
+  const zet = (s: string) => {
+    root.dataset.seizoen = s;
+    root.querySelectorAll('[data-zet]').forEach((b) =>
+      b.setAttribute('aria-checked', String((b as HTMLElement).dataset.zet === s)),
+    );
+  };
+  zet(maand >= 3 && maand <= 8 ? 'zomer' : 'winter');
+  root.querySelectorAll<HTMLButtonElement>('[data-zet]').forEach((b) => b.addEventListener('click', () => zet(b.dataset.zet!)));
+</script>
+
+<style>
+  .vb {
+    --bg: #eaf4fd;
+    --bg2: #d6e9fb;
+    --ink: #08263d;
+    --muted: #3d5f78;
+    --accent: #2f78c4;
+    --accent-ink: #fff;
+    --card: rgb(255 255 255 / 0.7);
+    --line: rgb(8 38 61 / 0.12);
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    transition:
+      background 0.8s ease,
+      color 0.8s ease;
+  }
+  .vb[data-seizoen='winter'] {
+    --bg: #140906;
+    --bg2: #24110a;
+    --ink: #fff3ea;
+    --muted: #d6b4a0;
+    --accent: #ff6a1a;
+    --accent-ink: #1a0b05;
+    --card: rgb(255 255 255 / 0.05);
+    --line: rgb(255 243 234 / 0.12);
+  }
+  .vb * {
+    transition:
+      color 0.8s ease,
+      background-color 0.8s ease,
+      border-color 0.8s ease;
+  }
+  .vb .w {
+    display: none;
+  }
+  .vb[data-seizoen='winter'] .w {
+    display: inline;
+  }
+  .vb[data-seizoen='winter'] .z {
+    display: none;
+  }
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 32px);
+  }
+
+  .vb-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 18px clamp(16px, 4vw, 40px);
+  }
+  .logo {
+    height: 50px;
+    width: auto;
+  }
+  .vb[data-seizoen='winter'] .logo {
+    filter: brightness(1.25) saturate(1.1);
+  }
+  .vb-top nav {
+    display: flex;
+    gap: 24px;
+    margin-left: auto;
+    font-weight: 500;
+  }
+  .vb-top nav a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+  .vb-call {
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+  }
+
+  .vb-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(100vh - 86px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 40px 16px 96px;
+    background: radial-gradient(70% 60% at 50% 40%, var(--bg2), var(--bg));
+  }
+  .vb-air,
+  .vb-embers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+  }
+  .vb-air svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: rgb(47 120 196 / 0.28);
+    stroke-width: 2;
+    stroke-dasharray: 14 22;
+    animation: vb-flow 6s linear infinite;
+  }
+  .vb-air path:nth-child(2n) {
+    animation-duration: 9s;
+  }
+  @keyframes vb-flow {
+    to {
+      stroke-dashoffset: -360;
+    }
+  }
+  .vb-embers {
+    opacity: 0;
+  }
+  .vb[data-seizoen='winter'] .vb-embers {
+    opacity: 1;
+  }
+  .vb[data-seizoen='winter'] .vb-air {
+    opacity: 0;
+  }
+  .vb-embers i {
+    position: absolute;
+    bottom: -20px;
+    left: calc(var(--i) * 5.6%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff8a3d;
+    box-shadow: 0 0 12px 4px rgb(255 106 26 / 0.5);
+    animation: vb-rise calc(6s + var(--i) * 0.4s) linear infinite;
+    animation-delay: calc(var(--i) * -0.7s);
+  }
+  @keyframes vb-rise {
+    from {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-110vh) translateX(30px);
+      opacity: 0;
+    }
+  }
+  .vb[data-seizoen='winter'] .vb-hero::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 50%;
+    background: radial-gradient(60% 100% at 50% 100%, rgb(255 106 26 / 0.35), transparent 70%);
+    pointer-events: none;
+  }
+
+  .vb-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 920px;
+  }
+  .switch {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 6px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    backdrop-filter: blur(10px);
+    margin-bottom: 36px;
+  }
+  .switch button {
+    position: relative;
+    z-index: 1;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 700;
+    font-size: 1.05rem;
+    padding: 14px 28px;
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .switch button[aria-checked='true'] {
+    color: var(--accent-ink);
+  }
+  .knob {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: calc(50% - 6px);
+    border-radius: 999px;
+    background: var(--accent);
+    transition:
+      transform 0.5s cubic-bezier(0.6, 0, 0.2, 1.3),
+      background 0.8s ease;
+  }
+  .vb[data-seizoen='winter'] .knob {
+    transform: translateX(100%);
+  }
+
+  .vb h1 {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-weight: 800;
+    font-size: clamp(2.6rem, 7vw, 5.8rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin: 0 0 32px;
+  }
+  .thermo {
+    display: inline-flex;
+    align-items: end;
+    gap: clamp(16px, 4vw, 40px);
+    margin-bottom: 28px;
+  }
+  .thermo > div {
+    display: grid;
+    justify-items: center;
+  }
+  .lbl {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .val {
+    font-family: var(--font-display);
+    font-stretch: 100%;
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--muted);
+    line-height: 1;
+  }
+  .val.big {
+    font-size: clamp(4.5rem, 12vw, 9rem);
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+  }
+  .arrow {
+    font-size: 2rem;
+    color: var(--muted);
+    padding-bottom: 12px;
+  }
+  .lead {
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    color: var(--muted);
+    max-width: 52ch;
+    margin: 0 auto 32px;
+  }
+  .actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .vb-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 54px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .vb-btn.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--line);
+  }
+
+  .vb-diensten {
+    padding: clamp(72px, 9vw, 120px) 0;
+  }
+  .eyebrow {
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+  .vb h2 {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-weight: 800;
+    font-size: clamp(2rem, 4.4vw, 3.4rem);
+    letter-spacing: -0.02em;
+    margin: 0 0 40px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+  }
+  .vb[data-seizoen='winter'] .cards {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+  .vb[data-seizoen='winter'] .airco {
+    order: 1;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 32px;
+    border-radius: 24px;
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    text-decoration: none;
+    min-height: 300px;
+    transition:
+      transform 0.3s ease,
+      background 0.8s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  .vb[data-seizoen='zomer'] .airco,
+  .vb[data-seizoen='winter'] .wp {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: transparent;
+  }
+  .badge {
+    align-self: start;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1.5px solid currentColor;
+    opacity: 0.8;
+  }
+  .card h3 {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+    margin: auto 0 0;
+  }
+  .card p {
+    margin: 0;
+    opacity: 0.85;
+  }
+  .more {
+    font-weight: 700;
+  }
+
+  .vb-quote {
+    padding: 0 0 clamp(72px, 9vw, 120px);
+  }
+  blockquote {
+    font-family: var(--font-display);
+    font-stretch: 100%;
+    font-weight: 600;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin: 0;
+    max-width: 30ch;
+  }
+  .who {
+    color: var(--muted);
+    margin: 16px 0 48px;
+  }
+  .facts {
+    list-style: none;
+    padding: 28px 0 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 48px;
+    border-top: 1.5px solid var(--line);
+  }
+  .facts b {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--accent);
+    margin-right: 8px;
+  }
+
+  @media (max-width: 860px) {
+    .vb-top nav {
+      display: none;
+    }
+    .vb-call {
+      margin-left: auto;
+    }
+    .cards,
+    .vb[data-seizoen='winter'] .cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

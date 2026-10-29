@@ -1,0 +1,75 @@
+---
+// PROTOTYPE – wisselbalk tussen varianten. Hoort niet in productie.
+interface Props {
+  varianten: { sleutel: string; naam: string }[];
+}
+const { varianten } = Astro.props;
+---
+
+<div class="ps" data-varianten={JSON.stringify(varianten)}>
+  <button data-dir="-1" aria-label="Vorige variant">←</button>
+  <span data-label></span>
+  <button data-dir="1" aria-label="Volgende variant">→</button>
+</div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.ps')!;
+  const varianten: { sleutel: string; naam: string }[] = JSON.parse(bar.dataset.varianten!);
+  const label = bar.querySelector<HTMLElement>('[data-label]')!;
+  const toon = (sleutel: string) => {
+    const v = varianten.find((x) => x.sleutel === sleutel) ?? varianten[0];
+    document.querySelectorAll<HTMLElement>('[data-variant]').forEach((el) => (el.hidden = el.dataset.variant !== v.sleutel));
+    label.textContent = `${v.sleutel} (${v.naam})`;
+    const url = new URL(location.href);
+    url.searchParams.set('variant', v.sleutel);
+    history.replaceState(null, '', url);
+    window.scrollTo(0, 0);
+  };
+  const stap = (dir: number) => {
+    const huidig = new URL(location.href).searchParams.get('variant') ?? varianten[0].sleutel;
+    const i = varianten.findIndex((x) => x.sleutel === huidig);
+    toon(varianten[(i + dir + varianten.length) % varianten.length].sleutel);
+  };
+  bar.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach((b) => b.addEventListener('click', () => stap(Number(b.dataset.dir))));
+  document.addEventListener('keydown', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.closest('input, textarea, [contenteditable]')) return;
+    if (e.key === 'ArrowLeft') stap(-1);
+    if (e.key === 'ArrowRight') stap(1);
+  });
+  toon(new URL(location.href).searchParams.get('variant') ?? varianten[0].sleutel);
+</script>
+
+<style>
+  .ps {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 999px;
+    background: #ff2bd6;
+    color: #fff;
+    font: 700 14px/1 system-ui, sans-serif;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+  }
+  .ps button {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 0.25);
+    color: inherit;
+    font: inherit;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .ps span {
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+</style>

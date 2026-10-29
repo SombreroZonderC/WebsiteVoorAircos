@@ -7,7 +7,7 @@ export default defineConfig({
   build: { format: 'file' },
   integrations: [
     sitemap({
-      filter: (page) => !['/bedankt', '/poc', '/404'].some((pad) => page.includes(pad)),
+      filter: (page) => !['/bedankt', '/poc', '/404', '/prototype'].some((pad) => page.includes(pad)),
     }),
   ],
 });
