@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+import FaqLijst from '../components/FaqLijst.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { faqSchema } from '../lib/schema';
+
+const alle = (await getCollection('faq')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+const groepen = [
+  { id: 'airco', titel: 'Airconditioning' },
+  { id: 'warmtepomp', titel: 'Warmtepompen' },
+  { id: 'onderhoud', titel: 'Onderhoud' },
+  { id: 'algemeen', titel: 'Algemeen' },
+].map((g) => ({ ...g, items: alle.filter((f) => f.data.categorie === g.id) }));
+---
+
+<Base
+  title="Veelgestelde vragen over airco en warmtepompen"
+  description="Antwoorden op veelgestelde vragen over airconditioning, warmtepompen en onderhoud. Van hybride vs. all-electric tot verwarmen met een airco."
+  schema={faqSchema(alle)}
+>
+  <PaginaHero
+    eyebrow="Veelgestelde vragen"
+    titel="Vragen en antwoorden"
+    intro="Alles wat je wilt weten over airco's, warmtepompen en onderhoud. Staat je vraag er niet tussen? Bel of mail gerust."
+  >
+    <nav class="jump" aria-label="Categorieën">
+      {groepen.map((g) => <a href={`#${g.id}`}>{g.titel}</a>)}
+    </nav>
+  </PaginaHero>
+
+  <section class="section paper">
+    <div class="wrap narrow">
+      {
+        groepen.map((g) => (
+          <div class="groep" id={g.id}>
+            <h2>{g.titel}</h2>
+            <FaqLijst items={g.items} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .narrow {
+    max-width: 860px;
+  }
+  .groep {
+    scroll-margin-top: 110px;
+  }
+  .groep + .groep {
+    margin-top: 72px;
+  }
+  .groep h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    margin-bottom: 20px;
+  }
+  .jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .jump a {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--line-dark);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .jump a:hover {
+    border-color: var(--orange);
+    color: #fff;
+  }
+</style>

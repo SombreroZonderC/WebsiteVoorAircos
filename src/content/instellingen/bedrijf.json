@@ -1,0 +1,25 @@
+{
+  "naam": "The CoolFactory",
+  "tagline": "Airconditioning & warmtepompen",
+  "eigenaar": "Sjoerd Moller",
+  "url": "https://thecoolfactory.nl",
+  "telefoon": { "weergave": "06 211 276 12", "internationaal": "+31621127612" },
+  "email": "info@thecoolfactory.nl",
+  "whatsapp": false,
+  "adres": {
+    "straat": "Spekhoekweg 8",
+    "postcode": "8111 RR",
+    "plaats": "Heeten",
+    "gemeente": "Raalte",
+    "provincie": "Overijssel",
+    "land": "NL"
+  },
+  "jarenErvaring": "20+",
+  "merk": "Mitsubishi Electric",
+  "kvk": null,
+  "btw": null,
+  "openingstijden": null,
+  "certificeringen": [],
+  "werkgebied": [],
+  "googleReviewsUrl": null
+}

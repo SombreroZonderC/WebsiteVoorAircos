@@ -1,13 +1,13 @@
 ---
 import Icon from './Icon.astro';
-import { nav, site } from '../data/site';
+import { bedrijf, nav, telLink } from '../lib/bedrijf';
 
 const path = Astro.url.pathname.replace(/\.html$/, '');
 ---
 
 <header class="header" data-header>
   <div class="wrap bar">
-    <a href="/" class="logo" aria-label={`${site.name} – home`}>
+    <a href="/" class="logo" aria-label={`${bedrijf.naam} – home`}>
       <img src="/images/logo-op-donker.svg" alt="" width="132" height="73" />
     </a>
 
@@ -29,9 +29,9 @@ const path = Astro.url.pathname.replace(/\.html$/, '');
     </nav>
 
     <div class="right">
-      <a class="phone" href={site.phone.href}>
+      <a class="phone" href={telLink}>
         <Icon name="phone" size={18} />
-        <span>{site.phone.display}</span>
+        <span>{bedrijf.telefoon.weergave}</span>
       </a>
       <a class="btn small" href="/contact">Offerte</a>
       <button class="toggle" aria-expanded="false" aria-controls="menu" data-toggle>
@@ -83,7 +83,7 @@ const path = Astro.url.pathname.replace(/\.html$/, '');
     height: 84px;
   }
   .logo img {
-    height: 50px;
+    height: 56px;
     width: auto;
   }
   .nav ul {
@@ -147,11 +147,11 @@ const path = Astro.url.pathname.replace(/\.html$/, '');
     justify-content: center;
     cursor: pointer;
   }
-  .toggle .i-close,
-  .open .toggle .i-open {
+  .toggle :global(.i-close),
+  .open .toggle :global(.i-open) {
     display: none;
   }
-  .open .toggle .i-close {
+  .open .toggle :global(.i-close) {
     display: block;
   }
 

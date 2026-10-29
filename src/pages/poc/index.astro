@@ -1,0 +1,193 @@
+---
+import '../../styles/global.css';
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>POC vergelijking | The CoolFactory</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body class="poc">
+    <header class="bar">
+      <strong>Homepage POC</strong>
+      <div class="switch" role="tablist" aria-label="Versie kiezen (mobiel)">
+        <button role="tab" aria-selected="true" data-show="a">Zonder foto's</button>
+        <button role="tab" aria-selected="false" data-show="b">Met stockfoto's</button>
+      </div>
+      <nav>
+        <div class="switch device" role="group" aria-label="Weergave">
+          <button aria-pressed="true" data-device="1440">Desktop</button>
+          <button aria-pressed="false" data-device="390">Mobiel</button>
+        </div>
+        <a href="/poc/zonder-foto" target="_blank">A openen ↗</a>
+        <a href="/poc/met-stock" target="_blank">B openen ↗</a>
+      </nav>
+    </header>
+    <main class="frames" data-active="a">
+      <section class="frame a">
+        <h2>A · Zonder foto's <span>lijntekeningen als placeholder</span></h2>
+        <div class="viewport"><iframe src="/poc/zonder-foto" title="Homepage zonder foto's"></iframe></div>
+      </section>
+      <section class="frame b">
+        <h2>B · Met stockfoto's <span>sfeerbeelden van Unsplash</span></h2>
+        <div class="viewport"><iframe src="/poc/met-stock" title="Homepage met stockfoto's"></iframe></div>
+      </section>
+    </main>
+
+    <script>
+      // Iframes renderen op een vaste breedte en worden geschaald, zodat je
+      // ook op een laptop beide versies op desktopbreedte naast elkaar ziet.
+      let breedte = window.innerWidth < 900 ? 390 : 1440;
+      const viewports = document.querySelectorAll<HTMLElement>('.viewport');
+      const schaal = () =>
+        viewports.forEach((vp) => {
+          const iframe = vp.querySelector('iframe')!;
+          const s = Math.min(1, vp.clientWidth / breedte);
+          iframe.style.width = `${breedte}px`;
+          iframe.style.height = `${vp.clientHeight / s}px`;
+          iframe.style.transform = `scale(${s})`;
+          iframe.style.marginLeft = `${Math.max(0, (vp.clientWidth - breedte * s) / 2)}px`;
+        });
+      new ResizeObserver(schaal).observe(document.body);
+      document.querySelectorAll<HTMLButtonElement>('[data-device]').forEach((btn) =>
+        btn.addEventListener('click', () => {
+          breedte = Number(btn.dataset.device);
+          document
+            .querySelectorAll('[data-device]')
+            .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+          schaal();
+        }),
+      );
+
+      const frames = document.querySelector<HTMLElement>('.frames')!;
+      document.querySelectorAll<HTMLButtonElement>('[data-show]').forEach((btn) =>
+        btn.addEventListener('click', () => {
+          frames.dataset.active = btn.dataset.show;
+          document
+            .querySelectorAll('[data-show]')
+            .forEach((b) => b.setAttribute('aria-selected', String(b === btn)));
+        }),
+      );
+    </script>
+
+    <style>
+      body.poc {
+        background: #02090c;
+        color: var(--text-on-dark);
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--line-dark);
+        font-size: 0.92rem;
+      }
+      .bar nav {
+        display: flex;
+        gap: 16px;
+      }
+      .bar a {
+        color: var(--muted-on-dark);
+      }
+      .switch {
+        display: none;
+        gap: 4px;
+        padding: 4px;
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.06);
+      }
+      .switch button {
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        padding: 6px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .switch [aria-selected='true'] {
+        background: var(--orange);
+      }
+      .frames {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 12px;
+        min-height: 0;
+      }
+      .frame {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        min-width: 0;
+      }
+      .frame h2 {
+        font-size: 0.95rem;
+        margin: 4px 4px 10px;
+        font-stretch: 105%;
+      }
+      .frame h2 span {
+        font-family: var(--font-body);
+        font-weight: 400;
+        color: var(--muted-on-dark);
+        margin-left: 8px;
+      }
+      .viewport {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line-dark);
+        border-radius: 12px;
+        background: #02090c;
+      }
+      iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        transform-origin: 0 0;
+        background: var(--ink);
+      }
+      .switch.device {
+        display: flex;
+      }
+      .switch [aria-pressed='true'] {
+        background: var(--orange);
+      }
+      .bar nav {
+        align-items: center;
+      }
+      @media (max-width: 900px) {
+        .bar nav {
+          display: none;
+        }
+        .switch {
+          display: flex;
+        }
+        .frames {
+          grid-template-columns: 1fr;
+        }
+        .frames[data-active='a'] .b,
+        .frames[data-active='b'] .a {
+          display: none;
+        }
+      }
+    </style>
+  </body>
+</html>

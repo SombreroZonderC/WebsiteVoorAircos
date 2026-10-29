@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+---
+
+<Base title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer)." noindex>
+  <PaginaHero
+    eyebrow="404"
+    titel="Deze pagina is even uit de lucht."
+    intro="De pagina die je zoekt bestaat niet (meer). Misschien vind je via het menu wat je zoekt."
+    accent="koud"
+  >
+    <div class="actions">
+      <a class="btn" href="/">Naar de homepage</a>
+      <a class="btn ghost" href="/contact">Contact</a>
+    </div>
+  </PaginaHero>
+</Base>

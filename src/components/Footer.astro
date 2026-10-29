@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro';
-import { nav, site } from '../data/site';
+import { bedrijf, mailLink, nav, telLink } from '../lib/bedrijf';
 
 const year = new Date().getFullYear();
 ---
@@ -9,14 +9,14 @@ const year = new Date().getFullYear();
   <div class="wrap">
     <div class="top">
       <div class="brand">
-        <img src="/images/logo-op-donker.svg" alt={site.name} width="170" height="94" loading="lazy" />
+        <img src="/images/logo-op-donker.svg" alt={bedrijf.naam} width="170" height="94" loading="lazy" />
         <p class="muted">
-          Vakmanschap en betrouwbare service, rechtstreeks vanuit Heeten. Specialist in {site.brand}.
+          Vakmanschap en betrouwbare service, rechtstreeks vanuit Heeten. Specialist in {bedrijf.merk}.
         </p>
       </div>
 
       <div>
-        <h2 class="h">Diensten</h2>
+        <h2 class="h">Menu</h2>
         <ul>
           {
             nav.map((item) => (
@@ -33,22 +33,22 @@ const year = new Date().getFullYear();
         <h2 class="h">Contact</h2>
         <ul class="contact">
           <li>
-            <Icon name="phone" size={18} /><a href={site.phone.href}>{site.phone.display}</a>
+            <Icon name="phone" size={18} /><a href={telLink}>{bedrijf.telefoon.weergave}</a>
           </li>
           <li>
-            <Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a>
+            <Icon name="mail" size={18} /><a href={mailLink}>{bedrijf.email}</a>
           </li>
           <li>
             <Icon name="pin" size={18} />
             <span>
-              {site.address.street}<br />{site.address.postalCode} {site.address.city}
+              {bedrijf.adres.straat}<br />{bedrijf.adres.postcode} {bedrijf.adres.plaats}
             </span>
           </li>
           {
-            site.openingHours && (
+            bedrijf.openingstijden && (
               <li>
                 <Icon name="clock" size={18} />
-                <span>{site.openingHours}</span>
+                <span>{bedrijf.openingstijden}</span>
               </li>
             )
           }
@@ -57,9 +57,9 @@ const year = new Date().getFullYear();
     </div>
 
     <div class="bottom">
-      <span>© {year} {site.name}</span>
-      {site.kvk && <span>KvK {site.kvk}</span>}
-      {site.btw && <span>Btw {site.btw}</span>}
+      <span>© {year} {bedrijf.naam}</span>
+      {bedrijf.kvk && <span>KvK {bedrijf.kvk}</span>}
+      {bedrijf.btw && <span>Btw {bedrijf.btw}</span>}
       <a href="/privacy">Privacyverklaring</a>
     </div>
   </div>

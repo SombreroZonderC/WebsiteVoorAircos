@@ -1,0 +1,86 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+
+interface Props {
+  items: CollectionEntry<'faq'>[];
+}
+const { items } = Astro.props;
+const gerenderd = await Promise.all(items.map(async (item) => ({ item, ...(await render(item)) })));
+---
+
+<div class="faq">
+  {
+    gerenderd.map(({ item, Content }) => (
+      <details>
+        <summary>
+          <h3>{item.data.vraag}</h3>
+          <span class="plus" aria-hidden="true" />
+        </summary>
+        <div class="antwoord">
+          <Content />
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 22px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary h3 {
+    margin: 0;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  }
+  .plus {
+    flex: none;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    transition:
+      transform 0.3s var(--ease),
+      background 0.2s;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 2px;
+    background: var(--orange);
+    transform: translate(-50%, -50%);
+  }
+  .plus::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  details[open] .plus {
+    transform: rotate(45deg);
+  }
+  summary:hover .plus {
+    background: rgb(234 91 12 / 0.08);
+  }
+  .antwoord {
+    padding: 0 56px 24px 0;
+    color: var(--muted);
+    max-width: 72ch;
+  }
+</style>

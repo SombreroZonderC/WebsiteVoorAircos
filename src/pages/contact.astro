@@ -1,0 +1,330 @@
+---
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
+
+const onderwerpen = [
+  { waarde: 'airconditioning', label: 'Airconditioning' },
+  { waarde: 'warmtepompen', label: 'Warmtepomp (hybride of all-electric)' },
+  { waarde: 'onderhoud', label: 'Onderhoud of storing' },
+  { waarde: 'anders', label: 'Weet ik nog niet / iets anders' },
+];
+---
+
+<Base
+  title="Contact en offerte aanvragen"
+  description="Vraag een vrijblijvende offerte aan voor een airco of warmtepomp, of neem contact op met Sjoerd van The CoolFactory in Heeten. Bel 06 211 276 12."
+>
+  <PaginaHero
+    eyebrow="Contact"
+    titel="Samen kijken wat past?"
+    intro="Stuur me een bericht of bel direct. Ik neem zo snel mogelijk contact met je op voor persoonlijk advies of een vrijblijvende offerte."
+  />
+
+  <section class="section paper">
+    <div class="wrap layout">
+      <!--
+        Netlify Forms: werkt automatisch zodra de site op Netlify staat.
+        Lokaal wordt verzenden nagebootst (zie script onderaan).
+      -->
+      <form
+        class="card form"
+        name="offerte"
+        method="POST"
+        action="/bedankt"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        data-form
+      >
+        <input type="hidden" name="form-name" value="offerte" />
+        <p class="sr-only">
+          <label>Niet invullen: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <div class="row">
+          <div class="field">
+            <label for="naam">Naam <span class="req" aria-hidden="true">*</span></label>
+            <input id="naam" name="naam" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="email">E-mailadres <span class="req" aria-hidden="true">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="telefoon">Telefoonnummer <span class="opt">optioneel</span></label>
+            <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" />
+          </div>
+          <div class="field">
+            <label for="plaats">Postcode en plaats <span class="opt">optioneel</span></label>
+            <input id="plaats" name="postcode-plaats" type="text" autocomplete="postal-code" placeholder="8111 AB Heeten" />
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend>Waar gaat het over? <span class="opt">optioneel</span></legend>
+          <div class="keuzes">
+            {
+              onderwerpen.map((o) => (
+                <label class="keuze">
+                  <input type="radio" name="onderwerp" value={o.waarde} />
+                  <span>{o.label}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <div class="row">
+          <div class="field">
+            <label for="woning">Type woning <span class="opt">optioneel</span></label>
+            <select id="woning" name="type-woning">
+              <option value="">Maak een keuze</option>
+              <option>Tussenwoning</option>
+              <option>Hoekwoning</option>
+              <option>Twee-onder-een-kap</option>
+              <option>Vrijstaand</option>
+              <option>Appartement</option>
+              <option>Bedrijfspand</option>
+              <option>Anders</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="voorkeur">Hoe wil je benaderd worden? <span class="opt">optioneel</span></label>
+            <select id="voorkeur" name="contactvoorkeur">
+              <option value="">Geen voorkeur</option>
+              <option>Bellen</option>
+              <option>E-mail</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="bericht">Bericht <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="bericht" name="bericht" rows="5" required placeholder="Vertel kort wat je zoekt, bijvoorbeeld welke ruimtes je wilt koelen of verwarmen."></textarea>
+        </div>
+
+        <p class="note muted">
+          <span aria-hidden="true">*</span> verplicht. Je gegevens gebruik ik alleen om contact met je op te nemen. Zie de
+          <a href="/privacy">privacyverklaring</a>.
+        </p>
+
+        <button class="btn" type="submit">Verstuur bericht <Icon name="arrow" /></button>
+      </form>
+
+      <aside class="direct">
+        <h2 class="h3">Liever direct contact?</h2>
+        <a class="card kanaal" href={telLink}>
+          <span class="ico"><Icon name="phone" /></span>
+          <span><strong>Bellen</strong><span class="muted">{bedrijf.telefoon.weergave}</span></span>
+        </a>
+        <a class="card kanaal" href={mailLink}>
+          <span class="ico"><Icon name="mail" /></span>
+          <span><strong>Mailen</strong><span class="muted">{bedrijf.email}</span></span>
+        </a>
+        <div class="card kanaal">
+          <span class="ico"><Icon name="pin" /></span>
+          <span>
+            <strong>Adres</strong>
+            <span class="muted">{bedrijf.adres.straat}, {bedrijf.adres.postcode} {bedrijf.adres.plaats}</span>
+          </span>
+        </div>
+        {
+          bedrijf.openingstijden && (
+            <div class="card kanaal">
+              <span class="ico"><Icon name="clock" /></span>
+              <span>
+                <strong>Bereikbaar</strong>
+                <span class="muted">{bedrijf.openingstijden}</span>
+              </span>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+
+  // Onderwerp voorinvullen vanaf een dienstpagina (?onderwerp=warmtepompen)
+  const onderwerp = new URLSearchParams(location.search).get('onderwerp');
+  if (onderwerp) {
+    const radio = form.querySelector<HTMLInputElement>(`input[name="onderwerp"][value="${CSS.escape(onderwerp)}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  // Lokaal (v1) is er geen formulierverwerking: verzending nabootsen.
+  const isLokaal = ['localhost', '127.0.0.1'].includes(location.hostname);
+  form.addEventListener('submit', (e) => {
+    if (!isLokaal) return;
+    e.preventDefault();
+    if (form.reportValidity()) location.href = '/bedankt';
+  });
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: start;
+  }
+  .form {
+    display: grid;
+    gap: 22px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .field {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  label,
+  legend {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  legend {
+    margin-bottom: 8px;
+  }
+  .req {
+    color: var(--orange);
+  }
+  .opt {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-left: 4px;
+  }
+  input:not([type='radio']),
+  select,
+  textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 14px;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s,
+      background 0.2s;
+  }
+  input:not([type='radio']):focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 4px rgb(234 91 12 / 0.15);
+  }
+  textarea {
+    resize: vertical;
+  }
+  .keuzes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .keuze {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--paper);
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+  }
+  .keuze input {
+    accent-color: var(--orange);
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex: none;
+  }
+  .keuze:has(input:checked) {
+    border-color: var(--orange);
+    background: rgb(234 91 12 / 0.06);
+  }
+  .keuze:has(input:focus-visible) {
+    outline: 3px solid var(--orange);
+    outline-offset: 2px;
+  }
+  .note {
+    font-size: 0.88rem;
+    margin: 0;
+  }
+  .form .btn {
+    justify-self: start;
+  }
+  .direct {
+    display: grid;
+    gap: 12px;
+  }
+  .h3 {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+  .kanaal {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  a.kanaal:hover {
+    border-color: var(--orange);
+  }
+  .kanaal > span:last-child {
+    display: grid;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .ico {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgb(234 91 12 / 0.1);
+    color: var(--orange);
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .row,
+    .keuzes {
+      grid-template-columns: 1fr;
+    }
+    .form .btn {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+import Visual from '../components/Visual.astro';
+import Reviews from '../components/Reviews.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { bedrijf, bedrijfId, home } from '../lib/bedrijf';
+
+const pagina = (await getEntry('paginas', 'over-sjoerd'))!;
+const { Content } = await render(pagina);
+const p = pagina.data;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    url: `${bedrijf.url}/over-sjoerd`,
+    mainEntity: {
+      '@type': 'Person',
+      name: bedrijf.eigenaar,
+      jobTitle: 'Installateur airconditioning en warmtepompen',
+      worksFor: { '@id': bedrijfId },
+    },
+  },
+];
+---
+
+<Base title={p.seoTitel} description={p.seoOmschrijving} schema={schema}>
+  <PaginaHero eyebrow={p.eyebrow} titel={p.titel} intro={p.intro} />
+
+  <section class="section paper">
+    <div class="wrap layout">
+      <div data-reveal>
+        <Visual soort="portret" label="portret van Sjoerd" verhouding="4 / 5" />
+        <dl class="feiten">
+          <div><dt>Ervaring</dt><dd>{bedrijf.jarenErvaring} jaar</dd></div>
+          <div><dt>Specialisme</dt><dd>{bedrijf.merk}</dd></div>
+          <div><dt>Gevestigd in</dt><dd>{bedrijf.adres.plaats}</dd></div>
+          {
+            bedrijf.certificeringen.length > 0 && (
+              <div>
+                <dt>Certificering</dt>
+                <dd>{bedrijf.certificeringen.join(', ')}</dd>
+              </div>
+            )
+          }
+        </dl>
+      </div>
+      <div class="prose" data-reveal>
+        <Content />
+        <h2>Waar ik voor sta</h2>
+        <ul class="checklist">
+          {home.over.punten.map((punt) => <li>{punt}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <Reviews />
+  <CtaBand titel="Zullen we kennismaken?" />
+</Base>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: 380px minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .checklist {
+    margin-top: 8px;
+  }
+  .feiten {
+    margin: 20px 0 0;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .feiten div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  dt {
+    color: var(--muted);
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .layout > :first-child {
+      max-width: 420px;
+    }
+  }
+</style>

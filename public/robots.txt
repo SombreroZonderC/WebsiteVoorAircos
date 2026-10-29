@@ -1,3 +1,4 @@
+# Zoekmachines én AI-assistenten (GPTBot, ClaudeBot, PerplexityBot, …) zijn welkom.
 User-agent: *
 Allow: /
 

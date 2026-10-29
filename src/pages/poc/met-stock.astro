@@ -1,0 +1,9 @@
+---
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/Home.astro';
+import { home } from '../../lib/bedrijf';
+---
+
+<Base title={`POC met stockfoto's – ${home.seoTitel}`} description={home.seoOmschrijving} noindex>
+  <Home fotos="stock" />
+</Base>

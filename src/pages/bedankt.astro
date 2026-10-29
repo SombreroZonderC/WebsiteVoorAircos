@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf, telLink } from '../lib/bedrijf';
+---
+
+<Base title="Bedankt voor je bericht" description="Je bericht is verstuurd." noindex>
+  <PaginaHero
+    eyebrow="Verstuurd"
+    titel="Bedankt voor je bericht!"
+    intro="Ik heb je aanvraag ontvangen en neem zo snel mogelijk contact met je op."
+  >
+    <div class="actions">
+      <a class="btn" href="/">Terug naar home</a>
+      <a class="btn ghost" href={telLink}><Icon name="phone" /> Haast? Bel {bedrijf.telefoon.weergave}</a>
+    </div>
+  </PaginaHero>
+</Base>

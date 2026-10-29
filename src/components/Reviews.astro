@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import Icon from './Icon.astro';
+import { bedrijf } from '../lib/bedrijf';
+
+const reviews = (await getCollection('reviews')).sort((a, b) => b.data.datum.valueOf() - a.data.datum.valueOf());
+const datum = new Intl.DateTimeFormat('nl-NL', { month: 'long', year: 'numeric' });
+---
+
+<section class="section paper reviews" aria-labelledby="reviews-titel">
+  <div class="wrap">
+    <div class="head" data-reveal>
+      <div>
+        <p class="eyebrow">Ervaringen</p>
+        <h2 id="reviews-titel">Wat klanten zeggen</h2>
+      </div>
+      {
+        bedrijf.googleReviewsUrl && (
+          <a class="btn ghost" href={bedrijf.googleReviewsUrl} rel="noopener">
+            Alle reviews op Google <Icon name="arrow" />
+          </a>
+        )
+      }
+    </div>
+    <div class="grid grid-3">
+      {
+        reviews.map((r) => (
+          <figure class="card review" data-reveal>
+            <span class="quote" aria-hidden="true">“</span>
+            <blockquote>{r.data.tekst}</blockquote>
+            <figcaption>
+              <strong>{r.data.naam}</strong>
+              <span class="muted">
+                {r.data.bron} · {datum.format(r.data.datum)}
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .head h2 {
+    margin: 0;
+  }
+  .review {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .quote {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    line-height: 0.6;
+    height: 28px;
+    color: var(--orange);
+  }
+  blockquote {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.6;
+    flex: 1;
+  }
+  figcaption {
+    display: grid;
+    gap: 2px;
+    font-size: 0.9rem;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+</style>

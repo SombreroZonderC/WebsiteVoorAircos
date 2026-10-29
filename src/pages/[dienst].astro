@@ -1,0 +1,247 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+import Visual from '../components/Visual.astro';
+import Stappen from '../components/Stappen.astro';
+import FaqLijst from '../components/FaqLijst.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf, bedrijfId, telLink } from '../lib/bedrijf';
+import { faqSchema } from '../lib/schema';
+
+export async function getStaticPaths() {
+  const diensten = await getCollection('diensten');
+  return diensten.map((dienst) => ({ params: { dienst: dienst.id }, props: { dienst } }));
+}
+
+interface Props {
+  dienst: CollectionEntry<'diensten'>;
+}
+
+const { dienst } = Astro.props;
+const d = dienst.data;
+const { Content } = await render(dienst);
+
+const faqs = (await getCollection('faq', (f) => f.data.categorie === d.faqCategorie)).sort(
+  (a, b) => a.data.volgorde - b.data.volgorde,
+);
+const andere = (await getCollection('diensten'))
+  .filter((x) => x.id !== dienst.id)
+  .sort((a, b) => a.data.volgorde - b.data.volgorde);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: d.titel,
+    serviceType: d.menuLabel,
+    description: d.seoOmschrijving,
+    url: `${bedrijf.url}/${dienst.id}`,
+    provider: { '@id': bedrijfId },
+    areaServed: bedrijf.werkgebied.length > 0 ? bedrijf.werkgebied : bedrijf.adres.plaats,
+    brand: { '@type': 'Brand', name: bedrijf.merk },
+  },
+  ...faqSchema(faqs),
+];
+---
+
+<Base title={d.seoTitel} description={d.seoOmschrijving} schema={schema}>
+  <PaginaHero eyebrow={d.eyebrow} titel={d.titel} intro={d.intro} accent={d.accent}>
+    <div class="actions">
+      <a class="btn" href={`/contact?onderwerp=${dienst.id}`}>Vrijblijvende offerte <Icon name="arrow" /></a>
+      <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
+    </div>
+  </PaginaHero>
+
+  <section class="section paper">
+    <div class="wrap">
+      <div class="grid grid-3">
+        {
+          d.voordelen.map((v, i) => (
+            <div class="card voordeel" data-reveal style={`transition-delay: ${i * 80}ms`}>
+              <span class:list={['icon', d.accent]}>
+                <Icon name={i === 0 ? d.icoon : i === 1 ? 'shield' : 'check'} />
+              </span>
+              <h2 class="h3">{v.titel}</h2>
+              <p class="muted">{v.tekst}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="body">
+        <div class="prose" data-reveal>
+          <Content />
+        </div>
+        <aside class="aside" data-reveal>
+          <Visual soort={d.beeld} label={`project ${d.menuLabel.toLowerCase()}`} verhouding="4 / 5" />
+          <div class="card contact-card">
+            <h2 class="h3">Advies op maat?</h2>
+            <p class="muted">Bel of stuur een bericht, dan plannen we een afspraak aan huis.</p>
+            <a class="btn" href={`/contact?onderwerp=${dienst.id}`}>Offerte aanvragen</a>
+            <a class="tel" href={telLink}><Icon name="phone" size={18} /> {bedrijf.telefoon.weergave}</a>
+          </div>
+        </aside>
+      </div>
+
+      {
+        d.stappen.length > 0 && (
+          <div class="stappen-blok">
+            <h2 class="h-small" data-reveal>
+              Hoe het werkt
+            </h2>
+            <Stappen stappen={d.stappen} />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    faqs.length > 0 && (
+      <section class="section paper faq-sectie" aria-labelledby="faq-titel">
+        <div class="wrap narrow">
+          <p class="eyebrow">Veelgestelde vragen</p>
+          <h2 id="faq-titel">Vragen over {d.menuLabel.toLowerCase()}</h2>
+          <FaqLijst items={faqs} />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section dark andere" aria-labelledby="andere-titel">
+    <div class="wrap">
+      <h2 id="andere-titel" class="h-small">Ook interessant</h2>
+      <div class="grid grid-2">
+        {
+          andere.map((a) => (
+            <a class="card link-card" href={`/${a.id}`}>
+              <span class:list={['icon', a.data.accent]}>
+                <Icon name={a.data.icoon} />
+              </span>
+              <div>
+                <h3>{a.data.menuLabel}</h3>
+                <p class="muted">{a.data.intro}</p>
+              </div>
+              <Icon name="arrow" class="pijl" />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .voordeel .icon,
+  .link-card .icon {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    background: rgb(66 125 184 / 0.14);
+    color: var(--blue);
+  }
+  .voordeel .icon.warm {
+    background: rgb(234 91 12 / 0.12);
+    color: var(--orange);
+  }
+  .h3 {
+    font-size: clamp(1.2rem, 1.8vw, 1.4rem);
+    font-stretch: 105%;
+    font-weight: 700;
+  }
+  .voordeel p {
+    margin: 0;
+  }
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: clamp(40px, 6vw, 88px);
+    margin-top: clamp(64px, 8vw, 104px);
+    align-items: start;
+  }
+  .aside {
+    position: sticky;
+    top: 110px;
+    display: grid;
+    gap: 16px;
+  }
+  .contact-card {
+    display: grid;
+    gap: 12px;
+  }
+  .contact-card p {
+    margin: 0 0 4px;
+  }
+  .tel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px;
+  }
+  .stappen-blok {
+    margin-top: clamp(64px, 8vw, 104px);
+  }
+  .h-small {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    margin-bottom: 28px;
+  }
+  .faq-sectie {
+    padding-top: 0;
+  }
+  .narrow {
+    max-width: 860px;
+  }
+  .link-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 20px;
+    align-items: start;
+    text-decoration: none;
+    transition: border-color 0.25s var(--ease);
+  }
+  .link-card .icon {
+    margin: 0;
+    background: rgb(66 125 184 / 0.18);
+    color: var(--blue-ice);
+  }
+  .link-card .icon.warm {
+    background: rgb(234 91 12 / 0.16);
+    color: var(--orange-hot);
+  }
+  .link-card h3 {
+    margin-bottom: 6px;
+  }
+  .link-card p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .link-card :global(.pijl) {
+    color: var(--orange);
+    transition: transform 0.25s var(--ease);
+  }
+  .link-card:hover {
+    border-color: rgb(255 255 255 / 0.22);
+  }
+  .link-card:hover :global(.pijl) {
+    transform: translateX(4px);
+  }
+  @media (max-width: 900px) {
+    .body {
+      grid-template-columns: 1fr;
+    }
+    .aside {
+      position: static;
+      max-width: 420px;
+    }
+  }
+</style>

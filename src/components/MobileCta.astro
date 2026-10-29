@@ -1,15 +1,15 @@
 ---
 import Icon from './Icon.astro';
-import { site } from '../data/site';
+import { bedrijf, telLink, whatsappLink } from '../lib/bedrijf';
 ---
 
 <div class="mobile-cta">
-  <a href={site.phone.href} class="call">
+  <a href={telLink} class="call">
     <Icon name="phone" size={18} /> Bellen
   </a>
   {
-    site.whatsapp ? (
-      <a href={site.whatsappHref} class="alt">
+    bedrijf.whatsapp ? (
+      <a href={whatsappLink} class="alt">
         <Icon name="whatsapp" size={18} /> WhatsApp
       </a>
     ) : (

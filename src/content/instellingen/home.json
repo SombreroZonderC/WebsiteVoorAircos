@@ -1,0 +1,57 @@
+{
+  "seoTitel": "Airco en warmtepomp in Heeten | The CoolFactory",
+  "seoOmschrijving": "Airco of warmtepomp laten plaatsen in Heeten en omgeving. Persoonlijk advies aan huis, nette installatie en onderhoud. Specialist in Mitsubishi Electric.",
+  "hero": {
+    "eyebrow": "Airco & warmtepompen · Heeten",
+    "titelKoud": "Koel in de zomer.",
+    "titelWarm": "Warm in de winter.",
+    "lead": "Ik ben Sjoerd, en met ruim 20 jaar ervaring plaats en onderhoud ik airconditioning en warmtepompen van Mitsubishi Electric. Persoonlijk advies aan huis, een nette installatie en duidelijke afspraken."
+  },
+  "usps": [
+    {
+      "titel": "Ruim 20 jaar vakervaring",
+      "tekst": "Jarenlange ervaring met montage, dus advies dat onderbouwd is en past bij jouw woning en wensen."
+    },
+    {
+      "titel": "Eén merk, topkwaliteit",
+      "tekst": "Ik werk uitsluitend met Mitsubishi Electric. Ik ken de systemen door en door, en dat merk je aan het resultaat."
+    },
+    {
+      "titel": "Van advies tot onderhoud",
+      "tekst": "Eén aanspreekpunt van het eerste gesprek tot het onderhoud na de installatie. Geen callcenter, gewoon ik."
+    }
+  ],
+  "werkwijze": [
+    {
+      "titel": "Kennismaking",
+      "tekst": "Je belt of stuurt een bericht. We bespreken kort wat je zoekt."
+    },
+    {
+      "titel": "Advies aan huis",
+      "tekst": "Ik kom langs, bekijk de situatie en denk mee over de beste oplossing."
+    },
+    {
+      "titel": "Heldere offerte",
+      "tekst": "Je krijgt een vrijblijvende offerte, zonder kleine lettertjes."
+    },
+    {
+      "titel": "Nette installatie",
+      "tekst": "Ik installeer zorgvuldig, ruim op en leg uit hoe alles werkt."
+    }
+  ],
+  "over": {
+    "titel": "Geen bedrijf met een callcenter. Gewoon Sjoerd.",
+    "tekst": "The CoolFactory is mijn bedrijf in Heeten. Ik sta bekend om persoonlijke service, duidelijke communicatie en betrouwbare uitvoering. Jij hebt één aanspreekpunt, van het eerste advies tot het onderhoud jaren later.",
+    "punten": [
+      "Persoonlijk en betrouwbaar",
+      "Snelle installatie",
+      "Topkwaliteit producten",
+      "Advies aan huis",
+      "Duurzaam comfort"
+    ]
+  },
+  "cta": {
+    "titel": "Benieuwd wat past bij jouw huis?",
+    "tekst": "Bel of mail voor persoonlijk advies of een vrijblijvende offerte. Ik denk graag met je mee."
+  }
+}

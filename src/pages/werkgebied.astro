@@ -1,0 +1,116 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf } from '../lib/bedrijf';
+
+const pagina = (await getEntry('paginas', 'werkgebied'))!;
+const { Content } = await render(pagina);
+const p = pagina.data;
+const a = bedrijf.adres;
+const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
+---
+
+<Base title={p.seoTitel} description={p.seoOmschrijving}>
+  <PaginaHero eyebrow={p.eyebrow} titel={p.titel} intro={p.intro} accent="koud" />
+
+  <section class="section paper">
+    <div class="wrap layout">
+      <div class="prose" data-reveal>
+        <Content />
+        {
+          bedrijf.werkgebied.length > 0 && (
+            <>
+              <h2>Plaatsen in mijn werkgebied</h2>
+              <ul class="plaatsen">
+                {bedrijf.werkgebied.map((plaats) => (
+                  <li>
+                    <Icon name="pin" size={16} /> {plaats}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+      </div>
+      <aside class="card adres" data-reveal>
+        <span class="pin"><Icon name="pin" /></span>
+        <h2 class="h3">Uitvalsbasis</h2>
+        <address>
+          {bedrijf.naam}<br />
+          {a.straat}<br />
+          {a.postcode} {a.plaats}<br />
+          Gemeente {a.gemeente}, {a.provincie}
+        </address>
+        <a class="btn ghost" href={`https://www.openstreetmap.org/search?query=${kaartQuery}`} rel="noopener">
+          Bekijk op de kaart <Icon name="arrow" />
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <CtaBand titel="Woon je in de regio?" tekst="Neem contact op voor advies aan huis of een vrijblijvende offerte." />
+</Base>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .plaatsen {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .plaatsen li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    font-weight: 500;
+  }
+  .plaatsen :global(svg) {
+    color: var(--orange);
+  }
+  .adres {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+  }
+  .pin {
+    display: inline-grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgb(234 91 12 / 0.12);
+    color: var(--orange);
+  }
+  .h3 {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+  address {
+    font-style: normal;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

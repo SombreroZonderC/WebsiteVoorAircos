@@ -5,5 +5,9 @@ export default defineConfig({
   site: 'https://thecoolfactory.nl',
   trailingSlash: 'never',
   build: { format: 'file' },
-  integrations: [sitemap({ filter: (page) => !page.includes('/bedankt') })],
+  integrations: [
+    sitemap({
+      filter: (page) => !['/bedankt', '/poc', '/404'].some((pad) => page.includes(pad)),
+    }),
+  ],
 });

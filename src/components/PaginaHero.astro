@@ -1,0 +1,29 @@
+---
+interface Props {
+  eyebrow: string;
+  titel: string;
+  intro: string;
+  accent?: 'koud' | 'warm';
+}
+const { eyebrow, titel, intro, accent = 'warm' } = Astro.props;
+---
+
+<section class="page-hero dark">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="wrap inner">
+    <p class:list={['eyebrow', { cold: accent === 'koud' }]}>{eyebrow}</p>
+    <h1>{titel}</h1>
+    <p class="lead">{intro}</p>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .inner {
+    position: relative;
+  }
+  h1 {
+    max-width: 16ch;
+  }
+</style>

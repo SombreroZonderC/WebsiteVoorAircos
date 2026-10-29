@@ -1,0 +1,495 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import Visual from './Visual.astro';
+import Stappen from './Stappen.astro';
+import Reviews from './Reviews.astro';
+import FaqLijst from './FaqLijst.astro';
+import CtaBand from './CtaBand.astro';
+import { bedrijf, home, telLink } from '../lib/bedrijf';
+
+import projectFoto from '../assets/project-dakopstelling.jpg';
+import stockHero from '../assets/stock/hero-woning-warmtepomp.jpg';
+import stockAirco from '../assets/stock/airco-woonkamer.jpg';
+import stockWarmtepomp from '../assets/stock/warmtepomp-tuin.jpg';
+
+interface Props {
+  /** POC: 'stock' toont stockfoto's als sfeerbeeld, 'geen' toont placeholders */
+  fotos?: 'geen' | 'stock';
+}
+const { fotos = 'geen' } = Astro.props;
+const stock = fotos === 'stock';
+
+const diensten = (await getCollection('diensten')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+const stockPerDienst: Record<string, typeof stockAirco | undefined> = {
+  airco: stockAirco,
+  warmtepomp: stockWarmtepomp,
+};
+const faqs = (await getCollection('faq'))
+  .filter((f) => ['kan-airco-verwarmen', 'hybride-of-all-electric', 'waarom-onderhoud', 'welk-merk'].includes(f.id))
+  .sort((a, b) => a.data.categorie.localeCompare(b.data.categorie));
+---
+
+<!-- Hero -->
+<section class="hero dark">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="grid-lines" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">{home.hero.eyebrow}</p>
+      <h1>
+        <span class="text-cold">{home.hero.titelKoud}</span>
+        <span class="text-warm">{home.hero.titelWarm}</span>
+      </h1>
+      <p class="lead">{home.hero.lead}</p>
+      <div class="actions">
+        <a class="btn" href="/contact">Vrijblijvende offerte <Icon name="arrow" /></a>
+        <a class="btn ghost" href={telLink}><Icon name="phone" /> Bel {bedrijf.telefoon.weergave}</a>
+      </div>
+      <ul class="trust" aria-label="Waarom The CoolFactory">
+        <li><strong>{bedrijf.jarenErvaring}</strong> jaar ervaring</li>
+        <li>Specialist <strong>{bedrijf.merk}</strong></li>
+        <li>Advies <strong>aan huis</strong></li>
+      </ul>
+    </div>
+
+    <div class="hero-visual">
+      {
+        stock ? (
+          <Visual
+            soort="warmtepomp"
+            foto={stockHero}
+            alt="Moderne woning met een warmtepomp-buitenunit naast de voordeur"
+            sfeerbeeld
+            verhouding="4 / 5"
+            eager
+          />
+        ) : (
+          <div class="orb-wrap" aria-hidden="true">
+            <div class="orb" />
+            <div class="ring" />
+            <div class="chip chip-cold">
+              <Icon name="snow" size={18} /> Zomer · koelen
+            </div>
+            <div class="chip chip-warm">
+              <Icon name="flame" size={18} /> Winter · verwarmen
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Diensten -->
+<section class="section dark diensten" aria-labelledby="diensten-titel">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow cold">Diensten</p>
+      <h2 id="diensten-titel">Alles voor een comfortabel binnenklimaat</h2>
+    </div>
+    <div class="grid grid-3">
+      {
+        diensten.map((d, i) => (
+          <a class="card dienst" href={`/${d.id}`} data-reveal style={`transition-delay: ${i * 80}ms`}>
+            <Visual
+              soort={d.data.beeld}
+              foto={stock ? stockPerDienst[d.data.beeld] : undefined}
+              alt={stock ? d.data.titel : ''}
+              sfeerbeeld={stock}
+              label={d.data.menuLabel.toLowerCase()}
+              verhouding="16 / 11"
+            />
+            <div class="dienst-body">
+              <span class:list={['icon', d.data.accent]}>
+                <Icon name={d.data.icoon} />
+              </span>
+              <h3>{d.data.menuLabel}</h3>
+              <p class="muted">{d.data.intro}</p>
+              <span class="more">
+                Meer over {d.data.menuLabel.toLowerCase()} <Icon name="arrow" size={18} />
+              </span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Waarom -->
+<section class="section paper" aria-labelledby="waarom-titel">
+  <div class="wrap">
+    <div class="split">
+      <div data-reveal>
+        <p class="eyebrow">Waarom The CoolFactory</p>
+        <h2 id="waarom-titel">Vakwerk van iemand die het al 20 jaar doet</h2>
+        <p class="lead">
+          Geen verkooppraatjes, maar eerlijk advies en een installatie waar ik zelf mijn naam aan verbind.
+        </p>
+      </div>
+      <div class="usps">
+        {
+          home.usps.map((u, i) => (
+            <div class="usp" data-reveal style={`transition-delay: ${i * 80}ms`}>
+              <span class="usp-nr">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{u.titel}</h3>
+                <p class="muted">{u.tekst}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="werkwijze">
+      <h2 class="h-small" data-reveal>Zo werk ik</h2>
+      <Stappen stappen={home.werkwijze} />
+    </div>
+  </div>
+</section>
+
+<!-- Over -->
+<section class="section dark over" aria-labelledby="over-titel">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap split">
+    <div data-reveal>
+      <Visual soort="portret" label="Sjoerd aan het werk" verhouding="4 / 5" />
+    </div>
+    <div data-reveal>
+      <p class="eyebrow">Over mij</p>
+      <h2 id="over-titel">{home.over.titel}</h2>
+      <p class="lead">{home.over.tekst}</p>
+      <ul class="checklist">
+        {home.over.punten.map((p) => <li>{p}</li>)}
+      </ul>
+      <div class="actions" style="margin-top: 32px">
+        <a class="btn ghost" href="/over-sjoerd">Meer over Sjoerd <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recent werk -->
+<section class="section paper project" aria-labelledby="project-titel">
+  <div class="wrap split">
+    <div data-reveal>
+      <p class="eyebrow">Recent werk</p>
+      <h2 id="project-titel">Netjes weggewerkt, ook op het dak</h2>
+      <p class="lead">
+        Een buitenunit hoeft geen blikvanger te zijn. Hier geplaatst op een plat dak, met een strakke omkasting
+        die past bij de gevel.
+      </p>
+      <p class="muted"><span class="todo">Sjoerd: meer projectfoto's met korte beschrijving.</span></p>
+    </div>
+    <div data-reveal>
+      <figure class="project-foto">
+        <Image
+          src={projectFoto}
+          alt="Buitenunit met donkere lamellen-omkasting op een plat dak, voor een donkere dakkapel"
+          widths={[480, 800, 1200]}
+          sizes="(max-width: 720px) 100vw, 50vw"
+        />
+      </figure>
+    </div>
+  </div>
+</section>
+
+<Reviews />
+
+<!-- Vragen -->
+<section class="section paper vragen" aria-labelledby="vragen-titel">
+  <div class="wrap split">
+    <div data-reveal>
+      <p class="eyebrow">Veelgestelde vragen</p>
+      <h2 id="vragen-titel">Goed om te weten</h2>
+      <p class="lead">Staat je vraag er niet tussen? Bel of mail gerust.</p>
+      <a class="btn ghost" href="/veelgestelde-vragen">Alle vragen <Icon name="arrow" /></a>
+    </div>
+    <div data-reveal>
+      <FaqLijst items={faqs} />
+    </div>
+  </div>
+</section>
+
+<CtaBand />
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(120px, 14vw, 170px) clamp(64px, 8vw, 110px);
+  }
+  .hero-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+  .hero h1 span {
+    display: block;
+  }
+  .hero .lead {
+    margin-bottom: 36px;
+  }
+  .trust {
+    list-style: none;
+    padding: 0;
+    margin: 40px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    color: var(--muted-on-dark);
+    font-size: 0.95rem;
+  }
+  .trust li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .trust li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+  }
+  .trust strong {
+    color: var(--text-on-dark);
+    font-weight: 600;
+  }
+
+  .orb-wrap {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+  .orb {
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%, rgb(255 255 255 / 0.25), transparent 40%),
+      linear-gradient(115deg, var(--blue) 0%, var(--blue-ice) 30%, #e9d6cc 48%, var(--orange-hot) 62%, var(--orange) 100%);
+    background-size: 100% 100%, 130% 130%;
+    filter: saturate(1.1);
+    box-shadow:
+      -40px -20px 120px -20px rgb(66 125 184 / 0.6),
+      40px 30px 120px -20px rgb(234 91 12 / 0.55);
+    animation: shift 14s ease-in-out infinite alternate;
+  }
+  .orb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, transparent 55%, rgb(6 20 25 / 0.35));
+  }
+  @keyframes shift {
+    from {
+      background-position: 0 0, 20% 50%;
+    }
+    to {
+      background-position: 0 0, 80% 50%;
+    }
+  }
+  .ring {
+    position: absolute;
+    inset: 2%;
+    border-radius: 50%;
+    border: 1.5px dashed rgb(255 255 255 / 0.18);
+    animation: spin 60s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .chip {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgb(6 20 25 / 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .chip-cold {
+    top: 14%;
+    left: -4%;
+  }
+  .chip-cold :global(svg) {
+    color: var(--blue-ice);
+  }
+  .chip-warm {
+    bottom: 12%;
+    right: -4%;
+  }
+  .chip-warm :global(svg) {
+    color: var(--orange-hot);
+  }
+
+  /* Diensten */
+  .diensten {
+    padding-top: 0;
+  }
+  .section-head {
+    margin-bottom: 40px;
+  }
+  .section-head h2 {
+    max-width: 20ch;
+  }
+  .dienst {
+    padding: 12px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition:
+      transform 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  .dienst:hover {
+    transform: translateY(-4px);
+    border-color: rgb(255 255 255 / 0.22);
+  }
+  .dienst-body {
+    padding: 22px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .dienst-body .muted {
+    color: var(--muted-on-dark);
+    font-size: 0.98rem;
+    flex: 1;
+  }
+  .icon {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    background: rgb(66 125 184 / 0.16);
+    color: var(--blue-ice);
+  }
+  .icon.warm {
+    background: rgb(234 91 12 / 0.16);
+    color: var(--orange-hot);
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .more :global(svg) {
+    transition: transform 0.25s var(--ease);
+  }
+  .dienst:hover .more :global(svg) {
+    transform: translateX(4px);
+  }
+
+  /* Split-secties */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(36px, 6vw, 96px);
+    align-items: center;
+  }
+  .usps {
+    display: grid;
+    gap: 8px;
+  }
+  .usp {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .usp:last-child {
+    border-bottom: 0;
+  }
+  .usp-nr {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--orange);
+    line-height: 1.1;
+  }
+  .usp h3 {
+    margin-bottom: 6px;
+  }
+  .usp p {
+    margin: 0;
+  }
+  .werkwijze {
+    margin-top: clamp(64px, 9vw, 112px);
+  }
+  .h-small {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    margin-bottom: 28px;
+  }
+
+  .over {
+    position: relative;
+    overflow: hidden;
+  }
+  .over .split {
+    position: relative;
+  }
+
+  .project-foto {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 5 / 4;
+  }
+  .project-foto :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .vragen {
+    padding-top: 0;
+  }
+  .vragen .split {
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .hero-inner,
+    .split {
+      grid-template-columns: 1fr;
+    }
+    .hero-visual {
+      max-width: 420px;
+      width: 100%;
+      margin-inline: auto;
+    }
+    .orb-wrap {
+      max-width: 340px;
+    }
+    .chip-cold {
+      left: 0;
+    }
+    .chip-warm {
+      right: 0;
+    }
+  }
+</style>

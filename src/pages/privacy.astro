@@ -1,0 +1,20 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PaginaHero from '../components/PaginaHero.astro';
+
+const pagina = (await getEntry('paginas', 'privacy'))!;
+const { Content } = await render(pagina);
+const p = pagina.data;
+---
+
+<Base title={p.seoTitel} description={p.seoOmschrijving}>
+  <PaginaHero eyebrow={p.eyebrow} titel={p.titel} intro={p.intro} accent="koud" />
+  <section class="section paper">
+    <div class="wrap">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </section>
+</Base>

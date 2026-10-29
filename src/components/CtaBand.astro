@@ -1,0 +1,58 @@
+---
+import Icon from './Icon.astro';
+import { bedrijf, home, mailLink, telLink } from '../lib/bedrijf';
+
+interface Props {
+  titel?: string;
+  tekst?: string;
+}
+const { titel = home.cta.titel, tekst = home.cta.tekst } = Astro.props;
+---
+
+<section class="cta-band dark" aria-labelledby="cta-titel">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap inner" data-reveal>
+    <div>
+      <h2 id="cta-titel">{titel}</h2>
+      <p class="lead">{tekst}</p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="/contact">Offerte aanvragen <Icon name="arrow" /></a>
+      <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
+    </div>
+    <p class="mail muted">Of mail naar <a href={mailLink}>{bedrijf.email}</a></p>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(80px, 10vw, 120px);
+    border-top: 1px solid var(--line-dark);
+  }
+  .inner {
+    position: relative;
+    display: grid;
+    gap: 28px;
+    text-align: center;
+    justify-items: center;
+  }
+  .inner h2 {
+    max-width: 18ch;
+    margin-inline: auto;
+  }
+  .lead {
+    margin-inline: auto;
+  }
+  .actions {
+    justify-content: center;
+  }
+  .mail {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .mail a {
+    color: var(--text-on-dark);
+  }
+</style>
