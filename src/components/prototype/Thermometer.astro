@@ -1,0 +1,138 @@
+---
+// PROTOTYPE – klassieke thermometer (kwik + schaal). Temperatuur via CSS-variabele --temp op een ouder
+// of via de prop; schaal van -10° tot 40°.
+interface Props {
+  temp?: number;
+  label?: string;
+  id?: string;
+  thema?: 'donker' | 'licht';
+}
+const { temp = 21, label, id, thema = 'donker' } = Astro.props;
+const schaal = [40, 30, 20, 10, 0, -10];
+---
+
+<figure class:list={['thermo', thema]} style={`--temp:${temp}`} id={id}>
+  <div class="buis">
+  <svg viewBox="0 0 120 420" aria-hidden="true">
+    <defs>
+      <linearGradient id={`kwik-${id ?? 'x'}`} x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#3f7fc2"></stop>
+        <stop offset="0.55" stop-color="#9fc6ee"></stop>
+        <stop offset="0.7" stop-color="#ff9a5a"></stop>
+        <stop offset="1" stop-color="#e8580b"></stop>
+      </linearGradient>
+      <clipPath id={`buis-${id ?? 'x'}`}>
+        <rect x="46" y="20" width="28" height="330" rx="14"></rect>
+        <circle cx="60" cy="370" r="30"></circle>
+      </clipPath>
+    </defs>
+    <!-- glas -->
+    <rect class="glas" x="40" y="14" width="40" height="342" rx="20" />
+    <circle class="glas" cx="60" cy="370" r="38" />
+    <g clip-path={`url(#buis-${id ?? 'x'})`}>
+      <rect class="kwik" x="40" y="0" width="40" height="420" />
+    </g>
+    <circle class="bol" cx="60" cy="370" r="26" />
+    <!-- schaal: -10 (y=340) .. 40 (y=40) => 6px per graad -->
+    {
+      Array.from({ length: 51 }, (_, i) => {
+        const y = 340 - i * 6;
+        const groot = i % 10 === 0;
+        return <line class="tick" x1={groot ? 86 : 86} x2={groot ? 100 : 93} y1={y} y2={y} />;
+      })
+    }
+  </svg>
+  <ol class="schaal" aria-hidden="true">
+    {schaal.map((s) => <li style={`--s:${s}`}>{s}°</li>)}
+  </ol>
+  </div>
+  {label && <figcaption>{label}<b data-waarde>{temp}°</b></figcaption>}
+</figure>
+
+<style>
+  .thermo {
+    --glas: rgb(255 255 255 / 0.08);
+    --glas-rand: rgb(255 255 255 / 0.22);
+    --tick: rgb(255 255 255 / 0.35);
+    --tekst: #93a6ae;
+    --sterk: #eef3f5;
+    --kleur: color-mix(in oklab, #4a8fd6, #e8580b clamp(0%, calc((var(--temp) - 8) * 12%), 100%));
+    position: relative;
+    margin: 0;
+    width: 120px;
+    display: grid;
+    justify-items: center;
+  }
+  .thermo.licht {
+    --glas: rgb(13 34 41 / 0.04);
+    --glas-rand: rgb(13 34 41 / 0.2);
+    --tick: rgb(13 34 41 / 0.35);
+    --tekst: #5a6f77;
+    --sterk: #0c1d23;
+  }
+  .buis {
+    position: relative;
+    width: 100%;
+  }
+  svg {
+    display: block;
+    width: 120px;
+    height: auto;
+    overflow: visible;
+  }
+  .glas {
+    fill: var(--glas);
+    stroke: var(--glas-rand);
+    stroke-width: 2;
+  }
+  .kwik {
+    fill: var(--kleur);
+    transition-property: transform, fill;
+    /* bovenkant kwik op y = 340 - (temp + 10) * 6 */
+    transform: translateY(calc((340 - (var(--temp) + 10) * 6) * 1px));
+    transition: transform 1.2s cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+  .bol {
+    fill: var(--kleur);
+    transition: fill 1.2s;
+    filter: drop-shadow(0 0 14px var(--kleur));
+  }
+  .tick {
+    stroke: var(--tick);
+    stroke-width: 1.5;
+  }
+  .schaal {
+    position: absolute;
+    top: 0;
+    left: calc(50% + 46px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 100%;
+    font: 500 0.72rem/1 'IBM Plex Mono', ui-monospace, monospace;
+    color: var(--tekst);
+  }
+  .schaal li {
+    position: absolute;
+    /* zelfde formule als de ticks, omgerekend naar % van 420 hoog */
+    top: calc((340 - (var(--s) + 10) * 6) / 420 * 100% - 0.4em);
+    white-space: nowrap;
+  }
+  figcaption {
+    margin-top: 14px;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    font: 500 0.75rem/1 'IBM Plex Mono', ui-monospace, monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--tekst);
+  }
+  figcaption b {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    letter-spacing: -0.04em;
+    color: var(--sterk);
+    text-transform: none;
+  }
+</style>

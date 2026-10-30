@@ -1,0 +1,214 @@
+---
+// PROTOTYPE ronde 3 – vaste hero ("Koel. Warm." + infoblok), in donker of licht.
+import '@fontsource/ibm-plex-mono/500.css';
+import { bedrijf, telLink } from '../../lib/bedrijf';
+
+interface Props {
+  thema?: 'donker' | 'licht';
+}
+const { thema = 'donker' } = Astro.props;
+---
+
+<div class:list={['r3h', thema]}>
+  <header class="top">
+    <img src={thema === 'licht' ? '/images/logo-origineel.svg' : '/images/logo-op-donker.svg'} alt="The CoolFactory" />
+    <nav><a href="#">Airco</a><a href="#">Warmtepompen</a><a href="#">Onderhoud</a><a href="#">Over Sjoerd</a></nav>
+    <a class="tel" href={telLink}>{bedrijf.telefoon.weergave}</a>
+  </header>
+  <section class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <h1 class="words">
+      <span class="w koel">Koel<span>.</span></span>
+      <span class="w warm">Warm<span>.</span></span>
+      <span class="sr-only"> Airco en warmtepompen in {bedrijf.adres.plaats}</span>
+    </h1>
+    <div class="side">
+      <p class="temps mono"><span class="c">Zomer · 31° buiten → 21° binnen</span><span class="h">Winter · −4° buiten → 21° binnen</span></p>
+      <p class="promise">
+        Airco’s en warmtepompen van {bedrijf.merk}, geplaatst door {bedrijf.eigenaar}. {bedrijf.jarenErvaring} jaar
+        vakmanschap, vanuit {bedrijf.adres.plaats}.
+      </p>
+      <div class="actions">
+        <a class="btn" href="#">Vrijblijvende offerte</a>
+        <a class="ghost" href={telLink}>Bel {bedrijf.telefoon.weergave}</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .r3h {
+    --bg: #05090b;
+    --ink: #eef3f5;
+    --muted: #93a6ae;
+    --line: rgb(255 255 255 / 0.1);
+    --koel-1: #e9f3fc;
+    --koel-2: #8fc1f0;
+    --koel-3: #3a74b0;
+    --warm-1: #fff1e6;
+    --warm-2: #ff7a2f;
+    --warm-3: #c2410c;
+    --c: #8fc1f0;
+    --h: #ff7a2f;
+    position: relative;
+    background: var(--bg);
+    color: var(--ink);
+    overflow: hidden;
+  }
+  .r3h.licht {
+    --bg: #f5f6f4;
+    --ink: #0c1d23;
+    --muted: #52666d;
+    --line: rgb(12 29 35 / 0.12);
+    --koel-1: #1d4a7c;
+    --koel-2: #3a7cc2;
+    --koel-3: #8fc1f0;
+    --warm-1: #9a3008;
+    --warm-2: #e0560c;
+    --warm-3: #ff9a5a;
+    --c: #2a64a3;
+    --h: #b8460a;
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .top {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 18px clamp(16px, 3vw, 36px);
+  }
+  .top img {
+    height: 50px;
+    width: auto;
+  }
+  .top nav {
+    display: flex;
+    gap: 26px;
+    margin-left: auto;
+  }
+  .top nav a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .top nav a:hover {
+    color: var(--ink);
+  }
+  .tel {
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.35fr 0.65fr;
+    align-items: end;
+    gap: 32px;
+    padding: clamp(24px, 5vw, 64px) clamp(16px, 3vw, 36px) clamp(56px, 7vw, 96px);
+  }
+  .glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(45% 50% at 20% 30%, rgb(66 125 184 / 0.4), transparent 70%),
+      radial-gradient(45% 50% at 35% 85%, rgb(234 91 12 / 0.35), transparent 70%);
+  }
+  .licht .glow {
+    background:
+      radial-gradient(45% 50% at 18% 28%, rgb(66 125 184 / 0.18), transparent 70%),
+      radial-gradient(45% 50% at 35% 88%, rgb(234 91 12 / 0.16), transparent 70%);
+  }
+  .words {
+    position: relative;
+    margin: 0;
+    display: grid;
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(5rem, 17vw, 17rem);
+    line-height: 0.82;
+    letter-spacing: -0.06em;
+  }
+  .w {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  .koel {
+    background-image: linear-gradient(100deg, var(--koel-1) 10%, var(--koel-2) 45%, var(--koel-3) 90%);
+  }
+  .warm {
+    background-image: linear-gradient(100deg, var(--warm-1) 10%, var(--warm-2) 45%, var(--warm-3) 90%);
+  }
+  .w span {
+    color: var(--ink);
+    -webkit-text-fill-color: currentColor;
+    opacity: 0.2;
+  }
+  .side {
+    position: relative;
+    padding-bottom: 12px;
+  }
+  .temps {
+    display: grid;
+    gap: 6px;
+    font-size: 0.85rem;
+    margin: 0 0 24px;
+  }
+  .temps .c {
+    color: var(--c);
+  }
+  .temps .h {
+    color: var(--h);
+  }
+  .promise {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: #c94a06;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .ghost {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  @media (max-width: 1000px) {
+    .top nav {
+      display: none;
+    }
+    .tel {
+      margin-left: auto;
+    }
+    .hero {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
