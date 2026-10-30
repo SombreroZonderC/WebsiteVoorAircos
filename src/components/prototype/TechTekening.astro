@@ -1,0 +1,126 @@
+---
+// PROTOTYPE – opengewerkte unit als technisch sub-onderdeel ("Zo werkt het").
+interface Props {
+  soort: 'buiten' | 'binnen';
+  labels: { letter: string; tekst: string; x: number; y: number }[];
+  kleur?: string;
+}
+const { soort, labels, kleur = '#7fb4ea' } = Astro.props;
+---
+
+<figure class="tt" style={`--c:${kleur}`}>
+  <svg viewBox="0 0 560 420" role="img" aria-label={soort === 'buiten' ? 'Opengewerkte buitenunit' : 'Opengewerkte binnenunit'}>
+    {
+      soort === 'buiten' ? (
+        <g>
+          <path class="d" d="M150 110 L390 70 L470 120 L470 340 L230 380 L150 330 Z" />
+          <path class="d thin" d="M230 160 L470 120 M230 160 L230 380 M230 160 L150 110" />
+          <g transform="translate(-60 40)">
+            <path class="d panel" d="M150 130 L390 90 L390 310 L150 350 Z" />
+            <g class="fan">
+              <circle class="d" cx="268" cy="222" r="78" />
+              <circle class="d thin" cx="268" cy="222" r="62" />
+              <path class="d thin" d="M268 160 V284 M206 222 H330 M224 178 L312 266 M312 178 L224 266" />
+              <circle cx="268" cy="222" r="9" class="hub" />
+            </g>
+          </g>
+          <path class="d" d="M160 400 L240 412 L480 372" />
+        </g>
+      ) : (
+        <g>
+          <path class="d" d="M70 140 Q70 110 100 110 L460 110 Q490 110 490 140 L490 220 Q490 250 460 250 L100 250 Q70 250 70 220 Z" />
+          <path class="d thin" d="M100 205 L460 205 M110 222 L450 222" />
+          <circle cx="440" cy="140" r="6" class="hub" />
+          <path class="d flow" d="M130 280 c12 22 -12 38 0 62 M210 280 c12 22 -12 38 0 62 M290 280 c12 22 -12 38 0 62 M370 280 c12 22 -12 38 0 62" />
+        </g>
+      )
+    }
+  </svg>
+  {
+    labels.map((l) => (
+      <span class="lbl" style={`left:${l.x}%; top:${l.y}%`}>
+        <b>{l.letter}</b>
+        {l.tekst}
+      </span>
+    ))
+  }
+</figure>
+
+<style>
+  .tt {
+    position: relative;
+    margin: 0;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: rgb(232 240 243 / 0.85);
+    stroke-width: 2;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .thin {
+    stroke-width: 1;
+    opacity: 0.5;
+  }
+  .panel {
+    fill: rgb(10 20 26 / 0.9);
+  }
+  .hub {
+    fill: var(--c);
+    stroke: none;
+  }
+  .flow {
+    stroke: var(--c);
+    stroke-dasharray: 6 8;
+    animation: tt-flow 2.4s linear infinite;
+  }
+  .fan {
+    transform-origin: 268px 222px;
+    transform-box: view-box;
+    animation: tt-spin 7s linear infinite;
+  }
+  @keyframes tt-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes tt-flow {
+    to {
+      stroke-dashoffset: -56;
+    }
+  }
+  .lbl {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px 7px 7px;
+    border-radius: 999px;
+    background: rgb(6 14 18 / 0.85);
+    border: 1px solid rgb(255 255 255 / 0.14);
+    backdrop-filter: blur(6px);
+    color: #e8f0f3;
+    font: 500 0.82rem/1.2 'IBM Plex Mono', ui-monospace, monospace;
+    white-space: nowrap;
+  }
+  .lbl b {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--c);
+    color: #061419;
+    font-size: 0.72rem;
+  }
+  @media (max-width: 700px) {
+    .lbl {
+      position: static;
+      display: flex;
+      margin-top: 8px;
+      white-space: normal;
+    }
+  }
+</style>

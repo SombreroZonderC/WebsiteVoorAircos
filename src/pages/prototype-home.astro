@@ -2,15 +2,16 @@
 // PROTOTYPE – wegwerp. Drie ontwerprichtingen voor de homepage, wisselbaar via ?variant=A|B|C.
 // Na de keuze: winnaar verwerken in de echte homepage, deze route en src/components/prototype/ weg uit main.
 import '../styles/global.css';
-import VariantA from '../components/prototype/VariantA.astro';
-import VariantB from '../components/prototype/VariantB.astro';
-import VariantC from '../components/prototype/VariantC.astro';
+// Ronde 1 (Specificatieblad / Zomer-Winter / Groot & vet) staat in de git-geschiedenis en docs/prototype-ronde-1/.
+import VariantA from '../components/prototype/R2KiesJeKant.astro';
+import VariantB from '../components/prototype/R2Thermostaat.astro';
+import VariantC from '../components/prototype/R2Poster.astro';
 import PrototypeSwitcher from '../components/prototype/PrototypeSwitcher.astro';
 
 const varianten = [
-  { sleutel: 'A', naam: 'Specificatieblad' },
-  { sleutel: 'B', naam: 'Zomer/Winter' },
-  { sleutel: 'C', naam: 'Groot & vet' },
+  { sleutel: 'A', naam: 'Kies je kant' },
+  { sleutel: 'B', naam: 'Thermostaat' },
+  { sleutel: 'C', naam: 'Gelikte poster' },
 ];
 ---
 

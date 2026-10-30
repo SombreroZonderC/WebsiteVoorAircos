@@ -1,0 +1,629 @@
+---
+// PROTOTYPE ronde 2 – A "Kies je kant": de gesplitste hero ís de keuze; kiezen klapt de pagina open.
+import '@fontsource/ibm-plex-mono/500.css';
+import { getCollection } from 'astro:content';
+import { bedrijf, telLink } from '../../lib/bedrijf';
+import TechTekening from './TechTekening.astro';
+
+const reviews = await getCollection('reviews');
+---
+
+<div class="r2a" data-kant="">
+  <div class="grain" aria-hidden="true"></div>
+  <header class="top">
+    <img src="/images/logo-op-donker.svg" alt="The CoolFactory" />
+    <nav><a href="#">Airco</a><a href="#">Warmtepompen</a><a href="#">Onderhoud</a><a href="#">Over Sjoerd</a></nav>
+    <a class="tel" href={telLink}>{bedrijf.telefoon.weergave}</a>
+  </header>
+
+  <section class="split" aria-label="Wat zoek je?">
+    <button class="half koel" data-kies="koel" aria-pressed="false">
+      <span class="glow" aria-hidden="true"></span>
+      <span class="kicker">Airconditioning</span>
+      <span class="word">Koelen<span class="dot">.</span></span>
+      <span class="temp"><span>Buiten 31°</span><i>→</i><b>binnen 21°</b></span>
+      <span class="line">Stil, zuinig, en in het tussenseizoen verwarm je er ook mee.</span>
+      <span class="cta">Ik wil koelen <i>→</i></span>
+      <span class="tab">Liever koelen?</span>
+    </button>
+    <button class="half warm" data-kies="warm" aria-pressed="false">
+      <span class="glow" aria-hidden="true"></span>
+      <span class="kicker">Warmtepomp</span>
+      <span class="word">Verwarmen<span class="dot">.</span></span>
+      <span class="temp"><span>Buiten −4°</span><i>→</i><b>binnen 21°</b></span>
+      <span class="line">Minder gas. Hybride naast je cv-ketel, of volledig elektrisch.</span>
+      <span class="cta">Ik wil verwarmen <i>→</i></span>
+      <span class="tab">Liever verwarmen?</span>
+    </button>
+    <span class="of" aria-hidden="true">of</span>
+  </section>
+
+  <div class="infobar">
+    <span><b>{bedrijf.eigenaar}</b> · installateur in {bedrijf.adres.plaats}</span>
+    <span><b>{bedrijf.jarenErvaring}</b> jaar ervaring</span>
+    <span>Uitsluitend <b>{bedrijf.merk}</b></span>
+    <a class="btn" href="#">Vrijblijvende offerte</a>
+  </div>
+
+  <section class="waarom">
+    <div class="wrap">
+      <p class="eyebrow">
+        <span data-toon="leeg">Airco of warmtepomp</span><span data-toon="koel">Airconditioning</span><span data-toon="warm">Warmtepomp</span>
+      </p>
+      <h2>
+        <span data-toon="leeg">Eén vakman voor koelen én verwarmen.</span>
+        <span data-toon="koel">Een koel huis, zonder herrie of rommel.</span>
+        <span data-toon="warm">Warm de winter door, met veel minder gas.</span>
+      </h2>
+      <div class="punten" data-toon="koel">
+        <div><b>01</b><h3>Koelen én verwarmen</h3><p>Een split-airco is een lucht-lucht warmtepomp: koel in de zomer, zuinig warm in het voor- en najaar.</p></div>
+        <div><b>02</b><h3>Stil en onopvallend</h3><p>Samen kiezen we de beste plek voor binnen- en buitenunit.</p></div>
+        <div><b>03</b><h3>Strak gemonteerd</h3><p>Leidingen netjes weggewerkt, alles getest en uitgelegd.</p></div>
+      </div>
+      <div class="punten" data-toon="warm">
+        <div><b>01</b><h3>Eerlijk advies</h3><p>Ik kijk naar isolatie, radiatoren of vloerverwarming voordat ik iets adviseer.</p></div>
+        <div><b>02</b><h3>Hybride of all-electric</h3><p>Hybride werkt samen met je cv-ketel; all-electric verwarmt volledig zonder gas.</p></div>
+        <div><b>03</b><h3>Goed ingeregeld</h3><p>Een warmtepomp is zo goed als de afstelling. Daar neem ik de tijd voor.</p></div>
+      </div>
+      <div class="punten" data-toon="leeg">
+        <div><b>{bedrijf.jarenErvaring}</b><h3>Jaar vakervaring</h3><p>Advies dat onderbouwd is, van iemand die het vak kent.</p></div>
+        <div><b>1</b><h3>Merk: {bedrijf.merk}</h3><p>Ik ken de systemen door en door.</p></div>
+        <div><b>1</b><h3>Aanspreekpunt</h3><p>Van eerste gesprek tot onderhoud: gewoon Sjoerd.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="zo">
+    <div class="wrap zo-grid">
+      <div>
+        <p class="eyebrow mono">Zo werkt het</p>
+        <h2>
+          <span data-toon="leeg koel">Wat er bij je aan de muur komt.</span>
+          <span data-toon="warm">Wat er bij je huis komt te staan.</span>
+        </h2>
+        <p class="muted">
+          <span data-toon="leeg koel">Een binnenunit blaast gekoelde of verwarmde lucht de kamer in; de buitenunit doet het zware werk.</span>
+          <span data-toon="warm">De buitenunit haalt warmte uit de buitenlucht, ook als het vriest, en geeft die af aan je cv-water.</span>
+        </p>
+      </div>
+      <div data-toon="leeg koel">
+        <TechTekening
+          soort="binnen"
+          kleur="#7fb4ea"
+          labels={[
+            { letter: 'A', tekst: 'Fluisterstil', x: 4, y: 6 },
+            { letter: 'B', tekst: 'Instelbare luchtstroom', x: 52, y: 80 },
+            { letter: 'C', tekst: 'Mitsubishi Electric', x: 62, y: 10 },
+          ]}
+        />
+      </div>
+      <div data-toon="warm">
+        <TechTekening
+          soort="buiten"
+          kleur="#ff7a2f"
+          labels={[
+            { letter: 'A', tekst: 'Haalt warmte uit de buitenlucht', x: 0, y: 4 },
+            { letter: 'B', tekst: 'Mitsubishi Electric', x: 60, y: 18 },
+            { letter: 'C', tekst: 'Strak en waterpas geplaatst', x: 40, y: 88 },
+          ]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="reviews">
+    <div class="wrap rev-grid">
+      {
+        reviews.slice(0, 2).map((r) => (
+          <figure>
+            <blockquote>“{r.data.tekst}”</blockquote>
+            <figcaption>{r.data.naam} · Google</figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="finale">
+    <p class="pre">
+      <span data-toon="leeg">Benieuwd wat past bij jouw huis?</span>
+      <span data-toon="koel">Klaar voor een koele zomer?</span>
+      <span data-toon="warm">Klaar voor een warme winter?</span>
+    </p>
+    <a class="giant" href={telLink}>Bel Sjoerd <i>→</i></a>
+    <p class="sub">{bedrijf.telefoon.weergave} · {bedrijf.email}</p>
+  </section>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.r2a')!;
+  root.querySelectorAll<HTMLButtonElement>('[data-kies]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const kant = b.dataset.kies!;
+      root.dataset.kant = root.dataset.kant === kant ? '' : kant;
+      root.querySelectorAll('[data-kies]').forEach((x) =>
+        x.setAttribute('aria-pressed', String((x as HTMLElement).dataset.kies === root.dataset.kant)),
+      );
+    }),
+  );
+</script>
+
+<style>
+  .r2a {
+    --bg: #05090b;
+    --ink: #eef3f5;
+    --muted: #93a6ae;
+    --ice: #8fc1f0;
+    --blue: #427db8;
+    --ember: #ff7a2f;
+    --orange: #ea5b0c;
+    --btn: #c94a06;
+    --line: rgb(255 255 255 / 0.1);
+    --accent: var(--ink);
+    position: relative;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .r2a[data-kant='koel'] {
+    --accent: var(--ice);
+  }
+  .r2a[data-kant='warm'] {
+    --accent: var(--ember);
+  }
+  .grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 40px);
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  [data-toon] {
+    display: none;
+  }
+  .r2a[data-kant=''] [data-toon~='leeg'],
+  .r2a[data-kant='koel'] [data-toon~='koel'],
+  .r2a[data-kant='warm'] [data-toon~='warm'] {
+    display: revert;
+  }
+  .r2a[data-kant=''] .punten[data-toon~='leeg'],
+  .r2a[data-kant='koel'] .punten[data-toon~='koel'],
+  .r2a[data-kant='warm'] .punten[data-toon~='warm'] {
+    display: grid;
+  }
+
+  .top {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 18px clamp(16px, 3vw, 36px);
+  }
+  .top img {
+    height: 50px;
+    width: auto;
+  }
+  .top nav {
+    display: flex;
+    gap: 26px;
+    margin-left: auto;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .top nav a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .top nav a:hover {
+    color: var(--ink);
+  }
+  .tel {
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgb(255 255 255 / 0.04);
+    backdrop-filter: blur(8px);
+  }
+
+  .split {
+    position: relative;
+    display: flex;
+    height: min(92vh, 860px);
+    min-height: 600px;
+  }
+  .half {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 14px;
+    padding: clamp(24px, 4vw, 56px);
+    padding-bottom: clamp(40px, 6vw, 72px);
+    border: 0;
+    text-align: left;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    background: var(--bg);
+    transition: flex 0.9s cubic-bezier(0.7, 0, 0.15, 1);
+  }
+  .koel {
+    border-right: 1px solid var(--line);
+  }
+  .glow {
+    position: absolute;
+    inset: 0;
+    transition:
+      opacity 0.6s ease,
+      transform 0.9s ease;
+  }
+  .koel .glow {
+    background:
+      radial-gradient(60% 55% at 30% 35%, rgb(66 125 184 / 0.55), transparent 70%),
+      radial-gradient(40% 40% at 80% 90%, rgb(143 193 240 / 0.18), transparent 70%);
+  }
+  .warm .glow {
+    background:
+      radial-gradient(60% 55% at 70% 65%, rgb(234 91 12 / 0.55), transparent 70%),
+      radial-gradient(40% 40% at 20% 10%, rgb(255 122 47 / 0.16), transparent 70%);
+  }
+  .half:hover .glow {
+    transform: scale(1.08);
+  }
+  .half > span:not(.glow) {
+    position: relative;
+  }
+  .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .word {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    font-size: clamp(3rem, 6.6vw, 7rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    background: linear-gradient(180deg, #fff 20%, var(--c2) 140%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    white-space: nowrap;
+  }
+  .koel .word {
+    --c2: var(--ice);
+  }
+  .warm .word {
+    --c2: var(--ember);
+  }
+  .dot {
+    color: var(--c2);
+    -webkit-text-fill-color: currentColor;
+  }
+  .koel .dot {
+    color: var(--ice);
+  }
+  .warm .dot {
+    color: var(--ember);
+  }
+  .temp {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+    color: var(--muted);
+  }
+  .temp b {
+    color: var(--ink);
+  }
+  .temp i {
+    font-style: normal;
+  }
+  .line {
+    max-width: 36ch;
+    color: var(--muted);
+    font-size: 1.02rem;
+  }
+  .cta {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    border: 1px solid rgb(255 255 255 / 0.22);
+    background: rgb(255 255 255 / 0.05);
+    transition:
+      background 0.3s,
+      gap 0.3s;
+  }
+  .cta i {
+    font-style: normal;
+  }
+  .half:hover .cta {
+    background: rgb(255 255 255 / 0.12);
+    gap: 16px;
+  }
+  .tab {
+    display: none;
+  }
+  .of {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--muted);
+    z-index: 2;
+    transition: opacity 0.4s;
+  }
+
+  /* Gekozen toestand */
+  .r2a[data-kant='koel'] .koel,
+  .r2a[data-kant='warm'] .warm {
+    flex: 7;
+    cursor: default;
+  }
+  .r2a[data-kant='koel'] .warm,
+  .r2a[data-kant='warm'] .koel {
+    flex: 0.9;
+  }
+  .r2a[data-kant='koel'] .warm > span:not(.glow, .tab),
+  .r2a[data-kant='warm'] .koel > span:not(.glow, .tab) {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .r2a[data-kant='koel'] .warm .tab,
+  .r2a[data-kant='warm'] .koel .tab {
+    display: block;
+    position: absolute;
+    inset: 50% auto auto 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .r2a[data-kant='koel'] .cta,
+  .r2a[data-kant='warm'] .cta {
+    background: var(--btn);
+    border-color: transparent;
+  }
+  .r2a:not([data-kant='']) .of {
+    opacity: 0;
+  }
+
+  .infobar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 32px;
+    padding: 18px clamp(16px, 3vw, 36px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .infobar b {
+    color: var(--ink);
+  }
+  .btn {
+    margin-left: auto;
+    background: var(--btn);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 999px;
+  }
+
+  .waarom,
+  .zo,
+  .reviews {
+    padding: clamp(72px, 9vw, 120px) 0;
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    transition: color 0.6s;
+  }
+  .r2a h2 {
+    font-family: var(--font-display);
+    font-stretch: 108%;
+    font-weight: 800;
+    font-size: clamp(2.1rem, 4.6vw, 3.8rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    max-width: 18ch;
+    margin: 0 0 48px;
+  }
+  .punten {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    overflow: hidden;
+    animation: r2a-in 0.6s ease both;
+  }
+  .punten > div {
+    background: var(--bg);
+    padding: 32px;
+  }
+  .punten b {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 20px;
+    letter-spacing: -0.03em;
+  }
+  .punten h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin: 0 0 8px;
+  }
+  .punten p {
+    margin: 0;
+    color: var(--muted);
+  }
+  @keyframes r2a-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  .zo {
+    border-top: 1px solid var(--line);
+    background: radial-gradient(50% 60% at 80% 50%, rgb(255 255 255 / 0.04), transparent 70%);
+  }
+  .zo-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .muted {
+    color: var(--muted);
+    max-width: 44ch;
+  }
+  .rev-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+  .reviews figure {
+    margin: 0;
+    padding-top: 24px;
+    border-top: 2px solid var(--accent);
+    transition: border-color 0.6s;
+  }
+  blockquote {
+    margin: 0 0 16px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  figcaption {
+    color: var(--muted);
+  }
+  .finale {
+    padding: clamp(96px, 13vw, 180px) 16px;
+    text-align: center;
+    border-top: 1px solid var(--line);
+    background: radial-gradient(50% 70% at 50% 100%, rgb(234 91 12 / 0.22), transparent 70%);
+  }
+  .r2a[data-kant='koel'] .finale {
+    background: radial-gradient(50% 70% at 50% 100%, rgb(66 125 184 / 0.3), transparent 70%);
+  }
+  .pre {
+    color: var(--muted);
+    font-size: 1.15rem;
+    margin: 0 0 12px;
+  }
+  .giant {
+    display: inline-flex;
+    gap: 0.25em;
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    font-size: clamp(3.4rem, 11vw, 10rem);
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .giant i {
+    font-style: normal;
+    color: var(--accent);
+    transition: transform 0.3s;
+  }
+  .r2a[data-kant=''] .giant i {
+    color: var(--ember);
+  }
+  .giant:hover i {
+    transform: translateX(14px);
+  }
+  .sub {
+    color: var(--muted);
+    margin-top: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .top nav {
+      display: none;
+    }
+    .tel {
+      margin-left: auto;
+    }
+    .split {
+      flex-direction: column;
+      height: auto;
+      min-height: 0;
+    }
+    .half {
+      min-height: 46vh;
+      padding-top: 96px;
+    }
+    .koel {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .warm {
+      padding-top: 40px;
+    }
+    .r2a[data-kant='koel'] .warm,
+    .r2a[data-kant='warm'] .koel {
+      min-height: 64px;
+      flex: none;
+    }
+    .r2a[data-kant='koel'] .warm .tab,
+    .r2a[data-kant='warm'] .koel .tab {
+      transform: translate(-50%, -50%);
+    }
+    .punten,
+    .rev-grid,
+    .zo-grid {
+      grid-template-columns: 1fr;
+    }
+    .btn {
+      margin-left: 0;
+    }
+  }
+</style>

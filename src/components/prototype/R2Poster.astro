@@ -1,0 +1,579 @@
+---
+// PROTOTYPE ronde 2 – C "Gelikte poster": de vetheid van ronde 1-C, verfijnd; een keuzebalk filtert de bento.
+import '@fontsource/ibm-plex-mono/500.css';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { bedrijf, telLink } from '../../lib/bedrijf';
+import TechTekening from './TechTekening.astro';
+import projectFoto from '../../assets/project-dakopstelling.jpg';
+import stockAirco from '../../assets/stock/airco-woonkamer.jpg';
+import stockWp from '../../assets/stock/warmtepomp-tuin.jpg';
+
+const review = (await getCollection('reviews')).find((r) => r.id === 'harriet-eenkhoorn')!;
+---
+
+<div class="r2c" data-filter="alles">
+  <div class="grain" aria-hidden="true"></div>
+  <header class="top">
+    <img src="/images/logo-op-donker.svg" alt="The CoolFactory" />
+    <nav><a href="#">Airco</a><a href="#">Warmtepompen</a><a href="#">Onderhoud</a><a href="#">Over Sjoerd</a></nav>
+    <a class="tel" href={telLink}>{bedrijf.telefoon.weergave}</a>
+  </header>
+
+  <section class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <h1 class="words">
+      <span class="w koel">Koel<span>.</span></span>
+      <span class="w warm">Warm<span>.</span></span>
+    </h1>
+    <div class="side">
+      <p class="temps mono"><span class="c">31° → 21°</span><span class="h">−4° → 21°</span></p>
+      <p class="promise">
+        Airco’s en warmtepompen van {bedrijf.merk}, geplaatst door {bedrijf.eigenaar}. {bedrijf.jarenErvaring} jaar
+        vakmanschap, vanuit {bedrijf.adres.plaats}.
+      </p>
+      <div class="actions">
+        <a class="btn" href="#">Vrijblijvende offerte</a>
+        <a class="ghost" href={telLink}>Bel {bedrijf.telefoon.weergave}</a>
+      </div>
+    </div>
+  </section>
+
+  <nav class="chooser" aria-label="Wat zoek je?">
+    <span class="mono">Ik zoek</span>
+    <button data-f="alles" aria-pressed="true">Alles</button>
+    <button data-f="koel" aria-pressed="false">❄ Koelen</button>
+    <button data-f="warm" aria-pressed="false">☀ Verwarmen</button>
+    <button data-f="service" aria-pressed="false">Onderhoud</button>
+  </nav>
+
+  <section class="bento">
+    <a class="tile svc airco" data-cat="koel" href="#">
+      <Image src={stockAirco} alt="" widths={[600, 900]} sizes="50vw" />
+      <span class="shade"></span>
+      <span class="k mono">01 · Airconditioning</span>
+      <h3>Koelen, en zuinig verwarmen.</h3>
+      <span class="more">Bekijk airco’s →</span>
+      <span class="tag">Sfeerbeeld</span>
+    </a>
+    <a class="tile svc wp" data-cat="warm" href="#">
+      <Image src={stockWp} alt="" widths={[600, 900]} sizes="50vw" />
+      <span class="shade"></span>
+      <span class="k mono">02 · Warmtepomp</span>
+      <h3>Minder gas. Meer comfort.</h3>
+      <span class="more">Bekijk warmtepompen →</span>
+      <span class="tag">Sfeerbeeld</span>
+    </a>
+    <div class="tile num" data-cat="koel warm service">
+      <span class="n">{bedrijf.jarenErvaring}</span>
+      <p>jaar in het vak. Advies dat onderbouwd is.</p>
+    </div>
+    <div class="tile tech" data-cat="warm">
+      <span class="k mono">Zo werkt het</span>
+      <TechTekening soort="buiten" kleur="#ff7a2f" labels={[{ letter: 'A', tekst: 'Warmte uit buitenlucht', x: 0, y: 0 }]} />
+    </div>
+    <div class="tile tech" data-cat="koel">
+      <span class="k mono">Zo werkt het</span>
+      <TechTekening soort="binnen" kleur="#7fb4ea" labels={[{ letter: 'A', tekst: 'Fluisterstil', x: 0, y: 0 }]} />
+    </div>
+    <a class="tile svc oh" data-cat="service" href="#">
+      <span class="k mono">03 · Onderhoud</span>
+      <h3>Langer zorgeloos.</h3>
+      <p>Zuiniger, stiller en minder storingen. Ook na de installatie ben ik je aanspreekpunt.</p>
+      <span class="more">Bekijk onderhoud →</span>
+    </a>
+    <figure class="tile photo" data-cat="koel warm service">
+      <Image src={projectFoto} alt="Buitenunit met omkasting op een plat dak" widths={[600, 1000]} sizes="50vw" />
+      <figcaption>Recent werk · netjes weggewerkt op het dak</figcaption>
+    </figure>
+    <blockquote class="tile quote" data-cat="koel warm service">
+      <p>“{review.data.tekst}”</p>
+      <cite>{review.data.naam} · Google</cite>
+    </blockquote>
+    <div class="tile merk" data-cat="koel warm service">
+      <span class="n small">1</span>
+      <p>merk: {bedrijf.merk}. Ik ken elk systeem door en door.</p>
+    </div>
+  </section>
+
+  <section class="finale">
+    <p class="muted">Benieuwd wat past bij jouw huis?</p>
+    <a class="giant" href={telLink}>Bel Sjoerd<i>→</i></a>
+    <p class="muted">{bedrijf.telefoon.weergave} · {bedrijf.email}</p>
+  </section>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.r2c')!;
+  root.querySelectorAll<HTMLButtonElement>('[data-f]').forEach((b) =>
+    b.addEventListener('click', () => {
+      root.dataset.filter = b.dataset.f!;
+      root.querySelectorAll('[data-f]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      root.querySelectorAll<HTMLElement>('[data-cat]').forEach((t) => {
+        const match = b.dataset.f === 'alles' ? !t.classList.contains('tech') || t.dataset.cat === 'warm' : t.dataset.cat!.split(' ').includes(b.dataset.f!);
+        t.classList.toggle('uit', !match);
+      });
+    }),
+  );
+  // Begintoestand: één tekening tonen
+  root.querySelectorAll<HTMLElement>('.tech[data-cat="koel"]').forEach((t) => t.classList.add('uit'));
+</script>
+
+<style>
+  .r2c {
+    --bg: #05090b;
+    --panel: #0b1418;
+    --ink: #eef3f5;
+    --muted: #93a6ae;
+    --line: rgb(255 255 255 / 0.09);
+    --ice: #8fc1f0;
+    --ember: #ff7a2f;
+    --btn: #c94a06;
+    position: relative;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow: clip;
+  }
+  .grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .top {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 18px clamp(16px, 3vw, 36px);
+  }
+  .top img {
+    height: 50px;
+    width: auto;
+  }
+  .top nav {
+    display: flex;
+    gap: 26px;
+    margin-left: auto;
+  }
+  .top nav a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .tel {
+    font-weight: 700;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.35fr 0.65fr;
+    align-items: end;
+    gap: 32px;
+    padding: clamp(24px, 5vw, 64px) clamp(16px, 3vw, 36px) clamp(48px, 6vw, 80px);
+  }
+  .glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(45% 50% at 20% 30%, rgb(66 125 184 / 0.4), transparent 70%),
+      radial-gradient(45% 50% at 35% 85%, rgb(234 91 12 / 0.35), transparent 70%);
+  }
+  .words {
+    position: relative;
+    margin: 0;
+    display: grid;
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(5rem, 17vw, 17rem);
+    line-height: 0.82;
+    letter-spacing: -0.06em;
+  }
+  .w {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    transition: letter-spacing 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .w:hover {
+    letter-spacing: -0.03em;
+  }
+  .koel {
+    background-image: linear-gradient(100deg, #e9f3fc 10%, var(--ice) 45%, #3a74b0 90%);
+  }
+  .warm {
+    background-image: linear-gradient(100deg, #fff1e6 10%, var(--ember) 45%, #c2410c 90%);
+  }
+  .w span {
+    color: var(--ink);
+    -webkit-text-fill-color: currentColor;
+    opacity: 0.25;
+  }
+  .side {
+    position: relative;
+    padding-bottom: 12px;
+  }
+  .temps {
+    display: grid;
+    gap: 6px;
+    font-size: 0.95rem;
+    margin: 0 0 24px;
+  }
+  .temps .c {
+    color: var(--ice);
+  }
+  .temps .h {
+    color: var(--ember);
+  }
+  .promise {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: var(--btn);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .ghost {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .chooser {
+    position: sticky;
+    top: 12px;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: max-content;
+    max-width: calc(100% - 24px);
+    overflow-x: auto;
+    margin: 0 auto 16px;
+    padding: 6px 6px 6px 18px;
+    border-radius: 999px;
+    background: rgb(11 20 24 / 0.8);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 20px 40px -20px rgb(0 0 0 / 0.6);
+  }
+  .chooser .mono {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 8px;
+  }
+  .chooser button {
+    border: 0;
+    font: inherit;
+    font-weight: 600;
+    color: var(--muted);
+    background: none;
+    padding: 12px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .chooser button[aria-pressed='true'] {
+    color: #061419;
+    background: var(--ink);
+  }
+  .r2c[data-filter='koel'] .chooser button[aria-pressed='true'] {
+    background: var(--ice);
+  }
+  .r2c[data-filter='warm'] .chooser button[aria-pressed='true'] {
+    background: var(--ember);
+  }
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 240px;
+    grid-auto-flow: dense;
+    gap: 12px;
+    padding: 0 12px 12px;
+  }
+  .tile {
+    position: relative;
+    margin: 0;
+    border-radius: 26px;
+    padding: 28px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition:
+      opacity 0.5s,
+      transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+      filter 0.5s;
+  }
+  .tile.uit {
+    display: none;
+  }
+  a.tile:hover {
+    transform: translateY(-5px);
+  }
+  .svc {
+    grid-column: span 2;
+    grid-row: span 2;
+    justify-content: flex-end;
+  }
+  .svc :global(img),
+  .photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  a.tile:hover :global(img) {
+    transform: scale(1.05);
+  }
+  .shade {
+    position: absolute;
+    inset: 0;
+  }
+  .airco .shade {
+    background: linear-gradient(180deg, rgb(10 30 50 / 0.1) 20%, rgb(8 26 44 / 0.92));
+  }
+  .wp .shade {
+    background: linear-gradient(180deg, rgb(40 14 4 / 0.1) 20%, rgb(36 12 4 / 0.92));
+  }
+  .svc > *:not(:global(img)):not(.shade) {
+    position: relative;
+  }
+  .k {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: auto;
+  }
+  .svc .k {
+    position: absolute !important;
+    top: 24px;
+    left: 28px;
+    color: #fff;
+    opacity: 0.85;
+  }
+  .svc h3 {
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-weight: 800;
+    font-size: clamp(1.9rem, 3vw, 2.8rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0 0 14px;
+    max-width: 14ch;
+  }
+  .airco h3 {
+    color: #eaf4fd;
+  }
+  .wp h3 {
+    color: #fff1e6;
+  }
+  .more {
+    font-weight: 700;
+  }
+  .airco .more {
+    color: var(--ice);
+  }
+  .wp .more {
+    color: var(--ember);
+  }
+  .tag {
+    position: absolute !important;
+    top: 20px;
+    right: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.45);
+  }
+  .oh {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #0f1d23, #0b1418);
+  }
+  .oh h3 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    letter-spacing: -0.03em;
+    margin: 0 0 8px;
+  }
+  .oh p {
+    color: var(--muted);
+    margin: 0 0 12px;
+    max-width: 44ch;
+  }
+  .oh .more {
+    color: var(--ink);
+  }
+  .num,
+  .merk {
+    justify-content: space-between;
+  }
+  .num {
+    grid-row: span 2;
+    background: radial-gradient(80% 60% at 30% 20%, rgb(234 91 12 / 0.28), transparent 70%), var(--panel);
+  }
+  .n {
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(5rem, 9vw, 8.5rem);
+    letter-spacing: -0.07em;
+    line-height: 0.85;
+    background: linear-gradient(180deg, #fff, var(--ember));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .n.small {
+    background: linear-gradient(180deg, #fff, var(--ice));
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-size: clamp(4rem, 6vw, 5.5rem);
+  }
+  .num p,
+  .merk p {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+  .tech {
+    grid-row: span 2;
+    justify-content: space-between;
+  }
+  .photo {
+    grid-column: span 2;
+    grid-row: span 2;
+    padding: 0;
+  }
+  .photo figcaption {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgb(6 14 18 / 0.75);
+    backdrop-filter: blur(8px);
+  }
+  .quote {
+    grid-column: span 2;
+    justify-content: space-between;
+  }
+  .quote p {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .quote cite {
+    font-style: normal;
+    color: var(--muted);
+  }
+
+  .finale {
+    padding: clamp(96px, 13vw, 180px) 16px;
+    text-align: center;
+    background:
+      radial-gradient(40% 60% at 35% 100%, rgb(66 125 184 / 0.25), transparent 70%),
+      radial-gradient(40% 60% at 65% 100%, rgb(234 91 12 / 0.25), transparent 70%);
+  }
+  .muted {
+    color: var(--muted);
+  }
+  .giant {
+    display: inline-flex;
+    gap: 0.25em;
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(3.4rem, 11vw, 10rem);
+    letter-spacing: -0.06em;
+    line-height: 0.95;
+    text-decoration: none;
+  }
+  .giant i {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--ice), var(--ember));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: transform 0.3s;
+  }
+  .giant:hover i {
+    transform: translateX(14px);
+  }
+
+  @media (max-width: 1000px) {
+    .top nav {
+      display: none;
+    }
+    .tel {
+      margin-left: auto;
+    }
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .bento {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .bento {
+      grid-template-columns: 1fr;
+      grid-auto-rows: auto;
+    }
+    .bento > * {
+      grid-column: span 1 !important;
+      grid-row: span 1 !important;
+      min-height: 260px;
+    }
+    .num,
+    .merk {
+      min-height: 200px;
+    }
+  }
+</style>
