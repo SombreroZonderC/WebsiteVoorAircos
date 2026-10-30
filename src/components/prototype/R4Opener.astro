@@ -42,10 +42,6 @@ const ruimtes = {
     </div>
 
     <div class="wrap keuze">
-      <div class="thermos" aria-hidden="true">
-        <Thermometer id={`${prefix}-buiten`} label="Buiten" temp={31} thema="licht" />
-        <Thermometer id={`${prefix}-binnen`} label="Binnen" temp={21} thema="licht" />
-      </div>
       <div class="keuze-copy">
         <p class="eyebrow mono" id={`${prefix}-vraag`}>Wat zoek je?</p>
         <div class="seg" role="radiogroup" aria-labelledby={`${prefix}-vraag`}>
@@ -114,6 +110,24 @@ const ruimtes = {
 
   <section class="vlak licht paneel">
     <div class="wrap">
+      <div class="resultaat">
+        <div class="thermos" aria-hidden="true">
+          <Thermometer id={`${prefix}-buiten`} label="Buiten" temp={31} thema="licht" />
+          <Thermometer id={`${prefix}-binnen`} label="Binnen" temp={21} thema="licht" />
+        </div>
+        <div>
+          <p class="eyebrow mono">Het resultaat</p>
+          <h2 class="h2s">
+            <span data-m="koel">Buiten 31°. Binnen gewoon 21°.</span>
+            <span data-m="warm">Buiten −4°. Binnen gewoon 21°.</span>
+          </h2>
+          <p class="lead">
+            <span data-m="koel">Ook op de heetste dagen een koel huis, en een slaapkamer waarin je gewoon kunt slapen.</span>
+            <span data-m="warm">Een warm huis de hele winter, met veel minder gas dan je gewend bent.</span>
+          </p>
+        </div>
+      </div>
+
       <p class="eyebrow mono">Zo werk ik</p>
       <ol class="stappen">
         <li><b>01</b><h3>Bellen of mailen</h3><p>Je vertelt kort wat je zoekt.</p></li>
@@ -310,11 +324,23 @@ const ruimtes = {
   }
   .keuze {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+    padding-top: clamp(64px, 8vw, 110px);
+    padding-bottom: 56px;
+  }
+  .keuze .lead {
+    margin-inline: auto;
+  }
+  .resultaat {
+    display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     gap: clamp(40px, 8vw, 110px);
     align-items: center;
-    padding-top: clamp(64px, 8vw, 110px);
-    padding-bottom: 56px;
+    padding: clamp(64px, 8vw, 110px) 0 clamp(48px, 6vw, 80px);
+    border-bottom: 1px solid var(--line-l);
+    margin-bottom: clamp(48px, 6vw, 72px);
   }
   .thermos {
     display: flex;
@@ -481,9 +507,7 @@ const ruimtes = {
   }
 
   /* ---------- werkwijze, sjoerd, reviews ---------- */
-  .paneel .wrap > .eyebrow:first-child {
-    padding-top: clamp(64px, 8vw, 110px);
-  }
+
   .stappen {
     list-style: none;
     padding: 0;
@@ -599,13 +623,10 @@ const ruimtes = {
   }
 
   @media (max-width: 860px) {
-    .keuze,
+    .resultaat,
     .zo-grid,
     .sjoerd {
       grid-template-columns: minmax(0, 1fr);
-    }
-    .keuze-copy {
-      order: -1;
     }
     .thermos {
       justify-content: center;
