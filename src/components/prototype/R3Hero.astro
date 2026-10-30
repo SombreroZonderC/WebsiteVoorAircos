@@ -12,7 +12,7 @@ const { thema = 'donker' } = Astro.props;
 <div class:list={['r3h', thema]}>
   <header class="top">
     <img src={thema === 'licht' ? '/images/logo-origineel.svg' : '/images/logo-op-donker.svg'} alt="The CoolFactory" />
-    <nav><a href="#">Airco</a><a href="#">Warmtepompen</a><a href="#">Onderhoud</a><a href="#">Over Sjoerd</a></nav>
+    <nav><a href="/airconditioning">Airco</a><a href="/warmtepompen">Warmtepompen</a><a href="/onderhoud">Onderhoud</a><a href="/over-sjoerd">Over Sjoerd</a><a href="/werkgebied">Werkgebied</a><a href="/veelgestelde-vragen">Vragen</a></nav>
     <a class="tel" href={telLink}>{bedrijf.telefoon.weergave}</a>
     <button class="menu" aria-expanded="false" aria-label="Menu" data-menu>☰</button>
   </header>
@@ -30,7 +30,7 @@ const { thema = 'donker' } = Astro.props;
         vakmanschap, vanuit {bedrijf.adres.plaats}.
       </p>
       <div class="actions">
-        <a class="btn" href="#">Vrijblijvende offerte</a>
+        <a class="btn" href="/contact">Vrijblijvende offerte</a>
         <a class="ghost" href={telLink}>Bel {bedrijf.telefoon.weergave}</a>
       </div>
     </div>

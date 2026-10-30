@@ -1,14 +1,16 @@
 ---
-// PROTOTYPE ronde 4 – samengevoegde opener: inhoudsverdeling van 3A, licht/donker-afwisseling van 3C,
-// ruimtekaarten met prijs van 3B. De varianten verschillen alleen in hoe licht over donker komt.
+// PROTOTYPE ronde 5 – opener (inhoud van ronde 4) met vaste header, doorklik-links en footer.
+// De varianten verschillen alleen in de diepte-techniek: donker ligt achter, licht ligt ervoor.
 import { getCollection } from 'astro:content';
 import { bedrijf, telLink } from '../../lib/bedrijf';
 import R3Hero from './R3Hero.astro';
 import Thermometer from './Thermometer.astro';
 import TechTekening from './TechTekening.astro';
+import Footer from '../Footer.astro';
+import { nav } from '../../lib/bedrijf';
 
 interface Props {
-  overgang: 'gordijn' | 'diepte' | 'rustig';
+  overgang: 'diepte' | 'venster' | 'lagen';
   prefix: string;
 }
 const { overgang, prefix } = Astro.props;
@@ -29,8 +31,16 @@ const ruimtes = {
 ---
 
 <div class:list={['r4', `o-${overgang}`]} data-modus="koel" data-r4>
-  <div class="vlak donker plak">
-    <R3Hero thema="donker" />
+  <header class="vaste-kop" data-kop aria-label="Hoofdmenu">
+    <a href="/" class="vk-logo"><img src="/images/logo-op-donker.svg" alt="The CoolFactory" /></a>
+    <nav>{nav.map((n) => <a href={n.href}>{n.label}</a>)}</nav>
+    <a class="vk-tel" href={telLink}>{bedrijf.telefoon.weergave}</a>
+    <a class="vk-btn" href="/contact">Offerte</a>
+  </header>
+
+  <div class="paar">
+  <div class="vlak donker plak" data-diepte-vlak>
+    <div class="vlak-inhoud"><R3Hero thema="donker" /></div>
   </div>
 
   <section class="vlak licht paneel">
@@ -56,7 +66,7 @@ const ruimtes = {
           <span data-m="koel">Een stille airco van {bedrijf.merk} koelt in de zomer en verwarmt zuinig in het voor- en najaar.</span>
           <span data-m="warm">Een warmtepomp verwarmt je huis met veel minder gas. Hybride naast je cv-ketel, of volledig elektrisch.</span>
         </p>
-        <a class="btn" href="#"><span data-m="koel">Offerte voor een airco</span><span data-m="warm">Offerte voor een warmtepomp</span></a>
+        <a class="btn" href="/contact"><span data-m="koel">Offerte voor een airco</span><span data-m="warm">Offerte voor een warmtepomp</span></a>
       </div>
     </div>
 
@@ -65,7 +75,7 @@ const ruimtes = {
         (['koel', 'warm'] as const).map((m) => (
           <div class="ruimtes" data-m={m}>
             {ruimtes[m].map((r) => (
-              <a class="ruimte" href="#">
+              <a class="ruimte" href={m === 'koel' ? '/airconditioning' : '/warmtepompen'}>
                 <span class="soort mono">{m === 'koel' ? 'Airco' : 'Warmtepomp'}</span>
                 <h3>{r.naam}</h3>
                 <p>{r.tekst}</p>
@@ -79,8 +89,11 @@ const ruimtes = {
       }
     </div>
   </section>
+  </div>
 
-  <section class="vlak donker plak zo">
+  <div class="paar">
+  <section class="vlak donker plak zo" data-diepte-vlak>
+    <div class="vlak-inhoud">
     <div class="wrap zo-grid">
       <div>
         <p class="eyebrow mono">Zo werkt het</p>
@@ -98,20 +111,23 @@ const ruimtes = {
           <li><b>02</b> Hybride of all-electric</li>
           <li><b>03</b> Zorgvuldig ingeregeld</li>
         </ul>
+        <a class="door" href="/airconditioning" data-m="koel">Alles over airco’s →</a>
+        <a class="door" href="/warmtepompen" data-m="warm">Alles over warmtepompen →</a>
       </div>
-      <div class="tek" data-m="koel">
+      <div class="tek" data-m="koel" data-laag="0.12">
         <TechTekening soort="binnen" kleur="#7fb4ea" labels={[{ letter: 'A', tekst: 'Fluisterstil', x: 2, y: 6 }, { letter: 'B', tekst: 'Instelbare luchtstroom', x: 50, y: 84 }]} />
       </div>
-      <div class="tek" data-m="warm">
+      <div class="tek" data-m="warm" data-laag="0.12">
         <TechTekening soort="buiten" kleur="#ff7a2f" labels={[{ letter: 'A', tekst: 'Warmte uit de buitenlucht', x: 0, y: 4 }, { letter: 'B', tekst: 'Strak en waterpas', x: 48, y: 88 }]} />
       </div>
+    </div>
     </div>
   </section>
 
   <section class="vlak licht paneel">
     <div class="wrap">
       <div class="resultaat">
-        <div class="thermos" aria-hidden="true">
+        <div class="thermos" aria-hidden="true" data-laag="-0.06">
           <Thermometer id={`${prefix}-buiten`} label="Buiten" temp={31} thema="licht" />
           <Thermometer id={`${prefix}-binnen`} label="Binnen" temp={21} thema="licht" />
         </div>
@@ -142,6 +158,7 @@ const ruimtes = {
           <p class="eyebrow mono">Je krijgt Sjoerd</p>
           <h2 class="h2s">Geen callcenter, geen wisselende monteurs.</h2>
           <p class="lead">Van het eerste gesprek tot het onderhoud jaren later: je hebt één aanspreekpunt.</p>
+          <a class="door licht-door" href="/over-sjoerd">Meer over Sjoerd →</a>
         </div>
       </div>
 
@@ -157,6 +174,7 @@ const ruimtes = {
       </div>
     </div>
   </section>
+  </div>
 
   <section class="vlak donker finale">
     <p class="muted">Benieuwd wat past bij jouw huis?</p>
@@ -164,6 +182,7 @@ const ruimtes = {
     <p class="muted sub">{bedrijf.telefoon.weergave} · {bedrijf.email}</p>
   </section>
 
+  <Footer />
   <a class="mob-bel" href={telLink}>Bel Sjoerd · {bedrijf.telefoon.weergave}</a>
 </div>
 
@@ -193,19 +212,52 @@ const ruimtes = {
       });
     });
 
-    // Variant "diepte": het donkere vlak wijkt naar achteren terwijl het volgende lichte vlak eroverheen schuift.
-    if (root.classList.contains('o-diepte')) {
-      const paren = [...root.querySelectorAll<HTMLElement>('.plak')].map((d) => [d, d.nextElementSibling as HTMLElement] as const);
-      const update = () =>
-        paren.forEach(([donker, volgende]) => {
-          if (!volgende || root.closest('[hidden]')) return;
-          const top = volgende.getBoundingClientRect().top;
-          const p = Math.min(1, Math.max(0, 1 - top / innerHeight));
-          donker.style.setProperty('--p', p.toFixed(3));
+    // Vaste header: verschijnt zodra de hero uit beeld is.
+    const kop = root.querySelector<HTMLElement>('[data-kop]')!;
+    const eersteLicht = root.querySelector<HTMLElement>('.paneel')!;
+
+    const beweging = matchMedia('(prefers-reduced-motion: no-preference)');
+    const vlakken = [...root.querySelectorAll<HTMLElement>('[data-diepte-vlak]')];
+    const lagen = [...root.querySelectorAll<HTMLElement>('[data-laag]')];
+    // Diepte-effecten alleen als de bezoeker beweging toestaat en elk donker vlak in het scherm past.
+    const magDiepte = () =>
+      beweging.matches &&
+      innerWidth > 860 &&
+      vlakken.every((v) => v.querySelector<HTMLElement>('.vlak-inhoud')!.scrollHeight <= innerHeight);
+
+    let gepland = false;
+    const update = () => {
+      gepland = false;
+      if (root.closest('[hidden]')) return;
+      kop.classList.toggle('zichtbaar', eersteLicht.getBoundingClientRect().top < 80);
+      const aan = magDiepte();
+      root.classList.toggle('diepte-aan', aan);
+      if (!aan) return;
+      if (root.classList.contains('o-diepte')) {
+        vlakken.forEach((v) => {
+          const volgende = v.nextElementSibling as HTMLElement;
+          const p = Math.min(1, Math.max(0, 1 - volgende.getBoundingClientRect().top / innerHeight));
+          v.style.setProperty('--p', p.toFixed(3));
         });
-      addEventListener('scroll', update, { passive: true });
-      update();
-    }
+      }
+      if (root.classList.contains('o-lagen')) {
+        lagen.forEach((el) => {
+          const r = el.getBoundingClientRect();
+          const midden = r.top + r.height / 2 - innerHeight / 2;
+          el.style.setProperty('--y', `${(midden * Number(el.dataset.laag)).toFixed(1)}px`);
+        });
+      }
+    };
+    const plan = () => {
+      if (!gepland) {
+        gepland = true;
+        requestAnimationFrame(update);
+      }
+    };
+    addEventListener('scroll', plan, { passive: true });
+    addEventListener('resize', plan);
+    beweging.addEventListener('change', plan);
+    update();
   });
 </script>
 
@@ -261,43 +313,52 @@ const ruimtes = {
     background: var(--licht);
     color: var(--ink-l);
   }
+  .paar {
+    position: relative;
+  }
   .paneel {
     z-index: 2;
     padding-bottom: clamp(80px, 10vw, 130px);
   }
-  @media (min-width: 861px) {
-    .o-gordijn .plak,
-    .o-diepte .plak {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-    .o-gordijn .paneel,
-    .o-diepte .paneel {
-      border-radius: 36px 36px 0 0;
-      margin-top: -36px;
-      box-shadow: 0 -30px 60px -20px rgb(0 0 0 / 0.5);
-    }
-    .o-gordijn .zo,
-    .o-diepte .zo {
-      border-radius: 36px 36px 0 0;
-      margin-top: -36px;
-      z-index: 1;
-    }
-    .o-diepte .plak > *,
-    .o-diepte .plak.zo .wrap {
-      transform: scale(calc(1 - var(--p, 0) * 0.06));
-      filter: brightness(calc(1 - var(--p, 0) * 0.45));
-      transform-origin: 50% 30%;
-      will-change: transform, filter;
-    }
+  /* Diepte: donker ligt achter, licht schuift er recht overheen (geen afgeronde hoeken). */
+  .diepte-aan.o-diepte .plak {
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
-  .o-rustig .paneel {
-    border-radius: 0;
+  .diepte-aan .paneel {
+    box-shadow: 0 -24px 48px -24px rgb(0 0 0 / 0.55);
   }
-  .o-rustig .zo {
+  .diepte-aan.o-diepte .plak .vlak-inhoud {
+    transform: scale(calc(1 - var(--p, 0) * 0.03));
+    opacity: calc(1 - var(--p, 0) * 0.5);
+    transform-origin: 50% 40%;
+  }
+  /* Venster: de inhoud van het donkere vlak staat stil, het vlak zelf scrolt weg als een raam. */
+  .diepte-aan.o-venster .plak {
+    position: relative;
+    height: 100vh;
+    padding: 0;
+    clip-path: inset(0);
+  }
+  .diepte-aan.o-venster .plak .vlak-inhoud {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    align-content: center;
+    background: inherit;
+  }
+  .diepte-aan.o-venster .zo .vlak-inhoud {
+    padding: 40px 0;
+  }
+  /* Lagen: geen vastzittende vlakken; tekeningen en thermometers bewegen op hun eigen diepte. */
+  .diepte-aan.o-lagen [data-laag] {
+    transform: translateY(var(--y, 0));
+    will-change: transform;
+  }
+  .zo {
     background:
-      radial-gradient(60% 40% at 50% 0%, rgb(255 255 255 / 0.04), transparent 70%),
+      radial-gradient(50% 60% at 80% 50%, rgb(255 255 255 / 0.04), transparent 70%),
       var(--donker);
   }
 
@@ -622,7 +683,79 @@ const ruimtes = {
     display: none;
   }
 
+  /* ---------- vaste header + doorklik-links ---------- */
+  .vaste-kop {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 10px clamp(16px, 3vw, 36px);
+    background: rgb(5 9 11 / 0.95);
+    backdrop-filter: blur(14px) saturate(1.3);
+    -webkit-backdrop-filter: blur(14px) saturate(1.3);
+    border-bottom: 1px solid var(--line-d);
+    color: var(--ink-d);
+    transform: translateY(-100%);
+    transition: transform 0.35s ease;
+  }
+  .vaste-kop.zichtbaar,
+  .vaste-kop:focus-within {
+    transform: none;
+  }
+  .vk-logo img {
+    height: 36px;
+    width: auto;
+  }
+  .vaste-kop nav {
+    display: flex;
+    gap: 22px;
+    margin-left: auto;
+    font-size: 0.92rem;
+  }
+  .vaste-kop nav a {
+    color: var(--muted-d);
+    text-decoration: none;
+  }
+  .vaste-kop nav a:hover {
+    color: var(--ink-d);
+  }
+  .vk-tel {
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .vk-btn {
+    padding: 9px 18px;
+    border-radius: 999px;
+    background: #c94a06;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .door {
+    display: inline-block;
+    margin-top: 24px;
+    font-weight: 700;
+    color: var(--accent-d);
+    text-decoration: none;
+  }
+  .licht-door {
+    color: var(--accent);
+    margin-top: 4px;
+  }
+  .door:hover {
+    text-decoration: underline;
+  }
+
   @media (max-width: 860px) {
+    .vaste-kop nav,
+    .vk-tel {
+      display: none;
+    }
+    .vk-btn {
+      margin-left: auto;
+    }
     .resultaat,
     .zo-grid,
     .sjoerd {
