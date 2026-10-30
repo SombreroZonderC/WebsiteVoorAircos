@@ -56,7 +56,8 @@ const schaal = [40, 30, 20, 10, 0, -10];
     --tick: rgb(255 255 255 / 0.35);
     --tekst: #93a6ae;
     --sterk: #eef3f5;
-    --kleur: color-mix(in oklab, #4a8fd6, #e8580b clamp(0%, calc((var(--temp) - 8) * 12%), 100%));
+    /* Kleur volgt het verhaal als de ouder --kwik-kleur zet (koelen = blauw, verwarmen = oranje), anders de temperatuur. */
+    --kleur: var(--kwik-kleur, color-mix(in oklab, #4a8fd6, #e8580b clamp(0%, calc((var(--temp) - 8) * 12%), 100%)));
     position: relative;
     margin: 0;
     width: 120px;
@@ -87,10 +88,11 @@ const schaal = [40, 30, 20, 10, 0, -10];
   }
   .kwik {
     fill: var(--kleur);
-    transition-property: transform, fill;
     /* bovenkant kwik op y = 340 - (temp + 10) * 6 */
     transform: translateY(calc((340 - (var(--temp) + 10) * 6) * 1px));
-    transition: transform 1.2s cubic-bezier(0.3, 0.7, 0.2, 1);
+    transition:
+      transform 1.2s cubic-bezier(0.3, 0.7, 0.2, 1),
+      fill 0.8s ease;
   }
   .bol {
     fill: var(--kleur);

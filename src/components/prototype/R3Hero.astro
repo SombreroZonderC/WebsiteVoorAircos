@@ -14,6 +14,7 @@ const { thema = 'donker' } = Astro.props;
     <img src={thema === 'licht' ? '/images/logo-origineel.svg' : '/images/logo-op-donker.svg'} alt="The CoolFactory" />
     <nav><a href="#">Airco</a><a href="#">Warmtepompen</a><a href="#">Onderhoud</a><a href="#">Over Sjoerd</a></nav>
     <a class="tel" href={telLink}>{bedrijf.telefoon.weergave}</a>
+    <button class="menu" aria-expanded="false" aria-label="Menu" data-menu>☰</button>
   </header>
   <section class="hero">
     <div class="glow" aria-hidden="true"></div>
@@ -35,6 +36,16 @@ const { thema = 'donker' } = Astro.props;
     </div>
   </section>
 </div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-menu]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', String(open));
+      b.closest('.top')!.classList.toggle('open', open);
+    }),
+  );
+</script>
 
 <style>
   .r3h {
@@ -200,9 +211,42 @@ const { thema = 'donker' } = Astro.props;
     font-weight: 600;
     text-decoration: none;
   }
+  .menu {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: none;
+    color: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
   @media (max-width: 1000px) {
+    .menu {
+      display: inline-grid;
+      place-items: center;
+    }
+    .top {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
     .top nav {
       display: none;
+      order: 9;
+      width: 100%;
+      flex-direction: column;
+      gap: 0;
+      margin: 0;
+    }
+    .top.open nav {
+      display: flex;
+    }
+    .top nav a {
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      font-size: 1.15rem;
+      color: var(--ink);
     }
     .tel {
       margin-left: auto;

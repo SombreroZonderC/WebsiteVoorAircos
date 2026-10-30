@@ -1,0 +1,646 @@
+---
+// PROTOTYPE ronde 4 – samengevoegde opener: inhoudsverdeling van 3A, licht/donker-afwisseling van 3C,
+// ruimtekaarten met prijs van 3B. De varianten verschillen alleen in hoe licht over donker komt.
+import { getCollection } from 'astro:content';
+import { bedrijf, telLink } from '../../lib/bedrijf';
+import R3Hero from './R3Hero.astro';
+import Thermometer from './Thermometer.astro';
+import TechTekening from './TechTekening.astro';
+
+interface Props {
+  overgang: 'gordijn' | 'diepte' | 'rustig';
+  prefix: string;
+}
+const { overgang, prefix } = Astro.props;
+const reviews = (await getCollection('reviews')).slice(0, 3);
+
+const ruimtes = {
+  koel: [
+    { naam: 'Woonkamer', tekst: 'Krachtig koelen en snel bijverwarmen, netjes weggewerkt.' },
+    { naam: 'Slaapkamer', tekst: 'Fluisterstil, zodat je ook op hete nachten goed slaapt.' },
+    { naam: 'Zolder', tekst: 'De warmste plek van het huis, eindelijk bruikbaar in de zomer.' },
+  ],
+  warm: [
+    { naam: 'Hybride warmtepomp', tekst: 'Naast je cv-ketel. Fors minder gas, ook in een ouder huis.' },
+    { naam: 'All-electric', tekst: 'Volledig van het gas af, voor goed geïsoleerde woningen.' },
+    { naam: 'Airco als bijverwarming', tekst: 'Zuinig verwarmen in het voor- en najaar, per ruimte.' },
+  ],
+};
+---
+
+<div class:list={['r4', `o-${overgang}`]} data-modus="koel" data-r4>
+  <div class="vlak donker plak">
+    <R3Hero thema="donker" />
+  </div>
+
+  <section class="vlak licht paneel">
+    <div class="trust">
+      <span class="ph">★ Google-score volgt</span>
+      <span><b>{bedrijf.jarenErvaring}</b> jaar ervaring</span>
+      <span>Specialist <b>{bedrijf.merk}</b></span>
+      <span>Gevestigd in <b>{bedrijf.adres.plaats}</b></span>
+    </div>
+
+    <div class="wrap keuze">
+      <div class="thermos" aria-hidden="true">
+        <Thermometer id={`${prefix}-buiten`} label="Buiten" temp={31} thema="licht" />
+        <Thermometer id={`${prefix}-binnen`} label="Binnen" temp={21} thema="licht" />
+      </div>
+      <div class="keuze-copy">
+        <p class="eyebrow mono" id={`${prefix}-vraag`}>Wat zoek je?</p>
+        <div class="seg" role="radiogroup" aria-labelledby={`${prefix}-vraag`}>
+          <button role="radio" aria-checked="true" tabindex="0" data-zet="koel">❄ Koelen</button>
+          <button role="radio" aria-checked="false" tabindex="-1" data-zet="warm">☀ Verwarmen</button>
+        </div>
+        <h2>
+          <span data-m="koel">Buiten heet.<br /><em>Binnen koel.</em></span>
+          <span data-m="warm">Buiten koud.<br /><em>Binnen warm.</em></span>
+        </h2>
+        <p class="lead">
+          <span data-m="koel">Een stille airco van {bedrijf.merk} koelt in de zomer en verwarmt zuinig in het voor- en najaar.</span>
+          <span data-m="warm">Een warmtepomp verwarmt je huis met veel minder gas. Hybride naast je cv-ketel, of volledig elektrisch.</span>
+        </p>
+        <a class="btn" href="#"><span data-m="koel">Offerte voor een airco</span><span data-m="warm">Offerte voor een warmtepomp</span></a>
+      </div>
+    </div>
+
+    <div class="wrap">
+      {
+        (['koel', 'warm'] as const).map((m) => (
+          <div class="ruimtes" data-m={m}>
+            {ruimtes[m].map((r) => (
+              <a class="ruimte" href="#">
+                <span class="soort mono">{m === 'koel' ? 'Airco' : 'Warmtepomp'}</span>
+                <h3>{r.naam}</h3>
+                <p>{r.tekst}</p>
+                <span class="prijs">
+                  Indicatie vanaf <span class="ph">€ … (volgt)</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="vlak donker plak zo">
+    <div class="wrap zo-grid">
+      <div>
+        <p class="eyebrow mono">Zo werkt het</p>
+        <h2 class="h2s">
+          <span data-m="koel">Wat er bij je aan de muur komt.</span>
+          <span data-m="warm">Wat er bij je huis komt te staan.</span>
+        </h2>
+        <ul class="punten" data-m="koel">
+          <li><b>01</b> Koelen én zuinig verwarmen</li>
+          <li><b>02</b> De beste plek voor binnen- en buitenunit</li>
+          <li><b>03</b> Leidingen strak weggewerkt</li>
+        </ul>
+        <ul class="punten" data-m="warm">
+          <li><b>01</b> Eerlijk advies over isolatie en afgifte</li>
+          <li><b>02</b> Hybride of all-electric</li>
+          <li><b>03</b> Zorgvuldig ingeregeld</li>
+        </ul>
+      </div>
+      <div class="tek" data-m="koel">
+        <TechTekening soort="binnen" kleur="#7fb4ea" labels={[{ letter: 'A', tekst: 'Fluisterstil', x: 2, y: 6 }, { letter: 'B', tekst: 'Instelbare luchtstroom', x: 50, y: 84 }]} />
+      </div>
+      <div class="tek" data-m="warm">
+        <TechTekening soort="buiten" kleur="#ff7a2f" labels={[{ letter: 'A', tekst: 'Warmte uit de buitenlucht', x: 0, y: 4 }, { letter: 'B', tekst: 'Strak en waterpas', x: 48, y: 88 }]} />
+      </div>
+    </div>
+  </section>
+
+  <section class="vlak licht paneel">
+    <div class="wrap">
+      <p class="eyebrow mono">Zo werk ik</p>
+      <ol class="stappen">
+        <li><b>01</b><h3>Bellen of mailen</h3><p>Je vertelt kort wat je zoekt.</p></li>
+        <li><b>02</b><h3>Advies aan huis</h3><p>Ik kom langs en bekijk de situatie.</p></li>
+        <li><b>03</b><h3>Heldere offerte</h3><p>Vrijblijvend, zonder kleine lettertjes.</p></li>
+        <li><b>04</b><h3>Nette installatie</h3><p>Getest, opgeruimd en uitgelegd.</p></li>
+      </ol>
+
+      <div class="sjoerd">
+        <div class="portret"><span class="mono">Foto Sjoerd volgt</span></div>
+        <div>
+          <p class="eyebrow mono">Je krijgt Sjoerd</p>
+          <h2 class="h2s">Geen callcenter, geen wisselende monteurs.</h2>
+          <p class="lead">Van het eerste gesprek tot het onderhoud jaren later: je hebt één aanspreekpunt.</p>
+        </div>
+      </div>
+
+      <div class="reviews">
+        {
+          reviews.map((r) => (
+            <figure>
+              <blockquote>“{r.data.tekst}”</blockquote>
+              <figcaption>{r.data.naam} · Google</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="vlak donker finale">
+    <p class="muted">Benieuwd wat past bij jouw huis?</p>
+    <a class="giant" href={telLink}>Bel Sjoerd <i>→</i></a>
+    <p class="muted sub">{bedrijf.telefoon.weergave} · {bedrijf.email}</p>
+  </section>
+
+  <a class="mob-bel" href={telLink}>Bel Sjoerd · {bedrijf.telefoon.weergave}</a>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-r4]').forEach((root) => {
+    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-zet]')];
+    const buiten = root.querySelector<HTMLElement>('.thermos .thermo')!;
+    const zet = (m: string, focus = false) => {
+      root.dataset.modus = m;
+      knoppen.forEach((b) => {
+        const aan = b.dataset.zet === m;
+        b.setAttribute('aria-checked', String(aan));
+        b.tabIndex = aan ? 0 : -1;
+        if (aan && focus) b.focus();
+      });
+      const t = m === 'koel' ? 31 : -4;
+      buiten.style.setProperty('--temp', String(t));
+      buiten.querySelector('[data-waarde]')!.textContent = `${t}°`;
+    };
+    knoppen.forEach((b) => {
+      b.addEventListener('click', () => zet(b.dataset.zet!));
+      b.addEventListener('keydown', (e) => {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+          e.preventDefault();
+          zet(root.dataset.modus === 'koel' ? 'warm' : 'koel', true);
+        }
+      });
+    });
+
+    // Variant "diepte": het donkere vlak wijkt naar achteren terwijl het volgende lichte vlak eroverheen schuift.
+    if (root.classList.contains('o-diepte')) {
+      const paren = [...root.querySelectorAll<HTMLElement>('.plak')].map((d) => [d, d.nextElementSibling as HTMLElement] as const);
+      const update = () =>
+        paren.forEach(([donker, volgende]) => {
+          if (!volgende || root.closest('[hidden]')) return;
+          const top = volgende.getBoundingClientRect().top;
+          const p = Math.min(1, Math.max(0, 1 - top / innerHeight));
+          donker.style.setProperty('--p', p.toFixed(3));
+        });
+      addEventListener('scroll', update, { passive: true });
+      update();
+    }
+  });
+</script>
+
+<style>
+  .r4 {
+    --donker: #05090b;
+    --licht: #f5f6f4;
+    --kaart: #fff;
+    --ink-d: #eef3f5;
+    --muted-d: #93a6ae;
+    --ink-l: #0c1d23;
+    --muted-l: #4d6168;
+    --line-d: rgb(255 255 255 / 0.1);
+    --line-l: rgb(12 29 35 / 0.1);
+    --accent: #2a64a3;
+    --accent-d: #8fc1f0;
+    --oranje: #b8460a;
+    background: var(--donker);
+  }
+  .r4[data-modus='warm'] {
+    --accent: #b8460a;
+    --accent-d: #ff7a2f;
+  }
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 40px);
+  }
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  [data-m] {
+    display: none;
+  }
+  .r4[data-modus='koel'] [data-m='koel'],
+  .r4[data-modus='warm'] [data-m='warm'] {
+    display: revert;
+  }
+  .r4[data-modus='koel'] .ruimtes[data-m='koel'],
+  .r4[data-modus='warm'] .ruimtes[data-m='warm'] {
+    display: grid;
+  }
+
+  /* ---------- vlakken en overgangen ---------- */
+  .vlak {
+    position: relative;
+  }
+  .donker {
+    background: var(--donker);
+    color: var(--ink-d);
+  }
+  .licht {
+    background: var(--licht);
+    color: var(--ink-l);
+  }
+  .paneel {
+    z-index: 2;
+    padding-bottom: clamp(80px, 10vw, 130px);
+  }
+  @media (min-width: 861px) {
+    .o-gordijn .plak,
+    .o-diepte .plak {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .o-gordijn .paneel,
+    .o-diepte .paneel {
+      border-radius: 36px 36px 0 0;
+      margin-top: -36px;
+      box-shadow: 0 -30px 60px -20px rgb(0 0 0 / 0.5);
+    }
+    .o-gordijn .zo,
+    .o-diepte .zo {
+      border-radius: 36px 36px 0 0;
+      margin-top: -36px;
+      z-index: 1;
+    }
+    .o-diepte .plak > *,
+    .o-diepte .plak.zo .wrap {
+      transform: scale(calc(1 - var(--p, 0) * 0.06));
+      filter: brightness(calc(1 - var(--p, 0) * 0.45));
+      transform-origin: 50% 30%;
+      will-change: transform, filter;
+    }
+  }
+  .o-rustig .paneel {
+    border-radius: 0;
+  }
+  .o-rustig .zo {
+    background:
+      radial-gradient(60% 40% at 50% 0%, rgb(255 255 255 / 0.04), transparent 70%),
+      var(--donker);
+  }
+
+  /* ---------- trust + keuze ---------- */
+  .trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 40px;
+    padding: 28px 16px 24px;
+    border-bottom: 1px solid var(--line-l);
+    color: var(--muted-l);
+    font-size: 0.95rem;
+  }
+  .trust b {
+    color: var(--ink-l);
+  }
+  .ph {
+    color: var(--oranje);
+    border: 1px dashed rgb(184 70 10 / 0.6);
+    padding: 1px 9px;
+    border-radius: 999px;
+    font-size: 0.92em;
+  }
+  .keuze {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(40px, 8vw, 110px);
+    align-items: center;
+    padding-top: clamp(64px, 8vw, 110px);
+    padding-bottom: 56px;
+  }
+  .thermos {
+    display: flex;
+    gap: 34px;
+    padding-right: 30px;
+  }
+  .thermos :global(.thermo:last-child) {
+    --kwik-kleur: var(--accent);
+  }
+  .eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+  .donker .eyebrow {
+    color: var(--accent-d);
+  }
+  .seg {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 999px;
+    border: 1px solid var(--line-l);
+    background: var(--kaart);
+    margin-bottom: 28px;
+  }
+  .seg button {
+    border: 0;
+    background: none;
+    color: var(--muted-l);
+    font: inherit;
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .seg [aria-checked='true'] {
+    background: var(--accent);
+    color: #fff;
+  }
+  .r4 h2 {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    font-size: clamp(2.4rem, 5vw, 4.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin: 0 0 20px;
+  }
+  .r4 h2 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .r4 .h2s {
+    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+    line-height: 1.05;
+  }
+  .lead {
+    font-size: 1.12rem;
+    max-width: 46ch;
+    margin: 0 0 26px;
+    color: var(--muted-l);
+  }
+  .donker .lead,
+  .muted {
+    color: var(--muted-d);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0 24px;
+    border-radius: 999px;
+    background: #c94a06;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .ruimtes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    animation: r4-in 0.5s ease both;
+  }
+  @keyframes r4-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  .ruimte {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    border-radius: 20px;
+    background: var(--kaart);
+    border: 1px solid var(--line-l);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform 0.3s,
+      box-shadow 0.3s;
+  }
+  .ruimte:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -26px rgb(12 29 35 / 0.4);
+  }
+  .soort {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .ruimte h3 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .ruimte p {
+    margin: 0;
+    color: var(--muted-l);
+    flex: 1;
+  }
+  .prijs {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line-l);
+    font-size: 0.88rem;
+    color: var(--muted-l);
+  }
+
+  /* ---------- zo werkt het ---------- */
+  .zo {
+    padding: clamp(96px, 11vw, 150px) 0 clamp(110px, 12vw, 170px);
+    background:
+      radial-gradient(50% 60% at 80% 50%, rgb(255 255 255 / 0.04), transparent 70%),
+      var(--donker);
+  }
+  .zo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 56px;
+    align-items: center;
+  }
+  .punten {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0 0;
+    border-top: 1px solid var(--line-d);
+  }
+  .punten li {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line-d);
+  }
+  .punten b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent-d);
+    margin-right: 14px;
+    font-size: 0.85rem;
+  }
+
+  /* ---------- werkwijze, sjoerd, reviews ---------- */
+  .paneel .wrap > .eyebrow:first-child {
+    padding-top: clamp(64px, 8vw, 110px);
+  }
+  .stappen {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--line-l);
+  }
+  .stappen li {
+    position: relative;
+    padding: 26px 24px 0 0;
+  }
+  .stappen li::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--oranje);
+  }
+  .stappen b {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--oranje);
+    font-size: 0.85rem;
+  }
+  .stappen h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin: 12px 0 6px;
+  }
+  .stappen p {
+    margin: 0;
+    color: var(--muted-l);
+  }
+  .sjoerd {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+    margin-top: clamp(80px, 10vw, 120px);
+  }
+  .portret {
+    aspect-ratio: 4 / 5;
+    border-radius: 24px;
+    border: 1px dashed rgb(12 29 35 / 0.25);
+    background: linear-gradient(160deg, #eef1ef, #e0e6e4);
+    display: grid;
+    place-items: end start;
+    padding: 18px;
+    color: var(--muted-l);
+    font-size: 0.8rem;
+  }
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 56px;
+  }
+  .reviews figure {
+    margin: 0;
+    padding: 26px;
+    border-radius: 20px;
+    background: var(--kaart);
+    border: 1px solid var(--line-l);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  blockquote {
+    margin: 0;
+    line-height: 1.6;
+  }
+  figcaption {
+    color: var(--muted-l);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  /* ---------- finale ---------- */
+  .finale {
+    z-index: 3;
+    padding: clamp(96px, 13vw, 170px) 16px;
+    text-align: center;
+    background:
+      radial-gradient(40% 60% at 35% 100%, rgb(66 125 184 / 0.3), transparent 70%),
+      radial-gradient(40% 60% at 65% 100%, rgb(234 91 12 / 0.3), transparent 70%),
+      var(--donker);
+  }
+  .giant {
+    display: inline-flex;
+    gap: 0.25em;
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 9rem);
+    letter-spacing: -0.05em;
+    line-height: 1.1;
+    padding-bottom: 0.08em;
+    text-decoration: none;
+    color: var(--ink-d);
+  }
+  .giant i {
+    font-style: normal;
+    color: #ff7a2f;
+  }
+  .sub {
+    margin-top: 20px;
+  }
+  .mob-bel {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .keuze,
+    .zo-grid,
+    .sjoerd {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .keuze-copy {
+      order: -1;
+    }
+    .thermos {
+      justify-content: center;
+      padding-right: 0;
+      gap: 40px;
+    }
+    .thermos :global(.thermo),
+    .thermos :global(.thermo svg) {
+      width: 84px;
+    }
+    .ruimtes,
+    .reviews {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .stappen {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 24px;
+    }
+    .portret {
+      max-width: 260px;
+    }
+    .mob-bel {
+      display: flex;
+      justify-content: center;
+      position: sticky;
+      bottom: 12px;
+      z-index: 10;
+      margin: 0 12px 12px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #c94a06;
+      color: #fff;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.5);
+    }
+  }
+</style>

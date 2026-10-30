@@ -3,15 +3,13 @@
 // Na de keuze: winnaar verwerken in de echte homepage, deze route en src/components/prototype/ weg uit main.
 import '../styles/global.css';
 // Eerdere rondes staan in de git-geschiedenis en docs/prototype-ronde-*/.
-import VariantA from '../components/prototype/R3Donker.astro';
-import VariantB from '../components/prototype/R3Licht.astro';
-import VariantC from '../components/prototype/R3Mix.astro';
+import R4Opener from '../components/prototype/R4Opener.astro';
 import PrototypeSwitcher from '../components/prototype/PrototypeSwitcher.astro';
 
 const varianten = [
-  { sleutel: 'A', naam: 'Donker + thermometer-keuze' },
-  { sleutel: 'B', naam: 'Licht + kies jouw ruimte' },
-  { sleutel: 'C', naam: 'Mix + scroll-thermometer' },
+  { sleutel: 'A', naam: 'Gordijn' },
+  { sleutel: 'B', naam: 'Diepte' },
+  { sleutel: 'C', naam: 'Rustig (geen parallax)' },
 ];
 ---
 
@@ -25,9 +23,9 @@ const varianten = [
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body style="background:#fff">
-    <div data-variant="A"><VariantA /></div>
-    <div data-variant="B" hidden><VariantB /></div>
-    <div data-variant="C" hidden><VariantC /></div>
+    <div data-variant="A"><R4Opener overgang="gordijn" prefix="a" /></div>
+    <div data-variant="B" hidden><R4Opener overgang="diepte" prefix="b" /></div>
+    <div data-variant="C" hidden><R4Opener overgang="rustig" prefix="c" /></div>
     <PrototypeSwitcher varianten={varianten} />
   </body>
 </html>
