@@ -9,50 +9,67 @@ interface Props {
 const { titel = home.cta.titel, tekst = home.cta.tekst } = Astro.props;
 ---
 
-<section class="cta-band dark" aria-labelledby="cta-titel">
-  <div class="glow" aria-hidden="true"></div>
-  <div class="wrap inner" data-reveal>
-    <div>
-      <h2 id="cta-titel">{titel}</h2>
-      <p class="lead">{tekst}</p>
-    </div>
-    <div class="actions">
-      <a class="btn" href="/contact">Offerte aanvragen <Icon name="arrow" /></a>
-      <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
-    </div>
-    <p class="mail muted">Of mail naar <a href={mailLink}>{bedrijf.email}</a></p>
+<section class="finale dark" aria-label="Contact" data-geen-mobiele-cta>
+  <p class="pre">{titel}</p>
+  <a class="giant" href={telLink}>Bel Sjoerd <span aria-hidden="true">→</span></a>
+  <p class="tekst">{tekst}</p>
+  <div class="actions">
+    <a class="btn" href="/contact">Offerte aanvragen <Icon name="arrow" /></a>
+    <a class="btn ghost" href={mailLink}><Icon name="mail" /> {bedrijf.email}</a>
   </div>
+  <p class="nummer">{bedrijf.telefoon.weergave}</p>
 </section>
 
 <style>
-  .cta-band {
+  .finale {
     position: relative;
-    overflow: hidden;
-    padding-block: clamp(80px, 10vw, 120px);
+    z-index: 3;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    padding: clamp(96px, 13vw, 170px) 16px;
+    background:
+      radial-gradient(40% 60% at 35% 100%, rgb(66 125 184 / 0.3), transparent 70%),
+      radial-gradient(40% 60% at 65% 100%, rgb(234 91 12 / 0.3), transparent 70%),
+      var(--ink);
     border-top: 1px solid var(--line-dark);
   }
-  .inner {
-    position: relative;
-    display: grid;
-    gap: 28px;
-    text-align: center;
-    justify-items: center;
+  .pre {
+    color: var(--muted-on-dark);
+    font-size: 1.15rem;
+    margin: 0 0 8px;
   }
-  .inner h2 {
-    max-width: 18ch;
-    margin-inline: auto;
+  .giant {
+    display: inline-flex;
+    gap: 0.25em;
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 9rem);
+    letter-spacing: -0.05em;
+    line-height: 1.1;
+    padding-bottom: 0.08em;
+    text-decoration: none;
+    color: var(--text-on-dark);
   }
-  .lead {
-    margin-inline: auto;
+  .giant span {
+    color: var(--orange-hot);
+    transition: transform 0.3s var(--ease);
+  }
+  .giant:hover span {
+    transform: translateX(14px);
+  }
+  .tekst {
+    color: var(--muted-on-dark);
+    max-width: 52ch;
+    margin: 8px 0 28px;
   }
   .actions {
     justify-content: center;
   }
-  .mail {
-    margin: 0;
-    font-size: 0.95rem;
-  }
-  .mail a {
-    color: var(--text-on-dark);
+  .nummer {
+    font-family: var(--font-mono);
+    color: var(--muted-on-dark);
+    margin: 24px 0 0;
   }
 </style>

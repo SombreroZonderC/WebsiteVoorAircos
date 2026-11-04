@@ -3,6 +3,7 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PaginaHero from '../components/PaginaHero.astro';
 import Visual from '../components/Visual.astro';
+import TechTekening from '../components/TechTekening.astro';
 import Stappen from '../components/Stappen.astro';
 import FaqLijst from '../components/FaqLijst.astro';
 import CtaBand from '../components/CtaBand.astro';
@@ -75,7 +76,23 @@ const schema = [
           <Content />
         </div>
         <aside class="aside" data-reveal>
-          <Visual soort={d.beeld} label={`project ${d.menuLabel.toLowerCase()}`} verhouding="4 / 5" />
+          {
+            d.beeld === 'onderhoud' ? (
+              <Visual soort="onderhoud" label="Sjoerd aan het werk" verhouding="4 / 5" />
+            ) : (
+              <div class:list={['tek-kaart', d.accent]}>
+                <TechTekening
+                  soort={d.beeld === 'airco' ? 'binnen' : 'buiten'}
+                  kleur={d.beeld === 'airco' ? '#7fb4ea' : '#ff7a2f'}
+                  labels={
+                    d.beeld === 'airco'
+                      ? [{ letter: 'A', tekst: 'Fluisterstil', x: 2, y: 2 }]
+                      : [{ letter: 'A', tekst: 'Warmte uit de buitenlucht', x: 0, y: 2 }]
+                  }
+                />
+              </div>
+            )
+          }
           <div class="card contact-card">
             <h2 class="h3">Advies op maat?</h2>
             <p class="muted">Bel of stuur een bericht, dan plannen we een afspraak aan huis.</p>
@@ -145,11 +162,23 @@ const schema = [
     border-radius: 12px;
     margin-bottom: 18px;
     background: rgb(66 125 184 / 0.14);
-    color: var(--blue);
+    color: var(--blue-text);
   }
   .voordeel .icon.warm {
     background: rgb(234 91 12 / 0.12);
-    color: var(--orange);
+    color: var(--orange-text);
+  }
+  .tek-kaart {
+    padding: 28px 24px 20px;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(70% 80% at 30% 20%, rgb(66 125 184 / 0.35), transparent 70%),
+      var(--ink);
+  }
+  .tek-kaart.warm {
+    background:
+      radial-gradient(70% 80% at 70% 80%, rgb(234 91 12 / 0.3), transparent 70%),
+      var(--ink);
   }
   .h3 {
     font-size: clamp(1.2rem, 1.8vw, 1.4rem);

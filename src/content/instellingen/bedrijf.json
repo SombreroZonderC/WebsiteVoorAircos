@@ -3,7 +3,10 @@
   "tagline": "Airconditioning & warmtepompen",
   "eigenaar": "Sjoerd Moller",
   "url": "https://thecoolfactory.nl",
-  "telefoon": { "weergave": "06 211 276 12", "internationaal": "+31621127612" },
+  "telefoon": {
+    "weergave": "06 211 276 12",
+    "internationaal": "+31621127612"
+  },
   "email": "info@thecoolfactory.nl",
   "whatsapp": false,
   "adres": {
@@ -21,5 +24,6 @@
   "openingstijden": null,
   "certificeringen": [],
   "werkgebied": [],
-  "googleReviewsUrl": null
+  "googleReviewsUrl": null,
+  "googleScore": null
 }

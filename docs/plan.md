@@ -29,14 +29,18 @@ Vastgesteld in een grill-sessie op 29-10-2026. Dit is het referentiepunt voor al
 
 ## Ontwerp
 
-- Donkere basis met blauw (koud) en oranje (warm) uit het bestaande logo; stoere brede koppen (Archivo, breedte-as); strakke kaarten en dunne lijnen (Linear/Stripe-achtig).
-- Geen 3D/WebGL, geen zware animaties, geen experimentele navigatie.
+Vastgesteld na vijf prototyperondes, elk beoordeeld door de initiatiefnemer en een onafhankelijke reviewer (screenshots in `docs/prototype-ronde-1` t/m `-5`). De prototypecode zelf staat in de git-geschiedenis; laatste stand: commit `7e3f924`.
+
+- **Hero**: grote woorden "Koel." / "Warm." met kleurverloop (blauw/oranje) op donker, rechts een infoblok met belofte, naam, offerte en bellen.
+- **Ritme**: donker / licht / donker / licht / donker ("Bel Sjoerd"). Op de homepage ligt donker achter en schuift licht er recht overheen (diepte-variant A). Geen afgeronde paneelranden. Alleen bij `prefers-reduced-motion: no-preference`, breedte > 860px en als het donkere vlak in het scherm past.
+- **Homepage-opbouw**: hero → vertrouwensbalk → "Wat zoek je?" (koelen/verwarmen) met kop, CTA en ruimtekaarten met prijsindicatie → zo werkt het (technische tekening) → het resultaat (thermometers buiten/binnen) → werkwijze → je krijgt Sjoerd → reviews → "Bel Sjoerd".
+- **Koelen/verwarmen**: de keuze stuurt teksten, CTA, kaarten, tekening en thermometer. Koelen = blauw, verwarmen = oranje. Beide varianten staan in de HTML (voor zoekmachines), één is verborgen.
+- **Thermometer**: klassiek (glas, kwik, schaal), niet bovenaan. Binnen heeft de kleur van het verhaal.
+- **Typografie**: Archivo (breed, zwaar) voor koppen, Inter voor tekst, IBM Plex Mono voor labels.
+- **Niet doen**: felle blauw/oranje kleurvlakken met sneeuwvlok/vlam (lijkt op concurrent NuKoel, oogt goedkoop), bento-blokken, 3D/WebGL, zware parallax.
 - Ik-vorm van Sjoerd, "je"-vorm naar de bezoeker.
-- Neutrale grafische placeholders voor foto's. Homepage in twee POC-versies naast elkaar:
-  - `/poc/zonder-foto` – placeholders
-  - `/poc/met-stock` – stockfoto's (gelabeld als sfeerbeeld)
-  - `/poc` – vergelijking naast elkaar
-  - POC-pagina's zijn `noindex` en verdwijnen na de keuze.
+- Geen stockfoto's op de live site. Placeholders (lijntekeningen) tot Sjoerd foto's levert.
+- **Navigatie**: één header voor de hele site (transparant boven de hero, compact en vast na het scrollen, hamburgermenu onder 1180px), doorklik-links per sectie, footer met alle pagina's, vaste belknop op mobiel (verborgen als er al een grote belknop in beeld is).
 
 ## Pagina's
 

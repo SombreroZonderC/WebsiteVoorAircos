@@ -20,6 +20,20 @@ import { bedrijf, telLink, whatsappLink } from '../lib/bedrijf';
   }
 </div>
 
+<script>
+  // Verbergen zolang er al een grote belknop in beeld is (hero, "Bel Sjoerd"-afsluiter).
+  const balk = document.querySelector<HTMLElement>('.mobile-cta');
+  const plekken = document.querySelectorAll('[data-geen-mobiele-cta]');
+  if (balk && plekken.length && 'IntersectionObserver' in window) {
+    const zichtbaar = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? zichtbaar.add(e.target) : zichtbaar.delete(e.target)));
+      balk.classList.toggle('weg', zichtbaar.size > 0);
+    });
+    plekken.forEach((p) => io.observe(p));
+  }
+</script>
+
 <style>
   .mobile-cta {
     display: none;
@@ -36,11 +50,19 @@ import { bedrijf, telLink, whatsappLink } from '../lib/bedrijf';
       gap: 8px;
       padding: 8px;
       border-radius: 18px;
-      background: rgb(6 20 25 / 0.88);
+      background: rgb(5 9 11 / 0.9);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--line-dark);
       box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.5);
+      transition:
+        transform 0.3s var(--ease),
+        opacity 0.3s var(--ease);
+    }
+    .mobile-cta.weg {
+      transform: translateY(calc(100% + 24px));
+      opacity: 0;
+      pointer-events: none;
     }
     .mobile-cta a {
       display: flex;
@@ -61,8 +83,9 @@ import { bedrijf, telLink, whatsappLink } from '../lib/bedrijf';
     .alt {
       background: rgb(255 255 255 / 0.08);
     }
-    :global(body) {
-      padding-bottom: 88px;
+    /* Ruimte onder de footer zodat de balk niets afdekt */
+    :global(footer.footer) {
+      padding-bottom: calc(110px + env(safe-area-inset-bottom));
     }
   }
 </style>

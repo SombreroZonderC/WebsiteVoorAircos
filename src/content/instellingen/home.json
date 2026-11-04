@@ -2,53 +2,77 @@
   "seoTitel": "Airco en warmtepomp in Heeten | The CoolFactory",
   "seoOmschrijving": "Airco of warmtepomp laten plaatsen in Heeten en omgeving. Persoonlijk advies aan huis, nette installatie en onderhoud. Specialist in Mitsubishi Electric.",
   "hero": {
-    "eyebrow": "Airco & warmtepompen · Heeten",
-    "titelKoud": "Koel in de zomer.",
-    "titelWarm": "Warm in de winter.",
-    "lead": "Ik ben Sjoerd, en met ruim 20 jaar ervaring plaats en onderhoud ik airconditioning en warmtepompen van Mitsubishi Electric. Persoonlijk advies aan huis, een nette installatie en duidelijke afspraken."
+    "titelKoud": "Koel",
+    "titelWarm": "Warm",
+    "regelZomer": "Zomer · 31° buiten → 21° binnen",
+    "regelWinter": "Winter · −4° buiten → 21° binnen",
+    "belofte": "Airco’s en warmtepompen van Mitsubishi Electric, geplaatst door Sjoerd Moller. Ruim 20 jaar vakmanschap, vanuit Heeten."
   },
-  "usps": [
-    {
-      "titel": "Ruim 20 jaar vakervaring",
-      "tekst": "Jarenlange ervaring met montage, dus advies dat onderbouwd is en past bij jouw woning en wensen."
+  "keuze": {
+    "vraag": "Wat zoek je?",
+    "koel": {
+      "label": "Koelen",
+      "titel": "Buiten heet.",
+      "titelAccent": "Binnen koel.",
+      "lead": "Een stille airco van Mitsubishi Electric koelt in de zomer en verwarmt zuinig in het voor- en najaar.",
+      "cta": "Offerte voor een airco",
+      "dienst": "airconditioning",
+      "ruimtes": [
+        { "titel": "Woonkamer", "tekst": "Krachtig koelen en snel bijverwarmen, netjes weggewerkt.", "prijsVanaf": null },
+        { "titel": "Slaapkamer", "tekst": "Fluisterstil, zodat je ook op hete nachten goed slaapt.", "prijsVanaf": null },
+        { "titel": "Zolder", "tekst": "De warmste plek van het huis, eindelijk bruikbaar in de zomer.", "prijsVanaf": null }
+      ]
     },
-    {
-      "titel": "Eén merk, topkwaliteit",
-      "tekst": "Ik werk uitsluitend met Mitsubishi Electric. Ik ken de systemen door en door, en dat merk je aan het resultaat."
-    },
-    {
-      "titel": "Van advies tot onderhoud",
-      "tekst": "Eén aanspreekpunt van het eerste gesprek tot het onderhoud na de installatie. Geen callcenter, gewoon ik."
+    "warm": {
+      "label": "Verwarmen",
+      "titel": "Buiten koud.",
+      "titelAccent": "Binnen warm.",
+      "lead": "Een warmtepomp verwarmt je huis met veel minder gas. Hybride naast je cv-ketel, of volledig elektrisch.",
+      "cta": "Offerte voor een warmtepomp",
+      "dienst": "warmtepompen",
+      "ruimtes": [
+        { "titel": "Hybride warmtepomp", "tekst": "Naast je cv-ketel. Fors minder gas, ook in een ouder huis.", "prijsVanaf": null },
+        { "titel": "All-electric", "tekst": "Volledig van het gas af, voor goed geïsoleerde woningen.", "prijsVanaf": null },
+        { "titel": "Airco als bijverwarming", "tekst": "Zuinig verwarmen in het voor- en najaar, per ruimte.", "prijsVanaf": null }
+      ]
     }
-  ],
+  },
+  "zoWerktHet": {
+    "koel": {
+      "titel": "Wat er bij je aan de muur komt.",
+      "punten": ["Koelen én zuinig verwarmen", "De beste plek voor binnen- en buitenunit", "Leidingen strak weggewerkt"],
+      "link": "Alles over airco’s"
+    },
+    "warm": {
+      "titel": "Wat er bij je huis komt te staan.",
+      "punten": ["Eerlijk advies over isolatie en afgifte", "Hybride of all-electric", "Zorgvuldig ingeregeld"],
+      "link": "Alles over warmtepompen"
+    }
+  },
+  "resultaat": {
+    "koel": {
+      "titel": "Buiten 31°. Binnen gewoon 21°.",
+      "tekst": "Ook op de heetste dagen een koel huis, en een slaapkamer waarin je gewoon kunt slapen."
+    },
+    "warm": {
+      "titel": "Buiten −4°. Binnen gewoon 21°.",
+      "tekst": "Een warm huis de hele winter, met veel minder gas dan je gewend bent."
+    }
+  },
   "werkwijze": [
-    {
-      "titel": "Kennismaking",
-      "tekst": "Je belt of stuurt een bericht. We bespreken kort wat je zoekt."
-    },
-    {
-      "titel": "Advies aan huis",
-      "tekst": "Ik kom langs, bekijk de situatie en denk mee over de beste oplossing."
-    },
-    {
-      "titel": "Heldere offerte",
-      "tekst": "Je krijgt een vrijblijvende offerte, zonder kleine lettertjes."
-    },
-    {
-      "titel": "Nette installatie",
-      "tekst": "Ik installeer zorgvuldig, ruim op en leg uit hoe alles werkt."
-    }
+    { "titel": "Bellen of mailen", "tekst": "Je vertelt kort wat je zoekt." },
+    { "titel": "Advies aan huis", "tekst": "Ik kom langs en bekijk de situatie." },
+    { "titel": "Heldere offerte", "tekst": "Vrijblijvend, zonder kleine lettertjes." },
+    { "titel": "Nette installatie", "tekst": "Getest, opgeruimd en uitgelegd." }
   ],
+  "sjoerd": {
+    "titel": "Geen callcenter, geen wisselende monteurs.",
+    "tekst": "Van het eerste gesprek tot het onderhoud jaren later: je hebt één aanspreekpunt."
+  },
   "over": {
     "titel": "Geen bedrijf met een callcenter. Gewoon Sjoerd.",
     "tekst": "The CoolFactory is mijn bedrijf in Heeten. Ik sta bekend om persoonlijke service, duidelijke communicatie en betrouwbare uitvoering. Jij hebt één aanspreekpunt, van het eerste advies tot het onderhoud jaren later.",
-    "punten": [
-      "Persoonlijk en betrouwbaar",
-      "Snelle installatie",
-      "Topkwaliteit producten",
-      "Advies aan huis",
-      "Duurzaam comfort"
-    ]
+    "punten": ["Persoonlijk en betrouwbaar", "Snelle installatie", "Topkwaliteit producten", "Advies aan huis", "Duurzaam comfort"]
   },
   "cta": {
     "titel": "Benieuwd wat past bij jouw huis?",

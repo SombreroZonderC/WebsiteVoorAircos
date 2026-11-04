@@ -1,5 +1,5 @@
 ---
-// PROTOTYPE – opengewerkte unit als technisch sub-onderdeel ("Zo werkt het").
+// Gestileerde technische tekening van een binnen- of buitenunit, met labels.
 interface Props {
   soort: 'buiten' | 'binnen';
   labels: { letter: string; tekst: string; x: number; y: number }[];
@@ -28,10 +28,21 @@ const { soort, labels, kleur = '#7fb4ea' } = Astro.props;
         </g>
       ) : (
         <g>
-          <path class="d" d="M70 140 Q70 110 100 110 L460 110 Q490 110 490 140 L490 220 Q490 250 460 250 L100 250 Q70 250 70 220 Z" />
-          <path class="d thin" d="M100 205 L460 205 M110 222 L450 222" />
-          <circle cx="440" cy="140" r="6" class="hub" />
-          <path class="d flow" d="M130 280 c12 22 -12 38 0 62 M210 280 c12 22 -12 38 0 62 M290 280 c12 22 -12 38 0 62 M370 280 c12 22 -12 38 0 62" />
+          <path class="d thin" d="M40 70 H520 M40 70 V400" />
+          <path class="d thin" d="M96 100 H464" />
+          <path class="d panel" d="M80 112 Q80 96 96 96 L464 96 Q480 96 480 112 L480 196 Q480 226 450 230 L110 230 Q80 226 80 196 Z" />
+          <path class="d thin" d="M96 120 H464 M96 132 H464 M96 144 H464" />
+          <path class="d" d="M104 212 Q280 238 456 212" />
+          <path class="d thin" d="M112 222 Q280 246 448 222" />
+          <rect class="d thin" x="398" y="160" width="46" height="16" rx="4" />
+          <circle cx="408" cy="168" r="3.5" class="hub" />
+          <path class="d" d="M480 170 H500 Q510 170 510 180 V400" />
+          <path class="d thin" d="M488 182 H496 Q500 182 500 186 V400" />
+          <path class="d flow" d="M150 262 c12 22 -12 38 0 62 M230 266 c12 22 -12 38 0 62 M310 266 c12 22 -12 38 0 62 M390 262 c12 22 -12 38 0 62" />
+          <rect class="d panel" x="96" y="300" width="34" height="76" rx="8" />
+          <rect class="d thin" x="104" y="310" width="18" height="14" rx="2" />
+          <circle cx="113" cy="344" r="5" class="d thin" />
+          <circle cx="113" cy="362" r="3" class="hub" />
         </g>
       )
     }

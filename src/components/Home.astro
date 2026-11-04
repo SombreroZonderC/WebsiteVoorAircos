@@ -1,495 +1,722 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import Thermometer from './Thermometer.astro';
+import TechTekening from './TechTekening.astro';
 import Visual from './Visual.astro';
-import Stappen from './Stappen.astro';
-import Reviews from './Reviews.astro';
-import FaqLijst from './FaqLijst.astro';
 import CtaBand from './CtaBand.astro';
 import { bedrijf, home, telLink } from '../lib/bedrijf';
 
-import projectFoto from '../assets/project-dakopstelling.jpg';
-import stockHero from '../assets/stock/hero-woning-warmtepomp.jpg';
-import stockAirco from '../assets/stock/airco-woonkamer.jpg';
-import stockWarmtepomp from '../assets/stock/warmtepomp-tuin.jpg';
-
-interface Props {
-  /** POC: 'stock' toont stockfoto's als sfeerbeeld, 'geen' toont placeholders */
-  fotos?: 'geen' | 'stock';
-}
-const { fotos = 'geen' } = Astro.props;
-const stock = fotos === 'stock';
-
-const diensten = (await getCollection('diensten')).sort((a, b) => a.data.volgorde - b.data.volgorde);
-const stockPerDienst: Record<string, typeof stockAirco | undefined> = {
-  airco: stockAirco,
-  warmtepomp: stockWarmtepomp,
-};
-const faqs = (await getCollection('faq'))
-  .filter((f) => ['kan-airco-verwarmen', 'hybride-of-all-electric', 'waarom-onderhoud', 'welk-merk'].includes(f.id))
-  .sort((a, b) => a.data.categorie.localeCompare(b.data.categorie));
+const reviews = (await getCollection('reviews')).sort((a, b) => b.data.datum.valueOf() - a.data.datum.valueOf()).slice(0, 3);
+const kanten = ['koel', 'warm'] as const;
+// Zonder JavaScript is "koelen" zichtbaar; de verwarmen-variant staat er wel in (voor zoekmachines), maar verborgen.
+const verborgen = (m: (typeof kanten)[number]) => m !== 'koel';
+const k = home.keuze;
 ---
 
-<!-- Hero -->
-<section class="hero dark">
-  <div class="glow" aria-hidden="true"></div>
-  <div class="grid-lines" aria-hidden="true"></div>
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
-      <p class="eyebrow">{home.hero.eyebrow}</p>
-      <h1>
-        <span class="text-cold">{home.hero.titelKoud}</span>
-        <span class="text-warm">{home.hero.titelWarm}</span>
-      </h1>
-      <p class="lead">{home.hero.lead}</p>
-      <div class="actions">
-        <a class="btn" href="/contact">Vrijblijvende offerte <Icon name="arrow" /></a>
-        <a class="btn ghost" href={telLink}><Icon name="phone" /> Bel {bedrijf.telefoon.weergave}</a>
-      </div>
-      <ul class="trust" aria-label="Waarom The CoolFactory">
-        <li><strong>{bedrijf.jarenErvaring}</strong> jaar ervaring</li>
-        <li>Specialist <strong>{bedrijf.merk}</strong></li>
-        <li>Advies <strong>aan huis</strong></li>
-      </ul>
-    </div>
-
-    <div class="hero-visual">
-      {
-        stock ? (
-          <Visual
-            soort="warmtepomp"
-            foto={stockHero}
-            alt="Moderne woning met een warmtepomp-buitenunit naast de voordeur"
-            sfeerbeeld
-            verhouding="4 / 5"
-            eager
-          />
-        ) : (
-          <div class="orb-wrap" aria-hidden="true">
-            <div class="orb" />
-            <div class="ring" />
-            <div class="chip chip-cold">
-              <Icon name="snow" size={18} /> Zomer · koelen
-            </div>
-            <div class="chip chip-warm">
-              <Icon name="flame" size={18} /> Winter · verwarmen
+<div class="home" data-modus="koel" data-home>
+  <div class="paar">
+    <div class="vlak donker plak" data-diepte-vlak data-geen-mobiele-cta>
+      <div class="vlak-inhoud">
+        <section class="hero" aria-labelledby="hero-titel">
+          <div class="glow" aria-hidden="true"></div>
+          <h1 class="woorden" id="hero-titel">
+            <span class="w koel">{home.hero.titelKoud}<span class="punt">.</span></span>
+            <span class="w warm">{home.hero.titelWarm}<span class="punt">.</span></span>
+            <span class="sr-only"> Airco en warmtepompen in {bedrijf.adres.plaats}</span>
+          </h1>
+          <div class="zij">
+            <p class="regels">
+              <span class="c">{home.hero.regelZomer}</span>
+              <span class="h">{home.hero.regelWinter}</span>
+            </p>
+            <p class="belofte">{home.hero.belofte}</p>
+            <div class="actions">
+              <a class="btn" href="/contact">Vrijblijvende offerte <Icon name="arrow" /></a>
+              <a class="btn ghost" href={telLink}><Icon name="phone" /> Bel {bedrijf.telefoon.weergave}</a>
             </div>
           </div>
-        )
-      }
-    </div>
-  </div>
-</section>
-
-<!-- Diensten -->
-<section class="section dark diensten" aria-labelledby="diensten-titel">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <p class="eyebrow cold">Diensten</p>
-      <h2 id="diensten-titel">Alles voor een comfortabel binnenklimaat</h2>
-    </div>
-    <div class="grid grid-3">
-      {
-        diensten.map((d, i) => (
-          <a class="card dienst" href={`/${d.id}`} data-reveal style={`transition-delay: ${i * 80}ms`}>
-            <Visual
-              soort={d.data.beeld}
-              foto={stock ? stockPerDienst[d.data.beeld] : undefined}
-              alt={stock ? d.data.titel : ''}
-              sfeerbeeld={stock}
-              label={d.data.menuLabel.toLowerCase()}
-              verhouding="16 / 11"
-            />
-            <div class="dienst-body">
-              <span class:list={['icon', d.data.accent]}>
-                <Icon name={d.data.icoon} />
-              </span>
-              <h3>{d.data.menuLabel}</h3>
-              <p class="muted">{d.data.intro}</p>
-              <span class="more">
-                Meer over {d.data.menuLabel.toLowerCase()} <Icon name="arrow" size={18} />
-              </span>
-            </div>
-          </a>
-        ))
-      }
-    </div>
-  </div>
-</section>
-
-<!-- Waarom -->
-<section class="section paper" aria-labelledby="waarom-titel">
-  <div class="wrap">
-    <div class="split">
-      <div data-reveal>
-        <p class="eyebrow">Waarom The CoolFactory</p>
-        <h2 id="waarom-titel">Vakwerk van iemand die het al 20 jaar doet</h2>
-        <p class="lead">
-          Geen verkooppraatjes, maar eerlijk advies en een installatie waar ik zelf mijn naam aan verbind.
-        </p>
+        </section>
       </div>
-      <div class="usps">
+    </div>
+
+    <section class="vlak licht paneel" aria-labelledby="keuze-titel">
+      <div class="trust">
         {
-          home.usps.map((u, i) => (
-            <div class="usp" data-reveal style={`transition-delay: ${i * 80}ms`}>
-              <span class="usp-nr">{String(i + 1).padStart(2, '0')}</span>
-              <div>
-                <h3>{u.titel}</h3>
-                <p class="muted">{u.tekst}</p>
-              </div>
+          bedrijf.googleScore ? (
+            <a href={bedrijf.googleReviewsUrl ?? undefined} class="score" rel="noopener">
+              <Icon name="star" size={16} /> <b>{bedrijf.googleScore.score}</b> · {bedrijf.googleScore.aantal} Google-reviews
+            </a>
+          ) : (
+            <span class="todo">Google-score</span>
+          )
+        }
+        <span><b>{bedrijf.jarenErvaring}</b> jaar ervaring</span>
+        <span>Specialist <b>{bedrijf.merk}</b></span>
+        <span>Gevestigd in <b>{bedrijf.adres.plaats}</b></span>
+      </div>
+
+      <div class="wrap keuze">
+        <p class="eyebrow" id="keuze-vraag">{k.vraag}</p>
+        <div class="seg" role="radiogroup" aria-labelledby="keuze-vraag">
+          {
+            kanten.map((m) => (
+              <button role="radio" aria-checked={m === 'koel' ? 'true' : 'false'} tabindex={m === 'koel' ? 0 : -1} data-zet={m}>
+                <Icon name={m === 'koel' ? 'snow' : 'flame'} size={18} /> {k[m].label}
+              </button>
+            ))
+          }
+        </div>
+        <h2 id="keuze-titel">
+          {
+            kanten.map((m) => (
+              <span data-m={m} hidden={verborgen(m)}>
+                {k[m].titel}
+                <br />
+                <em>{k[m].titelAccent}</em>
+              </span>
+            ))
+          }
+        </h2>
+        {kanten.map((m) => (
+          <p class="lead" data-m={m} hidden={verborgen(m)}>{k[m].lead}</p>
+        ))}
+        {kanten.map((m) => (
+          <a class="btn" href={`/contact?onderwerp=${k[m].dienst}`} data-m={m} hidden={verborgen(m)}>
+            {k[m].cta} <Icon name="arrow" />
+          </a>
+        ))}
+      </div>
+
+      <div class="wrap">
+        {
+          kanten.map((m) => (
+            <div class="ruimtes" data-m={m} hidden={verborgen(m)}>
+              {k[m].ruimtes.map((r) => (
+                <a class="ruimte" href={`/${k[m].dienst}`}>
+                  <span class="soort">{m === 'koel' ? 'Airco' : 'Warmtepomp'}</span>
+                  <h3>{r.titel}</h3>
+                  <p>{r.tekst}</p>
+                  <span class="prijs">
+                    {r.prijsVanaf ? (
+                      <>Indicatie vanaf <b>{r.prijsVanaf}</b></>
+                    ) : (
+                      <span class="todo">prijsindicatie</span>
+                    )}
+                    <Icon name="arrow" size={18} />
+                  </span>
+                </a>
+              ))}
             </div>
           ))
         }
       </div>
-    </div>
-
-    <div class="werkwijze">
-      <h2 class="h-small" data-reveal>Zo werk ik</h2>
-      <Stappen stappen={home.werkwijze} />
-    </div>
+    </section>
   </div>
-</section>
 
-<!-- Over -->
-<section class="section dark over" aria-labelledby="over-titel">
-  <div class="glow" aria-hidden="true"></div>
-  <div class="wrap split">
-    <div data-reveal>
-      <Visual soort="portret" label="Sjoerd aan het werk" verhouding="4 / 5" />
-    </div>
-    <div data-reveal>
-      <p class="eyebrow">Over mij</p>
-      <h2 id="over-titel">{home.over.titel}</h2>
-      <p class="lead">{home.over.tekst}</p>
-      <ul class="checklist">
-        {home.over.punten.map((p) => <li>{p}</li>)}
-      </ul>
-      <div class="actions" style="margin-top: 32px">
-        <a class="btn ghost" href="/over-sjoerd">Meer over Sjoerd <Icon name="arrow" /></a>
+  <div class="paar">
+    <section class="vlak donker plak zo" data-diepte-vlak aria-labelledby="zo-titel">
+      <div class="vlak-inhoud">
+        <div class="wrap zo-grid">
+          <div>
+            <p class="eyebrow cold">Zo werkt het</p>
+            <h2 class="h2s" id="zo-titel">
+              {kanten.map((m) => <span data-m={m} hidden={verborgen(m)}>{home.zoWerktHet[m].titel}</span>)}
+            </h2>
+            {
+              kanten.map((m) => (
+                <div data-m={m} hidden={verborgen(m)}>
+                  <ol class="punten">
+                    {home.zoWerktHet[m].punten.map((p) => (
+                      <li>{p}</li>
+                    ))}
+                  </ol>
+                  <a class="door" href={`/${k[m].dienst}`}>
+                    {home.zoWerktHet[m].link} <Icon name="arrow" size={18} />
+                  </a>
+                </div>
+              ))
+            }
+          </div>
+          <div data-m="koel">
+            <TechTekening
+              soort="binnen"
+              kleur="#7fb4ea"
+              labels={[
+                { letter: 'A', tekst: 'Fluisterstil', x: 2, y: 2 },
+                { letter: 'B', tekst: 'Instelbare luchtstroom', x: 44, y: 84 },
+              ]}
+            />
+          </div>
+          <div data-m="warm" hidden>
+            <TechTekening
+              soort="buiten"
+              kleur="#ff7a2f"
+              labels={[
+                { letter: 'A', tekst: 'Warmte uit de buitenlucht', x: 0, y: 4 },
+                { letter: 'B', tekst: 'Strak en waterpas', x: 48, y: 88 },
+              ]}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section class="vlak licht paneel tweede" aria-labelledby="resultaat-titel">
+      <div class="wrap">
+        <div class="resultaat">
+          <div class="thermos" aria-hidden="true">
+            <Thermometer id="th-buiten" label="Buiten" temp={31} thema="licht" />
+            <Thermometer id="th-binnen" label="Binnen" temp={21} thema="licht" />
+          </div>
+          <div>
+            <p class="eyebrow">Het resultaat</p>
+            <h2 class="h2s" id="resultaat-titel">
+              {kanten.map((m) => <span data-m={m} hidden={verborgen(m)}>{home.resultaat[m].titel}</span>)}
+            </h2>
+            {kanten.map((m) => (
+              <p class="lead" data-m={m} hidden={verborgen(m)}>{home.resultaat[m].tekst}</p>
+            ))}
+          </div>
+        </div>
+
+        <h2 class="eyebrow werkwijze-kop">Zo werk ik</h2>
+        <ol class="stappen">
+          {
+            home.werkwijze.map((s, i) => (
+              <li>
+                <span class="nr">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{s.titel}</h3>
+                <p>{s.tekst}</p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <div class="sjoerd">
+          <Visual soort="portret" label="foto van Sjoerd" verhouding="4 / 5" />
+          <div>
+            <p class="eyebrow">Je krijgt Sjoerd</p>
+            <h2 class="h2s">{home.sjoerd.titel}</h2>
+            <p class="lead">{home.sjoerd.tekst}</p>
+            <a class="door licht-door" href="/over-sjoerd">Meer over Sjoerd <Icon name="arrow" size={18} /></a>
+          </div>
+        </div>
+
+        <div class="reviews">
+          {
+            reviews.map((r) => (
+              <figure>
+                <blockquote>“{r.data.tekst}”</blockquote>
+                <figcaption>
+                  {r.data.naam} · {r.data.bron}
+                </figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    </section>
   </div>
-</section>
 
-<!-- Recent werk -->
-<section class="section paper project" aria-labelledby="project-titel">
-  <div class="wrap split">
-    <div data-reveal>
-      <p class="eyebrow">Recent werk</p>
-      <h2 id="project-titel">Netjes weggewerkt, ook op het dak</h2>
-      <p class="lead">
-        Een buitenunit hoeft geen blikvanger te zijn. Hier geplaatst op een plat dak, met een strakke omkasting
-        die past bij de gevel.
-      </p>
-      <p class="muted"><span class="todo">Sjoerd: meer projectfoto's met korte beschrijving.</span></p>
-    </div>
-    <div data-reveal>
-      <figure class="project-foto">
-        <Image
-          src={projectFoto}
-          alt="Buitenunit met donkere lamellen-omkasting op een plat dak, voor een donkere dakkapel"
-          widths={[480, 800, 1200]}
-          sizes="(max-width: 720px) 100vw, 50vw"
-        />
-      </figure>
-    </div>
-  </div>
-</section>
+  <CtaBand />
+</div>
 
-<Reviews />
+<script>
+  const root = document.querySelector<HTMLElement>('[data-home]');
+  if (root) {
+    // --- Koelen / verwarmen ---------------------------------------------------
+    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-zet]')];
+    const kantDelen = [...root.querySelectorAll<HTMLElement>('[data-m]')];
+    const buiten = root.querySelector<HTMLElement>('#th-buiten')!;
+    const graden = (t: number) => `${t < 0 ? '−' : ''}${Math.abs(t)}°`;
 
-<!-- Vragen -->
-<section class="section paper vragen" aria-labelledby="vragen-titel">
-  <div class="wrap split">
-    <div data-reveal>
-      <p class="eyebrow">Veelgestelde vragen</p>
-      <h2 id="vragen-titel">Goed om te weten</h2>
-      <p class="lead">Staat je vraag er niet tussen? Bel of mail gerust.</p>
-      <a class="btn ghost" href="/veelgestelde-vragen">Alle vragen <Icon name="arrow" /></a>
-    </div>
-    <div data-reveal>
-      <FaqLijst items={faqs} />
-    </div>
-  </div>
-</section>
+    const zet = (modus: string, focus = false) => {
+      root.dataset.modus = modus;
+      kantDelen.forEach((el) => (el.hidden = el.dataset.m !== modus));
+      knoppen.forEach((b) => {
+        const aan = b.dataset.zet === modus;
+        b.setAttribute('aria-checked', String(aan));
+        b.tabIndex = aan ? 0 : -1;
+        if (aan && focus) b.focus();
+      });
+      const t = modus === 'koel' ? 31 : -4;
+      buiten.style.setProperty('--temp', String(t));
+      buiten.querySelector('[data-waarde]')!.textContent = graden(t);
+      beoordeelDiepte();
+    };
+    knoppen.forEach((b) => {
+      b.addEventListener('click', () => zet(b.dataset.zet!));
+      b.addEventListener('keydown', (e) => {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+          e.preventDefault();
+          zet(root.dataset.modus === 'koel' ? 'warm' : 'koel', true);
+        }
+      });
+    });
 
-<CtaBand />
+    // --- Diepte: donker ligt achter, licht schuift ervoor -----------------------
+    // Alleen als de bezoeker beweging toestaat, het scherm breed genoeg is en elk donker vlak in
+    // het scherm past. Beoordeeld bij laden, resize en wissel; per scrollframe wordt alleen --p bijgewerkt.
+    const vlakken = [...root.querySelectorAll<HTMLElement>('[data-diepte-vlak]')];
+    const beweging = matchMedia('(prefers-reduced-motion: no-preference)');
+    let diepte = false;
+
+    function beoordeelDiepte() {
+      const mag =
+        beweging.matches &&
+        innerWidth > 860 &&
+        vlakken.every((v) => v.querySelector<HTMLElement>('.vlak-inhoud')!.offsetHeight <= innerHeight);
+      if (mag !== diepte) {
+        diepte = mag;
+        root!.classList.toggle('diepte', mag);
+        if (!mag) vlakken.forEach((v) => {
+          v.style.removeProperty('--p');
+          v.querySelector<HTMLElement>('.vlak-inhoud')!.inert = false;
+        });
+      }
+      plan();
+    }
+
+    let gepland = false;
+    function plan() {
+      if (diepte && !gepland) {
+        gepland = true;
+        requestAnimationFrame(teken);
+      }
+    }
+    function teken() {
+      gepland = false;
+      vlakken.forEach((v) => {
+        const volgende = v.nextElementSibling as HTMLElement;
+        const p = Math.min(1, Math.max(0, 1 - volgende.getBoundingClientRect().top / innerHeight));
+        v.style.setProperty('--p', p.toFixed(3));
+        // Volledig afgedekte inhoud uit de tabvolgorde halen
+        v.querySelector<HTMLElement>('.vlak-inhoud')!.inert = p > 0.98;
+      });
+    }
+
+    addEventListener('scroll', plan, { passive: true });
+    beweging.addEventListener('change', beoordeelDiepte);
+    new ResizeObserver(beoordeelDiepte).observe(document.documentElement);
+    beoordeelDiepte();
+  }
+</script>
 
 <style>
-  /* Hero */
+  .home {
+    --accent: var(--blue-text);
+    --accent-d: var(--blue-ice);
+    background: var(--ink);
+  }
+  .home[data-modus='warm'] {
+    --accent: var(--orange-text);
+    --accent-d: var(--orange-hot);
+  }
+
+  /* ---------- vlakken ---------- */
+  .paar {
+    position: relative;
+  }
+  .vlak {
+    position: relative;
+  }
+  .donker {
+    background: var(--ink);
+    color: var(--text-on-dark);
+  }
+  .licht {
+    background: var(--paper);
+    color: var(--text);
+  }
+  .paneel {
+    z-index: 2;
+    padding-bottom: clamp(80px, 10vw, 130px);
+  }
+  .diepte .plak {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .diepte .paneel {
+    box-shadow: 0 -24px 48px -24px rgb(0 0 0 / 0.55);
+  }
+  .diepte .plak .vlak-inhoud {
+    transform: scale(calc(1 - var(--p, 0) * 0.03));
+    opacity: calc(1 - var(--p, 0) * 0.5);
+    transform-origin: 50% 40%;
+  }
+
+  /* ---------- hero ---------- */
   .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(120px, 14vw, 170px) clamp(64px, 8vw, 110px);
-  }
-  .hero-inner {
-    position: relative;
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: clamp(32px, 5vw, 72px);
-    align-items: center;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+    align-items: end;
+    gap: 32px;
+    padding: calc(var(--header-h) + clamp(24px, 5vw, 64px)) clamp(16px, 3vw, 36px) clamp(56px, 7vw, 96px);
   }
-  .hero h1 span {
-    display: block;
+  .hero .glow {
+    background:
+      radial-gradient(45% 50% at 20% 30%, rgb(66 125 184 / 0.4), transparent 70%),
+      radial-gradient(45% 50% at 35% 85%, rgb(234 91 12 / 0.35), transparent 70%);
   }
-  .hero .lead {
-    margin-bottom: 36px;
+  .woorden {
+    position: relative;
+    margin: 0;
+    display: grid;
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(4.6rem, 17vw, 17rem);
+    line-height: 0.82;
+    letter-spacing: -0.06em;
   }
+  .w {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  .w.koel {
+    background-image: linear-gradient(100deg, #e9f3fc 10%, #8fc1f0 45%, #3a74b0 90%);
+  }
+  .w.warm {
+    background-image: linear-gradient(100deg, #fff1e6 10%, #ff7a2f 45%, #c2410c 90%);
+  }
+  .punt {
+    -webkit-text-fill-color: currentColor;
+  }
+  .koel .punt {
+    color: #3a74b0;
+  }
+  .warm .punt {
+    color: #c2410c;
+  }
+  .zij {
+    position: relative;
+    padding-bottom: 12px;
+  }
+  .regels {
+    display: grid;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    margin: 0 0 24px;
+  }
+  .regels .c {
+    color: var(--blue-ice);
+  }
+  .regels .h {
+    color: var(--orange-hot);
+  }
+  .belofte {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+
+  /* ---------- trust + keuze ---------- */
   .trust {
-    list-style: none;
-    padding: 0;
-    margin: 40px 0 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 28px;
-    color: var(--muted-on-dark);
+    justify-content: center;
+    align-items: center;
+    gap: 10px 40px;
+    padding: 24px 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
     font-size: 0.95rem;
   }
-  .trust li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .trust b {
+    color: var(--text);
   }
-  .trust li::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--orange);
-  }
-  .trust strong {
-    color: var(--text-on-dark);
-    font-weight: 600;
-  }
-
-  .orb-wrap {
-    position: relative;
-    aspect-ratio: 1;
-    max-width: 480px;
-    margin-inline: auto;
-  }
-  .orb {
-    position: absolute;
-    inset: 12%;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 30% 30%, rgb(255 255 255 / 0.25), transparent 40%),
-      linear-gradient(115deg, var(--blue) 0%, var(--blue-ice) 30%, #e9d6cc 48%, var(--orange-hot) 62%, var(--orange) 100%);
-    background-size: 100% 100%, 130% 130%;
-    filter: saturate(1.1);
-    box-shadow:
-      -40px -20px 120px -20px rgb(66 125 184 / 0.6),
-      40px 30px 120px -20px rgb(234 91 12 / 0.55);
-    animation: shift 14s ease-in-out infinite alternate;
-  }
-  .orb::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, transparent 55%, rgb(6 20 25 / 0.35));
-  }
-  @keyframes shift {
-    from {
-      background-position: 0 0, 20% 50%;
-    }
-    to {
-      background-position: 0 0, 80% 50%;
-    }
-  }
-  .ring {
-    position: absolute;
-    inset: 2%;
-    border-radius: 50%;
-    border: 1.5px dashed rgb(255 255 255 / 0.18);
-    animation: spin 60s linear infinite;
-  }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  .chip {
-    position: absolute;
+  .score {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 999px;
-    background: rgb(6 20 25 / 0.75);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--line-dark);
-    font-size: 0.9rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .chip-cold {
-    top: 14%;
-    left: -4%;
-  }
-  .chip-cold :global(svg) {
-    color: var(--blue-ice);
-  }
-  .chip-warm {
-    bottom: 12%;
-    right: -4%;
-  }
-  .chip-warm :global(svg) {
-    color: var(--orange-hot);
-  }
-
-  /* Diensten */
-  .diensten {
-    padding-top: 0;
-  }
-  .section-head {
-    margin-bottom: 40px;
-  }
-  .section-head h2 {
-    max-width: 20ch;
-  }
-  .dienst {
-    padding: 12px;
+    gap: 6px;
     text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    transition:
-      transform 0.3s var(--ease),
-      border-color 0.3s var(--ease);
   }
-  .dienst:hover {
-    transform: translateY(-4px);
-    border-color: rgb(255 255 255 / 0.22);
+  .score :global(svg) {
+    color: var(--orange-text);
   }
-  .dienst-body {
-    padding: 22px 14px 14px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+  .keuze {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    padding-top: clamp(64px, 8vw, 110px);
+    padding-bottom: 56px;
   }
-  .dienst-body .muted {
-    color: var(--muted-on-dark);
-    font-size: 0.98rem;
-    flex: 1;
-  }
-  .icon {
+  .seg {
     display: inline-grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    margin-bottom: 18px;
-    background: rgb(66 125 184 / 0.16);
-    color: var(--blue-ice);
-  }
-  .icon.warm {
-    background: rgb(234 91 12 / 0.16);
-    color: var(--orange-hot);
-  }
-  .more {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    color: #fff;
-  }
-  .more :global(svg) {
-    transition: transform 0.25s var(--ease);
-  }
-  .dienst:hover .more :global(svg) {
-    transform: translateX(4px);
-  }
-
-  /* Split-secties */
-  .split {
-    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(36px, 6vw, 96px);
-    align-items: center;
-  }
-  .usps {
-    display: grid;
-    gap: 8px;
-  }
-  .usp {
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 16px;
-    padding: 24px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .usp:last-child {
-    border-bottom: 0;
-  }
-  .usp-nr {
-    font-family: var(--font-display);
-    font-stretch: 112%;
-    font-weight: 800;
-    font-size: 1.6rem;
-    color: var(--orange);
-    line-height: 1.1;
-  }
-  .usp h3 {
-    margin-bottom: 6px;
-  }
-  .usp p {
-    margin: 0;
-  }
-  .werkwijze {
-    margin-top: clamp(64px, 9vw, 112px);
-  }
-  .h-small {
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    gap: 4px;
+    padding: 5px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
     margin-bottom: 28px;
   }
-
-  .over {
-    position: relative;
-    overflow: hidden;
+  .seg button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background 0.25s,
+      color 0.25s;
   }
-  .over .split {
-    position: relative;
+  .seg [aria-checked='true'] {
+    background: var(--accent);
+    color: #fff;
   }
-
-  .project-foto {
+  .home h2 {
+    font-size: clamp(2.4rem, 5vw, 4.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin: 0 0 20px;
+  }
+  .home h2 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .home .h2s {
+    font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+    line-height: 1.05;
+  }
+  .keuze .lead {
+    margin: 0 auto 26px;
+    max-width: 46ch;
+  }
+  .ruimtes:not([hidden]) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .ruimte {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    border-radius: 20px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    transition:
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  .ruimte:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -26px rgb(12 29 35 / 0.4);
+  }
+  .soort {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .ruimte h3 {
     margin: 0;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    aspect-ratio: 5 / 4;
   }
-  .project-foto :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .ruimte p {
+    margin: 0;
+    color: var(--muted);
+    flex: 1;
+  }
+  .prijs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  .prijs :global(svg) {
+    color: var(--accent);
+    flex: none;
   }
 
-  .vragen {
-    padding-top: 0;
+  /* ---------- zo werkt het ---------- */
+  .zo .vlak-inhoud {
+    padding: clamp(88px, 10vw, 140px) 0 clamp(100px, 11vw, 160px);
+    background:
+      radial-gradient(50% 60% at 80% 50%, rgb(255 255 255 / 0.04), transparent 70%),
+      var(--ink);
   }
-  .vragen .split {
-    align-items: start;
+  .zo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 56px;
+    align-items: center;
+  }
+  .punten {
+    list-style: none;
+    counter-reset: punt;
+    padding: 0;
+    margin: 24px 0 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .punten li {
+    counter-increment: punt;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .punten li::before {
+    content: counter(punt, decimal-leading-zero);
+    font-family: var(--font-mono);
+    color: var(--accent-d);
+    margin-right: 14px;
+    font-size: 0.85rem;
+  }
+  .door {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    font-weight: 700;
+    color: var(--accent-d);
+    text-decoration: none;
+  }
+  .licht-door {
+    color: var(--accent);
+    margin-top: 4px;
+  }
+  .door:hover {
+    text-decoration: underline;
   }
 
-  @media (max-width: 900px) {
-    .hero-inner,
-    .split {
-      grid-template-columns: 1fr;
+  /* ---------- resultaat, werkwijze, sjoerd, reviews ---------- */
+  .resultaat {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(40px, 8vw, 110px);
+    align-items: center;
+    padding: clamp(64px, 8vw, 110px) 0 clamp(48px, 6vw, 80px);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: clamp(48px, 6vw, 72px);
+  }
+  .thermos {
+    display: flex;
+    gap: 34px;
+    padding-right: 30px;
+  }
+  .thermos :global(.thermo:last-child) {
+    --kwik-kleur: var(--accent);
+  }
+  .home .werkwijze-kop {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    margin: 0 0 14px;
+  }
+  .stappen {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+  }
+  .stappen li {
+    position: relative;
+    padding: 26px 24px 0 0;
+  }
+  .stappen li::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--orange-text);
+  }
+  .nr {
+    font-family: var(--font-mono);
+    color: var(--orange-text);
+    font-size: 0.85rem;
+  }
+  .stappen h3 {
+    margin: 12px 0 6px;
+  }
+  .stappen p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .sjoerd {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+    margin-top: clamp(80px, 10vw, 120px);
+  }
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 56px;
+  }
+  .reviews figure {
+    margin: 0;
+    padding: 26px;
+    border-radius: 20px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  blockquote {
+    margin: 0;
+    line-height: 1.6;
+  }
+  figcaption {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 860px) {
+    .hero,
+    .resultaat,
+    .zo-grid,
+    .sjoerd {
+      grid-template-columns: minmax(0, 1fr);
     }
-    .hero-visual {
-      max-width: 420px;
-      width: 100%;
-      margin-inline: auto;
+    .thermos {
+      justify-content: center;
+      padding-right: 0;
+      gap: 40px;
     }
-    .orb-wrap {
-      max-width: 340px;
+    .thermos :global(.thermo),
+    .thermos :global(.thermo svg) {
+      width: 84px;
     }
-    .chip-cold {
-      left: 0;
+    .ruimtes:not([hidden]),
+    .reviews {
+      grid-template-columns: minmax(0, 1fr);
     }
-    .chip-warm {
-      right: 0;
+    .stappen {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 24px;
+    }
+    .sjoerd :global(.visual) {
+      max-width: 260px;
     }
   }
 </style>
