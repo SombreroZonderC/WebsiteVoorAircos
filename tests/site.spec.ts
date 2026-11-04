@@ -10,6 +10,9 @@ const paginas = [
   '/over-sjoerd',
   '/werkgebied',
   '/veelgestelde-vragen',
+  '/kennisbank',
+  '/kennisbank/hybride-of-all-electric',
+  '/kennisbank/verwarmen-met-een-airco',
   '/privacy',
   '/bedankt',
 ];

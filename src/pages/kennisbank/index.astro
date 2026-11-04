@@ -1,0 +1,110 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ReuzenHero from '../../components/ReuzenHero.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+
+const artikelen = (await getCollection('kennis')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+---
+
+<Base
+  title="Kennisbank: uitleg over airco en warmtepompen"
+  description="Heldere uitleg over airconditioning en warmtepompen: hybride of all-electric, verwarmen met een airco en meer. Met bronnen."
+>
+  <div class="paar">
+    <ReuzenHero
+      woord="Kennis."
+      kleur="koud"
+      verhouding="smal"
+      eyebrow="Kennisbank"
+      titel="Uitleg over airco en warmtepompen"
+      tekst="Rustig lezen voordat je een keuze maakt. Algemene uitleg, met bronnen erbij."
+    />
+    <section class="vlak licht paneel sectie">
+      <div class="wrap">
+        <ul class="lijst">
+          {
+            artikelen.map((a) => (
+              <li>
+                <a class:list={['artikel', a.data.accent]} href={`/kennisbank/${a.id}`}>
+                  <span class="meta">
+                    {a.data.eyebrow.replace('Kennisbank · ', '')} · {a.data.leestijd} min lezen
+                  </span>
+                  <h2>{a.data.titel}</h2>
+                  <p>{a.data.seoOmschrijving}</p>
+                  <span class="lees">
+                    Lees verder <Icon name="arrow" size={18} />
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </div>
+  <CtaBand titel="Liever even overleggen?" />
+</Base>
+
+<style>
+  .sectie {
+    padding-block: clamp(64px, 8vw, 110px);
+  }
+  .lijst {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .artikel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--blue-text);
+    text-decoration: none;
+    transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .artikel.warm {
+    border-top-color: var(--orange-text);
+  }
+  .artikel:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -26px rgb(12 29 35 / 0.4);
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+  h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    margin: 0;
+  }
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .lees {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--blue-text);
+  }
+  .warm .lees {
+    color: var(--orange-text);
+  }
+  @media (max-width: 860px) {
+    .lijst {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -26,21 +26,23 @@ const slug = pad.replace(/^\//, '') || 'home';
 const ogPad = existsSync(`public/images/og/${slug}.jpg`) ? `/images/og/${slug}.jpg` : '/images/og.jpg';
 const ogImage = new URL(ogPad, bedrijf.url).href;
 
-// Kruimelpad voor zoekmachines (Home → pagina)
-const paginaNaam = nav.find((n) => n.href === pad)?.label ?? title;
+// Kruimelpad voor zoekmachines (Home → [tussenniveau] → pagina)
+const tussen: Record<string, string> = { kennisbank: 'Kennisbank' };
+const delen = pad.split('/').filter(Boolean);
+const paginaNaam = nav.find((n) => n.href === pad)?.label ?? (delen.length === 1 && tussen[delen[0]]) ?? title;
+const niveaus = [
+  { name: 'Home', item: `${bedrijf.url}/` },
+  ...(delen.length > 1 && tussen[delen[0]] ? [{ name: tussen[delen[0]], item: `${bedrijf.url}/${delen[0]}` }] : []),
+  { name: paginaNaam, item: canonical },
+];
 const kruimel =
   pad && !noindex
     ? {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${bedrijf.url}/` },
-          { '@type': 'ListItem', position: 2, name: paginaNaam, item: canonical },
-        ],
+        itemListElement: niveaus.map((n, i) => ({ '@type': 'ListItem', position: i + 1, ...n })),
       }
     : null;
-
-
 
 const localBusiness = {
   '@context': 'https://schema.org',

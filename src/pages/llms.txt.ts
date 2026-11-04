@@ -5,6 +5,7 @@ import { bedrijf } from '../lib/bedrijf';
 // Samenvatting voor AI-assistenten en -zoekmachines (https://llmstxt.org).
 export const GET: APIRoute = async () => {
   const diensten = (await getCollection('diensten')).sort((a, b) => a.data.volgorde - b.data.volgorde);
+  const kennis = (await getCollection('kennis')).sort((x, y) => x.data.volgorde - y.data.volgorde);
   const a = bedrijf.adres;
 
   const regels = [
@@ -22,6 +23,10 @@ export const GET: APIRoute = async () => {
     '## Diensten',
     '',
     ...diensten.map((d) => `- [${d.data.menuLabel}](${bedrijf.url}/${d.id}): ${d.data.seoOmschrijving}`),
+    '',
+    '## Kennisbank',
+    '',
+    ...kennis.map((k) => `- [${k.data.titel}](${bedrijf.url}/kennisbank/${k.id}): ${k.data.seoOmschrijving}`),
     '',
     '## Meer informatie',
     '',

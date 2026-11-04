@@ -15,6 +15,9 @@ const paginas = [
   { slug: 'over-sjoerd', woord: `${bedrijf.jarenErvaring}`, kleur: 'warm', regel: `${bedrijf.eigenaar}, al ${bedrijf.jarenErvaring} jaar in het vak` },
   { slug: 'werkgebied', woord: `Vanuit ${bedrijf.adres.plaats}.`, kleur: 'koud', regel: 'Werkgebied' },
   { slug: 'veelgestelde-vragen', woord: 'Vragen?', kleur: 'wit', regel: 'Veelgestelde vragen' },
+  { slug: 'kennisbank', woord: 'Kennis.', kleur: 'koud', regel: 'Kennisbank: uitleg over airco en warmtepompen' },
+  { slug: 'kennisbank/hybride-of-all-electric', woord: 'Hybride?', kleur: 'warm', regel: 'Hybride of all-electric warmtepomp?' },
+  { slug: 'kennisbank/verwarmen-met-een-airco', woord: 'Warmte?', kleur: 'koud', regel: 'Kun je verwarmen met een airco?' },
   { slug: 'contact', woord: `Bel ${bedrijf.eigenaar.split(' ')[0]}.`, kleur: 'wit', regel: 'Contact & offerte' },
 ];
 
@@ -39,6 +42,7 @@ for (const p of paginas) {
     .r{font-size:30px;font-stretch:105%;font-weight:600;color:#93a6ae;margin-top:30px}
   </style><div class="g"></div><div class="c"><img src="data:image/svg+xml;base64,${logo}"><div class="w">${p.woord}</div><div class="r">${p.regel} · ${bedrijf.adres.plaats} · ${bedrijf.telefoon.weergave}</div></div>`);
   await page.waitForTimeout(150);
+  mkdirSync(`public/images/og/${p.slug}`.replace(/\/[^/]+$/, ''), { recursive: true });
   await page.screenshot({ path: `public/images/og/${p.slug}.jpg`, type: 'jpeg', quality: 85 });
   console.log('og:', p.slug);
 }

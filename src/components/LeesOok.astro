@@ -1,0 +1,32 @@
+---
+// Verwijzing naar een kennisbankartikel, bijvoorbeeld in een zijkaart.
+import { getEntry } from 'astro:content';
+interface Props {
+  artikel: string;
+}
+const k = (await getEntry('kennis', Astro.props.artikel))!;
+---
+
+<a class="lees-ook" href={`/kennisbank/${k.id}`}>
+  <span>Lees ook</span>
+  {k.data.titel}
+</a>
+
+<style>
+  .lees-ook {
+    display: block;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .lees-ook span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+</style>

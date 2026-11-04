@@ -1,0 +1,184 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ReuzenHero from '../../components/ReuzenHero.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { bedrijf, bedrijfId } from '../../lib/bedrijf';
+
+export async function getStaticPaths() {
+  const alle = await getCollection('kennis');
+  return alle.map((artikel) => ({ params: { slug: artikel.id }, props: { artikel, alle } }));
+}
+
+const { artikel, alle } = Astro.props;
+const { Content } = await render(artikel);
+const a = artikel.data;
+const verwant = alle.filter((x) => a.verwant.includes(x.id));
+const datum = a.bijgewerkt.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+const url = `${bedrijf.url}/kennisbank/${artikel.id}`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: a.titel,
+    description: a.seoOmschrijving,
+    dateModified: a.bijgewerkt.toISOString().slice(0, 10),
+    inLanguage: 'nl-NL',
+    mainEntityOfPage: url,
+    author: { '@id': bedrijfId },
+    publisher: { '@id': bedrijfId },
+    citation: a.bronnen.map((b) => b.url),
+  },
+];
+---
+
+<Base title={a.seoTitel} description={a.seoOmschrijving} schema={schema}>
+  <div class="paar">
+    <ReuzenHero woord={a.woord} kleur={a.accent} verhouding="smal" eyebrow={a.eyebrow} titel={a.titel} tekst={a.intro} />
+    <article class="vlak licht paneel sectie">
+      <div class="wrap layout">
+        <div>
+          <p class="meta">
+            <a href="/kennisbank">Kennisbank</a> · Bijgewerkt <time datetime={a.bijgewerkt.toISOString().slice(0, 10)}>{datum}</time> · {a.leestijd} min lezen
+          </p>
+          <div class:list={['kort', a.accent]}>
+            <h2>In het kort</h2>
+            <ul>{a.kernpunten.map((k) => <li>{k}</li>)}</ul>
+          </div>
+          <div class="prose"><Content /></div>
+          <div class="bronnen">
+            <h2>Bronnen</h2>
+            <ul>
+              {
+                a.bronnen.map((b) => (
+                  <li>
+                    <a href={b.url} rel="noopener">{b.naam}</a>
+                  </li>
+                ))
+              }
+            </ul>
+            <p>Algemene informatie, geen persoonlijk advies. Wat in jouw huis past, hangt af van de situatie ter plekke.</p>
+          </div>
+        </div>
+        <aside class="zij">
+          <div class="card">
+            <h2 class="h3">Twijfel je?</h2>
+            <p>Een vakman ziet in één bezoek wat in jouw huis past.</p>
+            <a class="btn" href="/contact">Vraag advies aan huis <Icon name="arrow" /></a>
+          </div>
+          {
+            verwant.length > 0 && (
+              <nav class="card verwant" aria-label="Verder lezen">
+                <h2 class="h3">Verder lezen</h2>
+                <ul>
+                  {verwant.map((v) => (
+                    <li>
+                      <a href={`/kennisbank/${v.id}`}>{v.data.titel}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )
+          }
+        </aside>
+      </div>
+    </article>
+  </div>
+  <CtaBand titel="Vraag het gewoon." />
+</Base>
+
+<style>
+  .sectie {
+    padding-block: clamp(56px, 7vw, 100px);
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+  .layout > div {
+    max-width: 72ch;
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin: 0 0 28px;
+  }
+  .meta a {
+    color: inherit;
+  }
+  .kort {
+    padding: 24px 28px;
+    margin-bottom: 40px;
+    background: var(--paper-2);
+    border-left: 4px solid var(--blue-text);
+  }
+  .kort.warm {
+    border-left-color: var(--orange-text);
+  }
+  .kort h2,
+  .bronnen h2 {
+    font-size: 1.15rem;
+    margin: 0 0 12px;
+  }
+  .kort ul,
+  .bronnen ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .kort li + li {
+    margin-top: 6px;
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .bronnen {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .bronnen li {
+    padding-block: 6px;
+  }
+  .bronnen p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 16px 0 0;
+  }
+  .zij {
+    display: grid;
+    gap: 16px;
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+  }
+  .zij .h3 {
+    font-size: 1.25rem;
+    margin: 0 0 8px;
+  }
+  .zij p {
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  .verwant ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .verwant a {
+    display: block;
+    padding-block: 10px;
+    font-weight: 600;
+  }
+  @media (max-width: 860px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .zij {
+      position: static;
+    }
+  }
+</style>

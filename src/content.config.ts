@@ -56,4 +56,25 @@ const paginas = defineCollection({
   }),
 });
 
-export const collections = { diensten, faq, reviews, paginas };
+// Kennisbank: algemene vakinformatie met bronnen, geen beloftes namens het bedrijf.
+const kennis = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/kennis' }),
+  schema: z.object({
+    titel: z.string(),
+    seoTitel: z.string(),
+    seoOmschrijving: z.string().max(170),
+    eyebrow: z.string(),
+    intro: z.string(),
+    /** Kort reuzenwoord voor de hero */
+    woord: z.string().max(12),
+    accent: z.enum(['koud', 'warm']),
+    volgorde: z.number().default(100),
+    bijgewerkt: z.coerce.date(),
+    leestijd: z.number(),
+    kernpunten: z.array(z.string()).min(2).max(5),
+    bronnen: z.array(z.object({ naam: z.string(), url: z.url() })).min(1),
+    verwant: z.array(z.string()).default([]),
+  }),
+});
+
+export const collections = { diensten, faq, reviews, paginas, kennis };

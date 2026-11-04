@@ -10,6 +10,7 @@ import AircoOpengewerkt from '../components/AircoOpengewerkt.astro';
 import Seizoensband from '../components/Seizoensband.astro';
 import Stappen from '../components/Stappen.astro';
 import FaqLijst from '../components/FaqLijst.astro';
+import LeesOok from '../components/LeesOok.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import RuimteKaarten from '../components/RuimteKaarten.astro';
@@ -66,6 +67,7 @@ const ruimtes = home.keuze.koel.ruimtes;
         <p class="muted">Bel of stuur een bericht, dan plannen we een afspraak aan huis.</p>
         <a class="btn" href="/contact?onderwerp=airconditioning">Offerte aanvragen</a>
         <a class="tel" href={telLink}><Icon name="phone" size={18} /> {bedrijf.telefoon.weergave}</a>
+        <LeesOok artikel="verwarmen-met-een-airco" />
       </aside>
     </div>
     <div class="wrap">
