@@ -279,15 +279,6 @@ p {
     var(--orange);
 }
 
-.page-hero {
-  position: relative;
-  overflow: hidden;
-  padding-block: clamp(130px, 16vw, 190px) clamp(64px, 8vw, 100px);
-}
-.page-hero .lead {
-  margin-bottom: 32px;
-}
-
 /* Temperatuurgloed: koud links, warm rechts, zoals in het logo */
 .glow {
   position: absolute;
@@ -296,17 +287,6 @@ p {
   background:
     radial-gradient(40% 60% at 12% 20%, rgb(66 125 184 / 0.32), transparent 70%),
     radial-gradient(38% 55% at 92% 85%, rgb(234 91 12 / 0.26), transparent 70%);
-}
-.grid-lines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--line-dark) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(70% 70% at 50% 30%, #000 20%, transparent 75%);
-  opacity: 0.5;
 }
 
 .prose {

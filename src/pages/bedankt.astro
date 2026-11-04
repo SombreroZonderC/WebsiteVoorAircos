@@ -1,19 +1,73 @@
 ---
 import Base from '../layouts/Base.astro';
-import PaginaHero from '../components/PaginaHero.astro';
+import ReuzenHero from '../components/ReuzenHero.astro';
 import Icon from '../components/Icon.astro';
 import { bedrijf, telLink } from '../lib/bedrijf';
 ---
 
 <Base title="Bedankt voor je bericht" description="Je bericht is verstuurd." noindex>
-  <PaginaHero
-    eyebrow="Verstuurd"
-    titel="Bedankt voor je bericht!"
-    intro="Ik heb je aanvraag ontvangen en neem zo snel mogelijk contact met je op."
-  >
-    <div class="actions">
-      <a class="btn" href="/">Terug naar home</a>
+  <div class="paar">
+    <ReuzenHero
+      woord="Bedankt."
+      kleur="warm"
+      verhouding="smal"
+      eyebrow="Verstuurd"
+      titel="Je bericht is binnen."
+      tekst="Ik heb je aanvraag ontvangen en neem zo snel mogelijk contact met je op."
+    >
+      <a class="btn" href="/">Terug naar home <Icon name="arrow" /></a>
       <a class="btn ghost" href={telLink}><Icon name="phone" /> Haast? Bel {bedrijf.telefoon.weergave}</a>
-    </div>
-  </PaginaHero>
+    </ReuzenHero>
+    <section class="vlak licht paneel sectie">
+      <div class="wrap">
+        <p class="eyebrow">Wat gebeurt er nu?</p>
+        <ol class="stappen">
+          <li><b>1</b><span>Ik bel of mail je terug.</span></li>
+          <li><b>2</b><span>We plannen een afspraak voor advies aan huis.</span></li>
+          <li><b>3</b><span>Je krijgt een heldere, vrijblijvende offerte.</span></li>
+        </ol>
+        <p class="muted">Intussen alvast lezen? Bekijk de <a href="/veelgestelde-vragen">veelgestelde vragen</a>.</p>
+      </div>
+    </section>
+  </div>
 </Base>
+
+<style>
+  .sectie {
+    padding-block: clamp(56px, 7vw, 96px);
+  }
+  .stappen {
+    list-style: none;
+    margin: 0 0 28px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .stappen li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 20px;
+    border-radius: 18px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    font-weight: 600;
+  }
+  .stappen b {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--orange-btn);
+    color: #fff;
+    font-size: 0.85rem;
+  }
+  @media (max-width: 760px) {
+    .stappen {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

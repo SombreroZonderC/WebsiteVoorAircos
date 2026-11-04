@@ -1,18 +1,68 @@
 ---
 import Base from '../layouts/Base.astro';
-import PaginaHero from '../components/PaginaHero.astro';
+import ReuzenHero from '../components/ReuzenHero.astro';
+import Icon from '../components/Icon.astro';
+import { nav } from '../lib/bedrijf';
 ---
 
 <Base title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer)." noindex>
-  <PaginaHero
-    eyebrow="404"
-    titel="Deze pagina is even uit de lucht."
-    intro="De pagina die je zoekt bestaat niet (meer). Misschien vind je via het menu wat je zoekt."
-    accent="koud"
-  >
-    <div class="actions">
-      <a class="btn" href="/">Naar de homepage</a>
-      <a class="btn ghost" href="/contact">Contact</a>
-    </div>
-  </PaginaHero>
+  <div class="paar">
+    <ReuzenHero
+      woord="404."
+      kleur="koud"
+      verhouding="smal"
+      eyebrow="Niet gevonden"
+      titel="Deze pagina is even uit de lucht."
+      tekst="De pagina die je zoekt bestaat niet (meer). Misschien vind je hieronder wat je zoekt."
+    >
+      <a class="btn" href="/">Naar de homepage <Icon name="arrow" /></a>
+    </ReuzenHero>
+    <section class="vlak licht paneel sectie">
+      <div class="wrap">
+        <p class="eyebrow">Populaire pagina's</p>
+        <ul class="links">
+          {
+            nav.map((n) => (
+              <li>
+                <a href={n.href}>
+                  {n.label} <Icon name="arrow" size={18} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </div>
 </Base>
+
+<style>
+  .sectie {
+    padding-block: clamp(56px, 7vw, 96px);
+  }
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+    gap: 10px;
+  }
+  .links a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .links a:hover {
+    border-color: var(--orange-text);
+  }
+  .links :global(svg) {
+    color: var(--orange-text);
+  }
+</style>
