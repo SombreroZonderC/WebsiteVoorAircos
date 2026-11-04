@@ -1,15 +1,23 @@
 ---
-import { getEntry, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import PaginaHero from '../components/PaginaHero.astro';
 import Visual from '../components/Visual.astro';
 import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { bedrijf, bedrijfId, home } from '../lib/bedrijf';
+import Icon from '../components/Icon.astro';
+import { bedrijf, bedrijfId, home, telLink } from '../lib/bedrijf';
 
 const pagina = (await getEntry('paginas', 'over-sjoerd'))!;
 const { Content } = await render(pagina);
 const p = pagina.data;
+const citaat = (await getCollection('reviews')).find((r) => r.id === 'google-reviewer') ?? (await getCollection('reviews'))[0];
+
+// Tijdlijn: jaartallen en mijlpalen vult Sjoerd aan (null = placeholder)
+const tijdlijn = [
+  { jaar: null, titel: 'In het vak', tekst: null },
+  { jaar: null, titel: 'The CoolFactory', tekst: 'Eigen bedrijf in Heeten.' },
+  { jaar: 'Nu', titel: 'Mitsubishi Electric-specialist', tekst: `Ruim ${bedrijf.jarenErvaring} jaar ervaring, één merk, één aanspreekpunt.` },
+];
 
 const schema = [
   {
@@ -27,33 +35,69 @@ const schema = [
 ---
 
 <Base title={p.seoTitel} description={p.seoOmschrijving} schema={schema}>
-  <PaginaHero eyebrow={p.eyebrow} titel={p.titel} intro={p.intro} />
+  <div class="paar">
+    <div class="vlak donker plak" data-diepte-vlak data-geen-mobiele-cta>
+      <div class="vlak-inhoud">
+        <section class="hero">
+          <div class="glow" aria-hidden="true"></div>
+          <div class="portret"><Visual soort="portret" label="portret van Sjoerd" verhouding="4 / 5" /></div>
+          <div class="info">
+            <p class="eyebrow">{p.eyebrow}</p>
+            <p class="twintig" aria-hidden="true">{bedrijf.jarenErvaring}</p>
+            <h1>Sjoerd Moller</h1>
+            <p class="intro">{p.intro}</p>
+            <div class="actions">
+              <a class="btn" href="/contact">Neem contact op <Icon name="arrow" /></a>
+              <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
 
-  <section class="section paper">
-    <div class="wrap layout">
-      <div data-reveal>
-        <Visual soort="portret" label="portret van Sjoerd" verhouding="4 / 5" />
-        <dl class="feiten">
-          <div><dt>Ervaring</dt><dd>{bedrijf.jarenErvaring} jaar</dd></div>
-          <div><dt>Specialisme</dt><dd>{bedrijf.merk}</dd></div>
-          <div><dt>Gevestigd in</dt><dd>{bedrijf.adres.plaats}</dd></div>
+    <section class="vlak licht paneel sectie">
+      <div class="wrap">
+        <h2 class="eyebrow">Tijdlijn</h2>
+        <ol class="tijdlijn">
           {
-            bedrijf.certificeringen.length > 0 && (
-              <div>
-                <dt>Certificering</dt>
-                <dd>{bedrijf.certificeringen.join(', ')}</dd>
-              </div>
-            )
+            tijdlijn.map((t) => (
+              <li>
+                <span class="jaar">{t.jaar ?? <span class="todo">jaartal</span>}</span>
+                <h3>{t.titel}</h3>
+                <p>{t.tekst ?? <span class="todo">hoe Sjoerd begon</span>}</p>
+              </li>
+            ))
           }
-        </dl>
+        </ol>
+
+        <div class="tekst">
+          <div class="prose"><Content /></div>
+          <aside>
+            <h2 class="h3">Waar ik voor sta</h2>
+            <ul class="checklist">{home.over.punten.map((punt) => <li>{punt}</li>)}</ul>
+            <dl class="feiten">
+              <div><dt>Ervaring</dt><dd>{bedrijf.jarenErvaring} jaar</dd></div>
+              <div><dt>Specialisme</dt><dd>{bedrijf.merk}</dd></div>
+              <div><dt>Gevestigd in</dt><dd>{bedrijf.adres.plaats}</dd></div>
+              {
+                bedrijf.certificeringen.length > 0 && (
+                  <div>
+                    <dt>Certificering</dt>
+                    <dd>{bedrijf.certificeringen.join(', ')}</dd>
+                  </div>
+                )
+              }
+            </dl>
+          </aside>
+        </div>
       </div>
-      <div class="prose" data-reveal>
-        <Content />
-        <h2>Waar ik voor sta</h2>
-        <ul class="checklist">
-          {home.over.punten.map((punt) => <li>{punt}</li>)}
-        </ul>
-      </div>
+    </section>
+  </div>
+
+  <section class="vlak donker citaat">
+    <div class="wrap">
+      <blockquote>“{citaat.data.tekst}”</blockquote>
+      <p class="bron">{citaat.data.naam} · {citaat.data.bron}</p>
     </div>
   </section>
 
@@ -62,29 +106,110 @@ const schema = [
 </Base>
 
 <style>
-  .layout {
+  .hero {
+    position: relative;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: 380px minmax(0, 1fr);
-    gap: clamp(40px, 6vw, 96px);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(28px, 5vw, 72px);
+    align-items: end;
+    padding: calc(var(--header-h) + clamp(28px, 5vw, 64px)) clamp(16px, 4vw, 56px) clamp(48px, 6vw, 80px);
+  }
+  .hero .glow {
+    background:
+      radial-gradient(45% 55% at 70% 40%, rgb(234 91 12 / 0.35), transparent 70%),
+      radial-gradient(40% 50% at 15% 80%, rgb(66 125 184 / 0.3), transparent 70%);
+  }
+  .portret,
+  .info {
+    position: relative;
+  }
+  .portret {
+    max-width: 420px;
+  }
+  .twintig {
+    margin: 0;
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(6rem, 18vw, 16rem);
+    line-height: 0.82;
+    letter-spacing: -0.07em;
+    background: linear-gradient(100deg, #fff1e6 10%, #ff7a2f 45%, #c2410c 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  h1 {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    margin: 18px 0 8px;
+  }
+  .intro {
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    color: var(--muted-on-dark);
+    max-width: 52ch;
+    margin: 0 0 24px;
+  }
+  .sectie {
+    padding-block: clamp(72px, 9vw, 120px);
+  }
+  .tijdlijn {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 2px solid var(--orange-text);
+  }
+  .tijdlijn li {
+    position: relative;
+    padding: 26px 24px 0 0;
+  }
+  .tijdlijn li::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--orange-text);
+  }
+  .jaar {
+    font-family: var(--font-mono);
+    color: var(--orange-text);
+    font-size: 0.9rem;
+  }
+  .tijdlijn h3 {
+    margin: 8px 0 4px;
+  }
+  .tijdlijn p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .tekst {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: clamp(40px, 6vw, 88px);
     align-items: start;
+    margin-top: clamp(64px, 8vw, 104px);
   }
   .prose :global(h2:first-child) {
     margin-top: 0;
   }
-  .checklist {
-    margin-top: 8px;
+  .h3 {
+    font-size: 1.35rem;
   }
   .feiten {
-    margin: 20px 0 0;
-    display: grid;
-    gap: 0;
+    margin: 28px 0 0;
     border-top: 1px solid var(--line);
   }
   .feiten div {
     display: flex;
     justify-content: space-between;
     gap: 16px;
-    padding: 14px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--line);
   }
   dt {
@@ -95,12 +220,45 @@ const schema = [
     font-weight: 600;
     text-align: right;
   }
-  @media (max-width: 900px) {
-    .layout {
-      grid-template-columns: 1fr;
+  .citaat {
+    padding-block: clamp(80px, 11vw, 150px);
+    background:
+      radial-gradient(40% 70% at 10% 50%, rgb(66 125 184 / 0.25), transparent 70%),
+      var(--ink);
+  }
+  blockquote {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.6rem, 3.6vw, 3rem);
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    max-width: 28ch;
+  }
+  .bron {
+    margin-top: 20px;
+    color: var(--muted-on-dark);
+  }
+  @media (max-width: 860px) {
+    .hero,
+    .tekst {
+      grid-template-columns: minmax(0, 1fr);
     }
-    .layout > :first-child {
-      max-width: 420px;
+    .portret {
+      max-width: 260px;
+    }
+    .tijdlijn {
+      grid-template-columns: minmax(0, 1fr);
+      border-top: 0;
+      border-left: 2px solid var(--orange-text);
+      padding-left: 20px;
+    }
+    .tijdlijn li {
+      padding: 0 0 24px;
+    }
+    .tijdlijn li::before {
+      top: 4px;
+      left: -29px;
     }
   }
 </style>

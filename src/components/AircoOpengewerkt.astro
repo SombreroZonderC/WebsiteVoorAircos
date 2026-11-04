@@ -1,0 +1,80 @@
+---
+// Opengewerkte binnenunit voor het scroll-verhaal. Onderdeel n licht op als een ouder data-actief="n" heeft.
+---
+
+<svg class="ao" viewBox="0 0 420 300" role="img" aria-label="Opengewerkte binnenunit met onderdelen">
+  <path class="muur" d="M20 30 H400" />
+  <g class="deel deel-0">
+    <path d="M40 56 Q40 42 54 42 H366 Q380 42 380 56 V128 Q380 152 354 154 H66 Q40 152 40 128 Z" />
+    <path class="dun" d="M56 66 H364 M56 78 H364 M56 90 H364" />
+    <text x="40" y="24">stille ventilator</text>
+  </g>
+  <g class="deel deel-1">
+    <circle cx="336" cy="108" r="12" />
+    <path d="M330 108 h12 M336 102 v12" class="dun" />
+    <text x="290" y="182">koelen · verwarmen</text>
+  </g>
+  <g class="deel deel-2">
+    <path d="M60 140 Q210 170 360 140" />
+    <path class="stroom" d="M110 196 c10 18 -10 32 0 50 M180 200 c10 18 -10 32 0 50 M250 200 c10 18 -10 32 0 50 M320 196 c10 18 -10 32 0 50" />
+    <text x="40" y="282">instelbare luchtstroom</text>
+  </g>
+  <g class="deel deel-3">
+    <path d="M380 110 H396 Q404 110 404 120 V296" />
+    <path class="dun" d="M386 122 H392 Q396 122 396 128 V296" />
+    <text x="300" y="282">strak leidingwerk</text>
+  </g>
+</svg>
+
+<style>
+  .ao {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: rgb(232 240 243 / 0.55);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .muur {
+    stroke-width: 1;
+    opacity: 0.4;
+  }
+  .dun {
+    stroke-width: 1.2;
+  }
+  text {
+    font: 500 12px var(--font-mono);
+    fill: rgb(232 240 243 / 0.45);
+    stroke: none;
+    letter-spacing: 0.06em;
+  }
+  .deel {
+    transition:
+      stroke 0.4s,
+      opacity 0.4s;
+  }
+  .stroom {
+    stroke-dasharray: 6 8;
+  }
+  :global([data-actief='0']) .deel-0,
+  :global([data-actief='1']) .deel-1,
+  :global([data-actief='2']) .deel-2,
+  :global([data-actief='3']) .deel-3 {
+    stroke: var(--blue-ice);
+  }
+  :global([data-actief='0']) .deel-0 text,
+  :global([data-actief='1']) .deel-1 text,
+  :global([data-actief='2']) .deel-2 text,
+  :global([data-actief='3']) .deel-3 text {
+    fill: var(--blue-ice);
+  }
+  :global([data-actief='2']) .stroom {
+    animation: stroom 1.8s linear infinite;
+  }
+  @keyframes stroom {
+    to {
+      stroke-dashoffset: -56;
+    }
+  }
+</style>

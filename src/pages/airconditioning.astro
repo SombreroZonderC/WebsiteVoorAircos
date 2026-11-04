@@ -1,0 +1,182 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ReuzenHero from '../components/ReuzenHero.astro';
+import OpstellingKiezer from '../components/OpstellingKiezer.astro';
+import ScrollUitleg from '../components/ScrollUitleg.astro';
+import AircoOpengewerkt from '../components/AircoOpengewerkt.astro';
+import Seizoensband from '../components/Seizoensband.astro';
+import Stappen from '../components/Stappen.astro';
+import FaqLijst from '../components/FaqLijst.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf, home, telLink } from '../lib/bedrijf';
+import { laadDienst } from '../lib/dienst';
+
+const { dienst, d, faqs, schema } = await laadDienst('airconditioning');
+const { Content } = await render(dienst);
+const ruimtes = home.keuze.koel.ruimtes;
+---
+
+<Base title={d.seoTitel} description={d.seoOmschrijving} schema={schema}>
+  <div class="paar">
+    <ReuzenHero woord="Koel." kleur="koud" eyebrow="Airconditioning · Heeten" titel={d.titel} tekst={d.intro} temp={{ buiten: 31, binnen: 21 }}>
+      <a class="btn" href="/contact?onderwerp=airconditioning">Offerte voor een airco <Icon name="arrow" /></a>
+      <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
+    </ReuzenHero>
+    <section class="vlak licht paneel sectie">
+      <div class="wrap"><OpstellingKiezer /></div>
+    </section>
+  </div>
+
+  <section class="vlak donker">
+    <ScrollUitleg
+      eyebrow="Opengewerkt"
+      titel="Wat er bij je aan de muur komt."
+      stappen={[
+        { titel: 'Stil', tekst: 'Een binnenunit van Mitsubishi Electric is binnen nauwelijks te horen, ook ’s nachts in de slaapkamer.' },
+        { titel: 'Koelen én verwarmen', tekst: 'Een split-airco is een lucht-lucht warmtepomp: koel in de zomer, zuinig bijverwarmen in het voor- en najaar.' },
+        { titel: 'Instelbare luchtstroom', tekst: 'De klep verdeelt de lucht door de ruimte, zonder dat je in de tocht zit.' },
+        { titel: 'Strak leidingwerk', tekst: 'Leidingen netjes weggewerkt naar de buitenunit. Ik kijk samen met je naar de beste route.' },
+      ]}
+    >
+      <AircoOpengewerkt slot="beeld" />
+    </ScrollUitleg>
+  </section>
+
+  <section class="vlak licht sectie">
+    <div class="wrap">
+      <p class="eyebrow cold">Het hele jaar</p>
+      <h2 class="h2">Niet alleen voor de zomer.</h2>
+      <Seizoensband />
+
+      <div class="ruimtes">
+        {
+          ruimtes.map((r) => (
+            <div class="ruimte">
+              <span class="soort">Airco</span>
+              <h3>{r.titel}</h3>
+              <p>{r.tekst}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="vlak licht sectie rand">
+    <div class="wrap body">
+      <div class="prose"><Content /></div>
+      <aside class="contact-kaart card">
+        <h2 class="h3">Advies op maat?</h2>
+        <p class="muted">Bel of stuur een bericht, dan plannen we een afspraak aan huis.</p>
+        <a class="btn" href="/contact?onderwerp=airconditioning">Offerte aanvragen</a>
+        <a class="tel" href={telLink}><Icon name="phone" size={18} /> {bedrijf.telefoon.weergave}</a>
+      </aside>
+    </div>
+    <div class="wrap">
+      <h2 class="h2 klein">Zo werk ik</h2>
+      <Stappen stappen={d.stappen} />
+      {
+        faqs.length > 0 && (
+          <div class="faq">
+            <p class="eyebrow">Veelgestelde vragen</p>
+            <h2 class="h2 klein">Vragen over airco’s</h2>
+            <FaqLijst items={faqs} />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand titel="Klaar voor een koele zomer?" />
+</Base>
+
+<style>
+  .sectie {
+    padding-block: clamp(72px, 9vw, 120px);
+  }
+  .rand {
+    border-top: 1px solid var(--line);
+  }
+  .h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+  }
+  .h2.klein {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin-top: clamp(56px, 7vw, 88px);
+  }
+  .ruimtes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 40px;
+  }
+  .ruimte {
+    padding: 22px;
+    border-radius: 20px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+  .soort {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-text);
+  }
+  .ruimte h3 {
+    margin: 6px 0 4px;
+  }
+  .ruimte p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: clamp(40px, 6vw, 88px);
+    align-items: start;
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .contact-kaart {
+    position: sticky;
+    top: 100px;
+    display: grid;
+    gap: 12px;
+  }
+  .h3 {
+    font-size: 1.35rem;
+    margin: 0;
+  }
+  .contact-kaart p {
+    margin: 0 0 4px;
+  }
+  .tel {
+    display: inline-flex;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .faq {
+    max-width: 860px;
+    margin-top: clamp(56px, 7vw, 88px);
+  }
+  .faq .h2.klein {
+    margin-top: 0;
+  }
+  @media (max-width: 860px) {
+    .ruimtes,
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .contact-kaart {
+      position: static;
+    }
+  }
+</style>

@@ -1,0 +1,129 @@
+---
+// Scroll-verhaal: de tekening (slot "beeld") blijft staan terwijl de stappen voorbijscrollen; de actieve
+// stap staat in data-actief op de wrapper, zodat de tekening per stap een onderdeel kan laten oplichten.
+// Zonder beweging of op smalle schermen: een gewone lijst naast/onder de tekening.
+interface Props {
+  eyebrow: string;
+  titel: string;
+  stappen: { titel: string; tekst: string }[];
+  accent?: 'koud' | 'warm';
+}
+const { eyebrow, titel, stappen, accent = 'koud' } = Astro.props;
+---
+
+<div class:list={['su', accent]} data-scroll-uitleg data-actief="0">
+  <div class="wrap su-grid">
+    <div class="su-tekst">
+      <p class:list={['eyebrow', { cold: accent === 'koud' }]}>{eyebrow}</p>
+      <h2>{titel}</h2>
+      <ol class="stappen">
+        {
+          stappen.map((s, i) => (
+            <li data-stap={i}>
+              <span class="nr">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{s.titel}</h3>
+              <p>{s.tekst}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <div class="su-beeld">
+      <div class="plakker"><slot name="beeld" /></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-scroll-uitleg]').forEach((root) => {
+    const stappen = [...root.querySelectorAll<HTMLElement>('[data-stap]')];
+    const zet = (i: number) => {
+      root.dataset.actief = String(i);
+      stappen.forEach((s, j) => s.classList.toggle('actief', j === i));
+    };
+    zet(0);
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && zet(Number((e.target as HTMLElement).dataset.stap))),
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    stappen.forEach((s) => io.observe(s));
+  });
+</script>
+
+<style>
+  .su {
+    --a: var(--blue-ice);
+    padding: clamp(80px, 10vw, 130px) 0;
+  }
+  .su.warm {
+    --a: var(--orange-hot);
+  }
+  .su-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(32px, 6vw, 80px);
+  }
+  h2 {
+    font-size: clamp(2rem, 3.8vw, 3rem);
+    margin-bottom: 28px;
+  }
+  .stappen {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .stappen li {
+    padding: 22px 0 22px 18px;
+    border-bottom: 1px solid var(--line-dark);
+    border-left: 2px solid transparent;
+    transition:
+      border-color 0.3s,
+      color 0.3s;
+  }
+  .nr {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--a);
+  }
+  .stappen h3 {
+    margin: 6px 0 4px;
+  }
+  .stappen p {
+    margin: 0;
+    color: var(--muted-on-dark);
+  }
+  .su-beeld {
+    align-self: start;
+  }
+  /* Met beweging en voldoende breedte: stappen hoger, tekening blijft staan, actieve stap gemarkeerd */
+  @media (prefers-reduced-motion: no-preference) and (min-width: 861px) {
+    .stappen li {
+      min-height: 34vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: var(--muted-on-dark);
+    }
+    .stappen li.actief {
+      color: var(--text-on-dark);
+      border-left-color: var(--a);
+    }
+    .su-beeld {
+      align-self: stretch;
+    }
+    .plakker {
+      position: sticky;
+      top: calc(50vh - 200px);
+    }
+  }
+  @media (max-width: 860px) {
+    .su-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .su-beeld {
+      order: -1;
+    }
+  }
+</style>

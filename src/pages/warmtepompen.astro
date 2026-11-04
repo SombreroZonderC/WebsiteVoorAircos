@@ -1,0 +1,164 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ReuzenHero from '../components/ReuzenHero.astro';
+import HuisDoorsnede from '../components/HuisDoorsnede.astro';
+import Geschiktheidscheck from '../components/Geschiktheidscheck.astro';
+import ScrollUitleg from '../components/ScrollUitleg.astro';
+import Kringloop from '../components/Kringloop.astro';
+import Stappen from '../components/Stappen.astro';
+import FaqLijst from '../components/FaqLijst.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf, telLink } from '../lib/bedrijf';
+import { laadDienst } from '../lib/dienst';
+
+const { dienst, d, faqs, schema } = await laadDienst('warmtepompen');
+const { Content } = await render(dienst);
+---
+
+<Base title={d.seoTitel} description={d.seoOmschrijving} schema={schema}>
+  <div class="paar">
+    <ReuzenHero woord="Warm." kleur="warm" eyebrow="Warmtepompen · Heeten" titel={d.titel} tekst={d.intro} temp={{ buiten: -4, binnen: 21 }}>
+      <a class="btn" href="/contact?onderwerp=warmtepompen">Offerte voor een warmtepomp <Icon name="arrow" /></a>
+      <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
+    </ReuzenHero>
+    <section class="vlak licht paneel sectie">
+      <div class="wrap">
+        <HuisDoorsnede />
+        <div class="check"><Geschiktheidscheck /></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="vlak donker">
+    <ScrollUitleg
+      eyebrow="Zo werkt het"
+      titel="Warmte uit de buitenlucht, ook bij −4°."
+      accent="warm"
+      stappen={[
+        { titel: 'Warmte uit de buitenlucht', tekst: 'Ook koude buitenlucht bevat warmte. De buitenunit haalt die eruit met een koudemiddel dat al bij lage temperaturen verdampt.' },
+        { titel: 'De compressor', tekst: 'De compressor drukt het koudemiddel samen. Daardoor stijgt de temperatuur flink.' },
+        { titel: 'Warmte naar je huis', tekst: 'Die warmte gaat naar je cv-water: radiatoren of vloerverwarming, en vaak ook je tapwater.' },
+        { titel: 'En weer opnieuw', tekst: 'Het afgekoelde koudemiddel gaat terug naar buiten, en de kringloop begint opnieuw.' },
+      ]}
+    >
+      <Kringloop slot="beeld" />
+    </ScrollUitleg>
+  </section>
+
+  <section class="vlak licht sectie">
+    <div class="wrap">
+      <div class="subsidie">
+        <div>
+          <p class="eyebrow">Subsidie</p>
+          <h2 class="h3">ISDE-subsidie voor warmtepompen</h2>
+          <p class="muted">Voor warmtepompen bestaat landelijke subsidie. De voorwaarden en bedragen veranderen regelmatig; de actuele regels staan bij RVO.</p>
+        </div>
+        <a class="btn ghost" href="https://www.rvo.nl/subsidies-financiering/isde" rel="noopener">Bekijk bij RVO <Icon name="arrow" /></a>
+      </div>
+
+      <div class="body">
+        <div class="prose"><Content /></div>
+        <aside class="contact-kaart card">
+          <h2 class="h3">Advies op maat?</h2>
+          <p class="muted">Ik kom langs, bekijk je huis en geef eerlijk advies.</p>
+          <a class="btn" href="/contact?onderwerp=warmtepompen">Offerte aanvragen</a>
+          <a class="tel" href={telLink}><Icon name="phone" size={18} /> {bedrijf.telefoon.weergave}</a>
+        </aside>
+      </div>
+
+      <h2 class="h2 klein">Zo werk ik</h2>
+      <Stappen stappen={d.stappen} />
+      {
+        faqs.length > 0 && (
+          <div class="faq">
+            <p class="eyebrow">Veelgestelde vragen</p>
+            <h2 class="h2 klein">Vragen over warmtepompen</h2>
+            <FaqLijst items={faqs} />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand titel="Klaar voor een warme winter?" />
+</Base>
+
+<style>
+  .sectie {
+    padding-block: clamp(72px, 9vw, 120px);
+  }
+  .check {
+    margin-top: clamp(64px, 8vw, 104px);
+  }
+  .h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+  }
+  .h2.klein {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin-top: clamp(56px, 7vw, 88px);
+  }
+  .h3 {
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+    margin: 0 0 6px;
+  }
+  .subsidie {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: clamp(22px, 3vw, 32px);
+    border-radius: var(--radius-lg);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    margin-bottom: clamp(56px, 7vw, 88px);
+  }
+  .subsidie p {
+    margin: 0;
+    max-width: 60ch;
+  }
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: clamp(40px, 6vw, 88px);
+    align-items: start;
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .contact-kaart {
+    position: sticky;
+    top: 100px;
+    display: grid;
+    gap: 12px;
+  }
+  .contact-kaart p {
+    margin: 0 0 4px;
+  }
+  .tel {
+    display: inline-flex;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .faq {
+    max-width: 860px;
+    margin-top: clamp(56px, 7vw, 88px);
+  }
+  .faq .h2.klein {
+    margin-top: 0;
+  }
+  @media (max-width: 860px) {
+    .body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .contact-kaart {
+      position: static;
+    }
+  }
+</style>

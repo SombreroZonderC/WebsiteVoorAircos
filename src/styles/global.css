@@ -127,8 +127,8 @@ p {
   background: var(--ink);
   color: var(--text-on-dark);
 }
-.dark .muted,
-.dark p.lead {
+:is(.dark, .donker) .muted,
+:is(.dark, .donker) p.lead {
   color: var(--muted-on-dark);
 }
 
@@ -155,7 +155,7 @@ p {
   color: var(--orange-text);
   margin-bottom: 14px;
 }
-.dark .eyebrow {
+:is(.dark, .donker) .eyebrow {
   color: var(--orange-hot);
 }
 .eyebrow::before {
@@ -167,7 +167,7 @@ p {
 .eyebrow.cold {
   color: var(--blue-text);
 }
-.dark .eyebrow.cold {
+:is(.dark, .donker) .eyebrow.cold {
   color: var(--blue-ice);
 }
 
@@ -221,7 +221,7 @@ p {
 .btn.ghost:hover {
   background: rgb(127 127 127 / 0.12);
 }
-.dark .btn.ghost {
+:is(.dark, .donker) .btn.ghost {
   border-color: rgb(255 255 255 / 0.28);
 }
 
@@ -238,7 +238,7 @@ p {
   border-radius: var(--radius-lg);
   padding: clamp(24px, 3vw, 36px);
 }
-.dark .card {
+:is(.dark, .donker) .card {
   background: linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.015));
   border-color: var(--line-dark);
 }
@@ -401,7 +401,10 @@ p {
   border-radius: 6px;
   background: rgb(234 91 12 / 0.1);
   outline: 1.5px dashed rgb(234 91 12 / 0.7);
-  color: inherit;
+  color: var(--text);
+  font-family: var(--font-body);
+  letter-spacing: normal;
+  text-transform: none;
   font-size: 0.92em;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -411,6 +414,39 @@ p {
   font-weight: 700;
   color: var(--orange-text);
 }
-.dark .todo::before {
+:is(.dark, .donker) .todo {
+  color: var(--text-on-dark);
+}
+:is(.dark, .donker) .todo::before {
   color: var(--orange-hot);
+}
+
+/* ---------- Licht/donker-vlakken en diepte (zie src/scripts/diepte.ts) ---------- */
+.paar,
+.vlak {
+  position: relative;
+}
+.vlak.donker {
+  background: var(--ink);
+  color: var(--text-on-dark);
+}
+.vlak.licht {
+  background: var(--paper);
+  color: var(--text);
+}
+.paneel {
+  z-index: 2;
+}
+html.diepte .plak {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+html.diepte .paneel {
+  box-shadow: 0 -24px 48px -24px rgb(0 0 0 / 0.55);
+}
+html.diepte .plak .vlak-inhoud {
+  transform: scale(calc(1 - var(--p, 0) * 0.03));
+  opacity: calc(1 - var(--p, 0) * 0.5);
+  transform-origin: 50% 40%;
 }

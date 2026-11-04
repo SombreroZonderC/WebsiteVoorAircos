@@ -1,10 +1,9 @@
 ---
 import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import PaginaHero from '../components/PaginaHero.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
-import { bedrijf } from '../lib/bedrijf';
+import { bedrijf, telLink } from '../lib/bedrijf';
 
 const pagina = (await getEntry('paginas', 'werkgebied'))!;
 const { Content } = await render(pagina);
@@ -14,16 +13,44 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
 ---
 
 <Base title={p.seoTitel} description={p.seoOmschrijving}>
-  <PaginaHero eyebrow={p.eyebrow} titel={p.titel} intro={p.intro} accent="koud" />
+  <div class="paar">
+    <div class="vlak donker plak" data-diepte-vlak data-geen-mobiele-cta>
+      <div class="vlak-inhoud">
+        <section class="hero">
+          <div class="glow" aria-hidden="true"></div>
+          <div class="info">
+            <p class="eyebrow cold">{p.eyebrow}</p>
+            <p class="woord" aria-hidden="true">Vanuit<br />Heeten.</p>
+            <h1>{p.titel}: airco en warmtepompen rond {a.plaats}</h1>
+            <p class="intro">{p.intro}</p>
+            <div class="actions">
+              <a class="btn" href="/contact">Vraag advies aan huis <Icon name="arrow" /></a>
+              <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
+            </div>
+          </div>
+          <svg class="kaart" viewBox="0 0 420 380" role="img" aria-label={`Gestileerde kaart met ${a.plaats} in het midden`}>
+            <circle class="ring r3" cx="210" cy="190" r="170" />
+            <circle class="ring r2" cx="210" cy="190" r="115" />
+            <circle class="ring r1" cx="210" cy="190" r="60" />
+            <path class="weg" d="M10 300 C90 260 140 320 230 280 S360 230 410 250" />
+            <path class="weg" d="M60 20 C120 90 150 120 200 180 S270 300 300 370" />
+            <path class="water" d="M0 120 C70 140 110 100 180 120 S300 160 420 130" />
+            <circle class="puls" cx="210" cy="190" r="14" />
+            <circle class="pin" cx="210" cy="190" r="7" />
+            <text x="226" y="186">{a.plaats}</text>
+            <text class="klein" x="216" y="214">gemeente {a.gemeente}</text>
+          </svg>
+        </section>
+      </div>
+    </div>
 
-  <section class="section paper">
-    <div class="wrap layout">
-      <div class="prose" data-reveal>
-        <Content />
-        {
-          bedrijf.werkgebied.length > 0 && (
-            <>
-              <h2>Plaatsen in mijn werkgebied</h2>
+    <section class="vlak licht paneel sectie">
+      <div class="wrap layout">
+        <div>
+          <div class="prose"><Content /></div>
+          <h2 class="h3">Plaatsen in mijn werkgebied</h2>
+          {
+            bedrijf.werkgebied.length > 0 ? (
               <ul class="plaatsen">
                 {bedrijf.werkgebied.map((plaats) => (
                   <li>
@@ -31,42 +58,144 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
                   </li>
                 ))}
               </ul>
-            </>
-          )
-        }
+            ) : (
+              <p>
+                <span class="todo">plaatsen of straal van het werkgebied</span>
+              </p>
+            )
+          }
+        </div>
+        <aside class="card adres">
+          <span class="pin-ico"><Icon name="pin" /></span>
+          <h2 class="h3">Uitvalsbasis</h2>
+          <address>
+            {bedrijf.naam}<br />
+            {a.straat}<br />
+            {a.postcode} {a.plaats}<br />
+            Gemeente {a.gemeente}, {a.provincie}
+          </address>
+          <a class="btn ghost" href={`https://www.openstreetmap.org/search?query=${kaartQuery}`} rel="noopener">
+            Bekijk op de kaart <Icon name="arrow" />
+          </a>
+        </aside>
       </div>
-      <aside class="card adres" data-reveal>
-        <span class="pin"><Icon name="pin" /></span>
-        <h2 class="h3">Uitvalsbasis</h2>
-        <address>
-          {bedrijf.naam}<br />
-          {a.straat}<br />
-          {a.postcode} {a.plaats}<br />
-          Gemeente {a.gemeente}, {a.provincie}
-        </address>
-        <a class="btn ghost" href={`https://www.openstreetmap.org/search?query=${kaartQuery}`} rel="noopener">
-          Bekijk op de kaart <Icon name="arrow" />
-        </a>
-      </aside>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <CtaBand titel="Woon je in de regio?" tekst="Neem contact op voor advies aan huis of een vrijblijvende offerte." />
+  <CtaBand titel="Woon je in de regio?" tekst="Twijfel je of je in mijn werkgebied valt? Bel of mail gerust." />
 </Base>
 
 <style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 72px);
+    align-items: center;
+    padding: calc(var(--header-h) + clamp(28px, 5vw, 64px)) clamp(16px, 4vw, 56px) clamp(48px, 6vw, 80px);
+  }
+  .hero .glow {
+    background: radial-gradient(45% 55% at 72% 50%, rgb(66 125 184 / 0.35), transparent 70%);
+  }
+  .info,
+  .kaart {
+    position: relative;
+  }
+  .woord {
+    margin: 0 0 18px;
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(3.4rem, 8vw, 7.5rem);
+    line-height: 0.86;
+    letter-spacing: -0.06em;
+    background: linear-gradient(100deg, #e9f3fc 10%, #8fc1f0 45%, #3a74b0 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  h1 {
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    font-stretch: 105%;
+    margin: 0 0 8px;
+  }
+  .intro {
+    color: var(--muted-on-dark);
+    max-width: 52ch;
+    margin: 0 0 24px;
+  }
+  .kaart {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .ring {
+    stroke: rgb(143 193 240 / 0.5);
+    stroke-dasharray: 4 7;
+    stroke-width: 1.4;
+  }
+  .r2 {
+    stroke: rgb(143 193 240 / 0.35);
+  }
+  .r3 {
+    stroke: rgb(143 193 240 / 0.2);
+  }
+  .weg {
+    stroke: rgb(232 240 243 / 0.22);
+    stroke-width: 3;
+  }
+  .water {
+    stroke: rgb(127 180 234 / 0.35);
+    stroke-width: 5;
+  }
+  .pin {
+    fill: var(--orange-hot);
+  }
+  .puls {
+    fill: rgb(255 122 47 / 0.25);
+    transform-origin: 210px 190px;
+    animation: puls 2.4s ease-out infinite;
+  }
+  @keyframes puls {
+    from {
+      transform: scale(0.6);
+      opacity: 1;
+    }
+    to {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+  text {
+    font: 700 15px var(--font-display);
+    fill: var(--text-on-dark);
+  }
+  text.klein {
+    font: 500 11px var(--font-mono);
+    fill: var(--muted-on-dark);
+  }
+  .sectie {
+    padding-block: clamp(72px, 9vw, 120px);
+  }
   .layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 380px;
+    grid-template-columns: minmax(0, 1fr) 360px;
     gap: clamp(40px, 6vw, 96px);
     align-items: start;
   }
   .prose :global(h2:first-child) {
     margin-top: 0;
   }
+  .h3 {
+    font-size: 1.35rem;
+    margin: 32px 0 14px;
+  }
   .plaatsen {
     list-style: none;
     padding: 0;
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -75,7 +204,6 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin: 0;
     padding: 8px 14px;
     border-radius: 999px;
     background: var(--paper-2);
@@ -83,34 +211,37 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
     font-weight: 500;
   }
   .plaatsen :global(svg) {
-    color: var(--orange);
+    color: var(--orange-text);
   }
   .adres {
     display: grid;
-    gap: 14px;
+    gap: 12px;
     justify-items: start;
   }
-  .pin {
+  .adres .h3 {
+    margin: 0;
+  }
+  .pin-ico {
     display: inline-grid;
     place-items: center;
     width: 48px;
     height: 48px;
     border-radius: 14px;
     background: rgb(234 91 12 / 0.12);
-    color: var(--orange);
-  }
-  .h3 {
-    font-size: 1.3rem;
-    margin: 0;
+    color: var(--orange-text);
   }
   address {
     font-style: normal;
     color: var(--muted);
     line-height: 1.7;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 860px) {
+    .hero,
     .layout {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .kaart {
+      max-width: 360px;
     }
   }
 </style>

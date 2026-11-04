@@ -1,0 +1,208 @@
+---
+// Warmtepomp: doorsnede van een huis met schakelaar hybride / all-electric.
+const systemen = {
+  hybride: {
+    label: 'Hybride',
+    titel: 'Hybride warmtepomp',
+    tekst: 'De warmtepomp doet het meeste werk. Je cv-ketel springt alleen bij op de koudste dagen en voor warm water.',
+    punten: ['Past ook in oudere huizen', 'Fors minder gas', 'Je ketel blijft als back-up'],
+  },
+  electric: {
+    label: 'All-electric',
+    titel: 'All-electric warmtepomp',
+    tekst: 'De warmtepomp verwarmt je huis en meestal ook je tapwater, volledig zonder gas.',
+    punten: ['Helemaal van het gas af', 'Het beste in een goed geïsoleerd huis', 'Ideaal met vloerverwarming'],
+  },
+} as const;
+const sleutels = ['hybride', 'electric'] as const;
+---
+
+<div class="huis" data-huis data-systeem="hybride">
+  <div class="kop">
+    <p class="eyebrow">Hybride of all-electric?</p>
+    <h2 id="huis-vraag">Welk systeem past bij jouw huis?</h2>
+    <div class="seg" role="radiogroup" aria-labelledby="huis-vraag">
+      {
+        sleutels.map((k) => (
+          <button role="radio" aria-checked={k === 'hybride' ? 'true' : 'false'} tabindex={k === 'hybride' ? 0 : -1} data-sys={k}>
+            {systemen[k].label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="raster">
+    <svg viewBox="0 0 420 300" role="img" aria-label="Doorsnede van een huis met warmtepomp">
+      <path d="M40 130 L210 30 L380 130" />
+      <path d="M64 116 V270 H356 V116" />
+      <path class="dun" d="M64 196 H356" />
+      <rect x="92" y="222" width="40" height="44" rx="4" />
+      <path class="dun" d="M100 232 h24 M100 242 h24 M100 252 h24" />
+      <rect x="92" y="142" width="40" height="44" rx="4" />
+      <path class="dun" d="M100 152 h24 M100 162 h24 M100 172 h24" />
+      <text x="88" y="214">radiator</text>
+      <g class="ketel">
+        <rect x="262" y="212" width="36" height="52" rx="4" />
+        <path class="vlam" d="M272 248 q8 -18 16 0 q-8 -6 -16 0" />
+        <text x="252" y="204">cv-ketel</text>
+        <path class="gas" d="M280 264 V292" />
+        <text x="288" y="290">gas</text>
+      </g>
+      <g class="geenGas">
+        <path class="dun" d="M280 270 V292" />
+        <path class="kruis" d="M270 274 l20 16 M290 274 l-20 16" />
+        <rect x="262" y="212" width="36" height="52" rx="4" class="boiler" />
+        <text x="250" y="204">boiler</text>
+      </g>
+      <rect x="378" y="232" width="36" height="34" rx="4" />
+      <circle cx="396" cy="249" r="11" />
+      <text x="356" y="290">warmtepomp</text>
+      <path class="stroom" d="M378 249 H300 M262 249 H132 M112 222 V186 M112 142 V126 H240 V212" />
+    </svg>
+
+    {
+      sleutels.map((k) => (
+        <div class="uitleg" data-uitleg={k} hidden={k !== 'hybride'}>
+          <h3>{systemen[k].titel}</h3>
+          <p class="muted">{systemen[k].tekst}</p>
+          <ul class="checklist">
+            {systemen[k].punten.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-huis]').forEach((root) => {
+    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-sys]')];
+    const zet = (s: string, focus = false) => {
+      root.dataset.systeem = s;
+      knoppen.forEach((b) => {
+        const aan = b.dataset.sys === s;
+        b.setAttribute('aria-checked', String(aan));
+        b.tabIndex = aan ? 0 : -1;
+        if (aan && focus) b.focus();
+      });
+      root.querySelectorAll<HTMLElement>('[data-uitleg]').forEach((u) => (u.hidden = u.dataset.uitleg !== s));
+    };
+    knoppen.forEach((b) => {
+      b.addEventListener('click', () => zet(b.dataset.sys!));
+      b.addEventListener('keydown', (e) => {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+          e.preventDefault();
+          zet(root.dataset.systeem === 'hybride' ? 'electric' : 'hybride', true);
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .kop {
+    margin-bottom: 20px;
+  }
+  .kop h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.04em;
+    margin-bottom: 18px;
+  }
+  .seg {
+    display: inline-flex;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .seg button {
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 11px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background 0.25s,
+      color 0.25s;
+  }
+  .seg [aria-checked='true'] {
+    background: var(--orange-text);
+    color: #fff;
+  }
+  .raster {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    padding: clamp(24px, 3vw, 40px);
+    border-radius: var(--radius-lg);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: #24343a;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .dun {
+    stroke-width: 1.2;
+    opacity: 0.55;
+  }
+  text {
+    font: 500 11px var(--font-mono);
+    fill: var(--muted);
+    stroke: none;
+  }
+  .stroom {
+    stroke: var(--orange-text);
+    stroke-dasharray: 6 7;
+    animation: stroom 1.8s linear infinite;
+  }
+  @keyframes stroom {
+    to {
+      stroke-dashoffset: -26;
+    }
+  }
+  .vlam {
+    stroke: var(--orange-text);
+  }
+  .geenGas {
+    display: none;
+  }
+  .kruis {
+    stroke: #b42318;
+    stroke-width: 2.5;
+  }
+  .boiler {
+    fill: var(--paper);
+  }
+  [data-systeem='electric'] .ketel {
+    display: none;
+  }
+  [data-systeem='electric'] .geenGas {
+    display: inline;
+  }
+  .uitleg h3 {
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+    margin-bottom: 8px;
+  }
+  .uitleg .checklist {
+    margin-top: 16px;
+  }
+  @media (max-width: 860px) {
+    .raster {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

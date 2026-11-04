@@ -243,7 +243,6 @@ const k = home.keuze;
       const t = modus === 'koel' ? 31 : -4;
       buiten.style.setProperty('--temp', String(t));
       buiten.querySelector('[data-waarde]')!.textContent = graden(t);
-      beoordeelDiepte();
     };
     knoppen.forEach((b) => {
       b.addEventListener('click', () => zet(b.dataset.zet!));
@@ -255,51 +254,6 @@ const k = home.keuze;
       });
     });
 
-    // --- Diepte: donker ligt achter, licht schuift ervoor -----------------------
-    // Alleen als de bezoeker beweging toestaat, het scherm breed genoeg is en elk donker vlak in
-    // het scherm past. Beoordeeld bij laden, resize en wissel; per scrollframe wordt alleen --p bijgewerkt.
-    const vlakken = [...root.querySelectorAll<HTMLElement>('[data-diepte-vlak]')];
-    const beweging = matchMedia('(prefers-reduced-motion: no-preference)');
-    let diepte = false;
-
-    function beoordeelDiepte() {
-      const mag =
-        beweging.matches &&
-        innerWidth > 860 &&
-        vlakken.every((v) => v.querySelector<HTMLElement>('.vlak-inhoud')!.offsetHeight <= innerHeight);
-      if (mag !== diepte) {
-        diepte = mag;
-        root!.classList.toggle('diepte', mag);
-        if (!mag) vlakken.forEach((v) => {
-          v.style.removeProperty('--p');
-          v.querySelector<HTMLElement>('.vlak-inhoud')!.inert = false;
-        });
-      }
-      plan();
-    }
-
-    let gepland = false;
-    function plan() {
-      if (diepte && !gepland) {
-        gepland = true;
-        requestAnimationFrame(teken);
-      }
-    }
-    function teken() {
-      gepland = false;
-      vlakken.forEach((v) => {
-        const volgende = v.nextElementSibling as HTMLElement;
-        const p = Math.min(1, Math.max(0, 1 - volgende.getBoundingClientRect().top / innerHeight));
-        v.style.setProperty('--p', p.toFixed(3));
-        // Volledig afgedekte inhoud uit de tabvolgorde halen
-        v.querySelector<HTMLElement>('.vlak-inhoud')!.inert = p > 0.98;
-      });
-    }
-
-    addEventListener('scroll', plan, { passive: true });
-    beweging.addEventListener('change', beoordeelDiepte);
-    new ResizeObserver(beoordeelDiepte).observe(document.documentElement);
-    beoordeelDiepte();
   }
 </script>
 
@@ -314,37 +268,8 @@ const k = home.keuze;
     --accent-d: var(--orange-hot);
   }
 
-  /* ---------- vlakken ---------- */
-  .paar {
-    position: relative;
-  }
-  .vlak {
-    position: relative;
-  }
-  .donker {
-    background: var(--ink);
-    color: var(--text-on-dark);
-  }
-  .licht {
-    background: var(--paper);
-    color: var(--text);
-  }
   .paneel {
-    z-index: 2;
     padding-bottom: clamp(80px, 10vw, 130px);
-  }
-  .diepte .plak {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  .diepte .paneel {
-    box-shadow: 0 -24px 48px -24px rgb(0 0 0 / 0.55);
-  }
-  .diepte .plak .vlak-inhoud {
-    transform: scale(calc(1 - var(--p, 0) * 0.03));
-    opacity: calc(1 - var(--p, 0) * 0.5);
-    transform-origin: 50% 40%;
   }
 
   /* ---------- hero ---------- */

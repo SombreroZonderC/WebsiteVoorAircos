@@ -1,46 +1,74 @@
 ---
 import Base from '../layouts/Base.astro';
-import PaginaHero from '../components/PaginaHero.astro';
 import Icon from '../components/Icon.astro';
 import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
 
-const onderwerpen = [
-  { waarde: 'airconditioning', label: 'Airconditioning' },
-  { waarde: 'warmtepompen', label: 'Warmtepomp (hybride of all-electric)' },
-  { waarde: 'onderhoud', label: 'Onderhoud of storing' },
-  { waarde: 'anders', label: 'Weet ik nog niet / iets anders' },
-];
+const tegels = [
+  { waarde: 'airconditioning', label: 'Koelen', sub: 'Airco', icoon: 'snow', accent: 'koud' },
+  { waarde: 'warmtepompen', label: 'Verwarmen', sub: 'Warmtepomp', icoon: 'flame', accent: 'warm' },
+  { waarde: 'onderhoud', label: 'Onderhoud', sub: 'of storing', icoon: 'wrench', accent: 'koud' },
+] as const;
 ---
 
 <Base
+  kopVast
   title="Contact en offerte aanvragen"
   description="Vraag een vrijblijvende offerte aan voor een airco of warmtepomp, of neem contact op met Sjoerd van The CoolFactory in Heeten. Bel 06 211 276 12."
 >
-  <PaginaHero
-    eyebrow="Contact"
-    titel="Samen kijken wat past?"
-    intro="Stuur me een bericht of bel direct. Ik neem zo snel mogelijk contact met je op voor persoonlijk advies of een vrijblijvende offerte."
-  />
+  <div class="split">
+    <section class="vlak donker links" aria-labelledby="contact-titel" data-geen-mobiele-cta>
+      <div class="glow" aria-hidden="true"></div>
+      <div class="links-inhoud">
+        <p class="eyebrow">Contact</p>
+        <h1 id="contact-titel" class="reus">Bel<br />Sjoerd.</h1>
+        <a class="nummer" href={telLink}>{bedrijf.telefoon.weergave}</a>
+        <p class="gegevens">
+          <a href={mailLink}>{bedrijf.email}</a><br />
+          {bedrijf.adres.straat}, {bedrijf.adres.postcode} {bedrijf.adres.plaats}
+        </p>
+        <p class="bereik">
+          Bereikbaar: {bedrijf.openingstijden ?? <span class="todo">openingstijden</span>}
+        </p>
+        <div class="hierna">
+          <p class="eyebrow">Wat gebeurt er hierna?</p>
+          <ol>
+            <li><b>1</b> Ik bel of mail je terug.</li>
+            <li><b>2</b> We plannen een afspraak voor advies aan huis.</li>
+            <li><b>3</b> Je krijgt een heldere, vrijblijvende offerte.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
 
-  <section class="section paper">
-    <div class="wrap layout">
-      <!--
-        Netlify Forms: werkt automatisch zodra de site op Netlify staat.
-        Lokaal wordt verzenden nagebootst (zie script onderaan).
-      -->
-      <form
-        class="card form"
-        name="offerte"
-        method="POST"
-        action="/bedankt"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        data-form
-      >
+    <section class="vlak licht rechts" aria-labelledby="form-titel">
+      <!-- Netlify Forms: werkt automatisch zodra de site op Netlify staat. Lokaal wordt verzenden nagebootst. -->
+      <form class="form" name="offerte" method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-field" data-form>
         <input type="hidden" name="form-name" value="offerte" />
         <p class="sr-only">
           <label>Niet invullen: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
         </p>
+
+        <h2 id="form-titel">Waar kan ik je mee helpen?</h2>
+        <fieldset class="tegels">
+          <legend class="sr-only">Onderwerp</legend>
+          {
+            tegels.map((t) => (
+              <label class:list={['tegel', t.accent]}>
+                <input type="radio" name="onderwerp" value={t.waarde} />
+                <span class="vak">
+                  <Icon name={t.icoon} size={26} />
+                  <span>
+                    <b>{t.label}</b>
+                    <small>{t.sub}</small>
+                  </span>
+                </span>
+              </label>
+            ))
+          }
+        </fieldset>
+        <label class="anders">
+          <input type="radio" name="onderwerp" value="anders" /> Weet ik nog niet / iets anders
+        </label>
 
         <div class="row">
           <div class="field">
@@ -52,7 +80,6 @@ const onderwerpen = [
             <input id="email" name="email" type="email" autocomplete="email" required />
           </div>
         </div>
-
         <div class="row">
           <div class="field">
             <label for="telefoon">Telefoonnummer <span class="opt">optioneel</span></label>
@@ -63,21 +90,6 @@ const onderwerpen = [
             <input id="plaats" name="postcode-plaats" type="text" autocomplete="postal-code" placeholder="8111 AB Heeten" />
           </div>
         </div>
-
-        <fieldset class="field">
-          <legend>Waar gaat het over? <span class="opt">optioneel</span></legend>
-          <div class="keuzes">
-            {
-              onderwerpen.map((o) => (
-                <label class="keuze">
-                  <input type="radio" name="onderwerp" value={o.waarde} />
-                  <span>{o.label}</span>
-                </label>
-              ))
-            }
-          </div>
-        </fieldset>
-
         <div class="row">
           <div class="field">
             <label for="woning">Type woning <span class="opt">optioneel</span></label>
@@ -101,64 +113,38 @@ const onderwerpen = [
             </select>
           </div>
         </div>
-
         <div class="field">
           <label for="bericht">Bericht <span class="req" aria-hidden="true">*</span></label>
           <textarea id="bericht" name="bericht" rows="5" required placeholder="Vertel kort wat je zoekt, bijvoorbeeld welke ruimtes je wilt koelen of verwarmen."></textarea>
         </div>
 
-        <p class="note muted">
+        <p class="note">
           <span aria-hidden="true">*</span> verplicht. Je gegevens gebruik ik alleen om contact met je op te nemen. Zie de
           <a href="/privacy">privacyverklaring</a>.
         </p>
-
-        <button class="btn" type="submit">Verstuur bericht <Icon name="arrow" /></button>
+        <button class="btn" type="submit">Verstuur aanvraag <Icon name="arrow" /></button>
       </form>
-
-      <aside class="direct">
-        <h2 class="h3">Liever direct contact?</h2>
-        <a class="card kanaal" href={telLink}>
-          <span class="ico"><Icon name="phone" /></span>
-          <span><strong>Bellen</strong><span class="muted">{bedrijf.telefoon.weergave}</span></span>
-        </a>
-        <a class="card kanaal" href={mailLink}>
-          <span class="ico"><Icon name="mail" /></span>
-          <span><strong>Mailen</strong><span class="muted">{bedrijf.email}</span></span>
-        </a>
-        <div class="card kanaal">
-          <span class="ico"><Icon name="pin" /></span>
-          <span>
-            <strong>Adres</strong>
-            <span class="muted">{bedrijf.adres.straat}, {bedrijf.adres.postcode} {bedrijf.adres.plaats}</span>
-          </span>
-        </div>
-        {
-          bedrijf.openingstijden && (
-            <div class="card kanaal">
-              <span class="ico"><Icon name="clock" /></span>
-              <span>
-                <strong>Bereikbaar</strong>
-                <span class="muted">{bedrijf.openingstijden}</span>
-              </span>
-            </div>
-          )
-        }
-      </aside>
-    </div>
-  </section>
+    </section>
+  </div>
 </Base>
 
 <script>
   const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+  const params = new URLSearchParams(location.search);
 
-  // Onderwerp voorinvullen vanaf een dienstpagina (?onderwerp=warmtepompen)
-  const onderwerp = new URLSearchParams(location.search).get('onderwerp');
+  // Onderwerp en (bij airco) het aantal ruimtes voorinvullen vanaf een dienstpagina
+  const onderwerp = params.get('onderwerp');
   if (onderwerp) {
     const radio = form.querySelector<HTMLInputElement>(`input[name="onderwerp"][value="${CSS.escape(onderwerp)}"]`);
     if (radio) radio.checked = true;
   }
+  const ruimtes = params.get('ruimtes');
+  const bericht = form.querySelector<HTMLTextAreaElement>('#bericht')!;
+  if (ruimtes && /^[1-4]\+?$/.test(ruimtes) && !bericht.value) {
+    bericht.value = `Ik wil graag advies over een airco voor ${ruimtes} ${ruimtes === '1' ? 'ruimte' : 'ruimtes'}.`;
+  }
 
-  // Lokaal (v1) is er geen formulierverwerking: verzending nabootsen.
+  // Lokaal is er geen formulierverwerking: verzending nabootsen.
   const isLokaal = ['localhost', '127.0.0.1'].includes(location.hostname);
   form.addEventListener('submit', (e) => {
     if (!isLokaal) return;
@@ -168,41 +154,182 @@ const onderwerpen = [
 </script>
 
 <style>
-  .layout {
+  .split {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 340px;
-    gap: clamp(32px, 5vw, 64px);
-    align-items: start;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    min-height: 100vh;
+  }
+  .links {
+    position: relative;
+    overflow: hidden;
+  }
+  .links .glow {
+    background:
+      radial-gradient(60% 40% at 20% 20%, rgb(66 125 184 / 0.4), transparent 70%),
+      radial-gradient(60% 40% at 40% 95%, rgb(234 91 12 / 0.35), transparent 70%);
+  }
+  .links-inhoud {
+    position: sticky;
+    top: 0;
+    padding: calc(var(--header-h) + clamp(32px, 5vw, 64px)) clamp(20px, 4vw, 56px) 56px;
+  }
+  .reus {
+    font-size: clamp(3.6rem, 8vw, 7.5rem);
+    font-stretch: 115%;
+    line-height: 0.88;
+    letter-spacing: -0.06em;
+    margin: 0 0 28px;
+  }
+  .nummer {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    margin-bottom: 12px;
+  }
+  .gegevens,
+  .bereik {
+    color: var(--muted-on-dark);
+    margin: 0 0 12px;
+  }
+  .gegevens a {
+    color: var(--text-on-dark);
+  }
+  .hierna {
+    margin-top: 32px;
+    padding: 22px 24px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line-dark);
+    background: rgb(255 255 255 / 0.04);
+  }
+  .hierna ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .hierna b {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background: var(--orange-btn);
+    font-size: 0.8rem;
+  }
+  .rechts {
+    padding: calc(var(--header-h) + clamp(32px, 5vw, 64px)) clamp(20px, 4vw, 64px) clamp(56px, 7vw, 96px);
   }
   .form {
     display: grid;
+    gap: 20px;
+    max-width: 640px;
+  }
+  h2 {
+    font-size: clamp(1.9rem, 3.4vw, 2.8rem);
+    letter-spacing: -0.04em;
+    margin: 0;
+  }
+  .tegels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .tegel {
+    position: relative;
+    cursor: pointer;
+  }
+  .tegel input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .vak {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     gap: 22px;
+    min-height: 128px;
+    padding: 18px;
+    border-radius: 18px;
+    background: var(--paper-2);
+    border: 1.5px solid var(--line);
+    transition:
+      background 0.25s,
+      border-color 0.25s,
+      color 0.25s,
+      transform 0.25s var(--ease);
+  }
+  .vak :global(svg) {
+    color: var(--blue-text);
+  }
+  .warm .vak :global(svg) {
+    color: var(--orange-text);
+  }
+  .vak b {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+  }
+  .vak small {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .tegel:hover .vak {
+    transform: translateY(-2px);
+  }
+  .tegel input:checked + .vak {
+    background: var(--blue-text);
+    border-color: var(--blue-text);
+    color: #fff;
+  }
+  .warm input:checked + .vak {
+    background: var(--orange-text);
+    border-color: var(--orange-text);
+  }
+  .tegel input:checked + .vak :global(svg),
+  .tegel input:checked + .vak small {
+    color: #fff;
+  }
+  .tegel input:focus-visible + .vak {
+    outline: 3px solid var(--orange);
+    outline-offset: 3px;
+  }
+  .anders {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: var(--muted);
+    margin-top: -8px;
+  }
+  .anders input {
+    accent-color: var(--orange-btn);
   }
   .row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 22px;
+    gap: 18px;
   }
   .field {
     display: grid;
     gap: 8px;
     min-width: 0;
   }
-  fieldset {
-    border: 0;
-    padding: 0;
-    margin: 0;
-  }
-  label,
-  legend {
+  .field label {
     font-weight: 600;
     font-size: 0.95rem;
   }
-  legend {
-    margin-bottom: 8px;
-  }
   .req {
-    color: var(--orange);
+    color: var(--orange-text);
   }
   .opt {
     font-weight: 400;
@@ -217,111 +344,57 @@ const onderwerpen = [
     font: inherit;
     font-size: 1rem;
     color: var(--text);
-    background: var(--paper);
+    background: var(--paper-2);
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 13px 14px;
     transition:
       border-color 0.2s,
-      box-shadow 0.2s,
-      background 0.2s;
+      box-shadow 0.2s;
   }
   input:not([type='radio']):focus,
   select:focus,
   textarea:focus {
     outline: none;
-    background: #fff;
-    border-color: var(--orange);
+    border-color: var(--orange-btn);
     box-shadow: 0 0 0 4px rgb(234 91 12 / 0.15);
   }
   textarea {
     resize: vertical;
   }
-  .keuzes {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .keuze {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: var(--paper);
-    font-weight: 500;
-    cursor: pointer;
-    transition:
-      border-color 0.2s,
-      background 0.2s;
-  }
-  .keuze input {
-    accent-color: var(--orange);
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    flex: none;
-  }
-  .keuze:has(input:checked) {
-    border-color: var(--orange);
-    background: rgb(234 91 12 / 0.06);
-  }
-  .keuze:has(input:focus-visible) {
-    outline: 3px solid var(--orange);
-    outline-offset: 2px;
-  }
   .note {
     font-size: 0.88rem;
+    color: var(--muted);
     margin: 0;
   }
   .form .btn {
     justify-self: start;
   }
-  .direct {
-    display: grid;
-    gap: 12px;
-  }
-  .h3 {
-    font-size: 1.3rem;
-    margin-bottom: 4px;
-  }
-  .kanaal {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 20px;
-    text-decoration: none;
-    transition: border-color 0.2s;
-  }
-  a.kanaal:hover {
-    border-color: var(--orange);
-  }
-  .kanaal > span:last-child {
-    display: grid;
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-  .ico {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: rgb(234 91 12 / 0.1);
-    color: var(--orange);
-  }
-  @media (max-width: 900px) {
-    .layout {
-      grid-template-columns: 1fr;
+  @media (max-width: 960px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+    }
+    .links-inhoud {
+      position: static;
+      padding-bottom: 40px;
+    }
+    .rechts {
+      padding-top: clamp(40px, 8vw, 64px);
     }
   }
   @media (max-width: 600px) {
-    .row,
-    .keuzes {
-      grid-template-columns: 1fr;
+    .tegels {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .vak {
+      min-height: 0;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .row {
+      grid-template-columns: minmax(0, 1fr);
     }
     .form .btn {
       width: 100%;

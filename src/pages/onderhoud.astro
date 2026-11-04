@@ -1,0 +1,208 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ReuzenHero from '../components/ReuzenHero.astro';
+import Manometer from '../components/Manometer.astro';
+import Stappen from '../components/Stappen.astro';
+import FaqLijst from '../components/FaqLijst.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { bedrijf, telLink } from '../lib/bedrijf';
+import { laadDienst } from '../lib/dienst';
+
+const { dienst, d, faqs, schema } = await laadDienst('onderhoud');
+const { Content } = await render(dienst);
+const controle = [
+  { titel: 'Werking en foutcodes', tekst: 'Draait alles zoals het hoort, en zijn er meldingen?' },
+  { titel: 'Filters en binnenunit', tekst: 'Reinigen waar nodig, voor schone lucht en een zuinig systeem.' },
+  { titel: 'Buitenunit en afvoer', tekst: 'Vrij van vuil en bladeren, condensafvoer in orde.' },
+  { titel: 'Drukken en temperaturen', tekst: 'Meten of het systeem binnen de juiste waarden werkt.' },
+  { titel: 'Advies', tekst: 'Je hoort wat ik heb gezien en of er iets aandacht nodig heeft.' },
+];
+---
+
+<Base title={d.seoTitel} description={d.seoOmschrijving} schema={schema}>
+  <div class="paar">
+    <ReuzenHero woord="Zorge­loos." kleur="koud" verhouding="smal" eyebrow="Onderhoud & service" titel={d.titel} tekst={d.intro}>
+      <Manometer slot="beeld" />
+      <a class="btn" href="/contact?onderwerp=onderhoud">Onderhoud aanvragen <Icon name="arrow" /></a>
+      <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
+    </ReuzenHero>
+
+    <section class="vlak licht paneel sectie">
+      <div class="wrap controle">
+        <div>
+          <p class="eyebrow cold">Wat ik controleer</p>
+          <h2 class="h2">Een onderhoudsbeurt, stap voor stap.</h2>
+          <ol class="lijst" data-afvinken>
+            {
+              controle.map((c) => (
+                <li class="af">
+                  <span class="vink" aria-hidden="true" />
+                  <div>
+                    <h3>{c.titel}</h3>
+                    <p>{c.tekst}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+        <aside class="storing">
+          <p class="eyebrow">Storing?</p>
+          <p class="groot">Bel direct.</p>
+          <a class="nummer" href={telLink}>{bedrijf.telefoon.weergave}</a>
+          <p class="muted">Werkt je airco of warmtepomp niet goed? Dan kijken we samen wat er aan de hand is.</p>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <section class="vlak licht sectie rand">
+    <div class="wrap">
+      <div class="prose"><Content /></div>
+      <h2 class="h2 klein">Zo werk ik</h2>
+      <Stappen stappen={d.stappen} />
+      {
+        faqs.length > 0 && (
+          <div class="faq">
+            <p class="eyebrow">Veelgestelde vragen</p>
+            <h2 class="h2 klein">Vragen over onderhoud</h2>
+            <FaqLijst items={faqs} />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand titel="Onderhoud inplannen?" />
+</Base>
+
+<script>
+  // Vinkjes zetten zich tijdens het scrollen; zonder JS of zonder beweging staan ze er meteen allemaal.
+  const lijst = document.querySelector<HTMLElement>('[data-afvinken]');
+  if (lijst && matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
+    const items = [...lijst.querySelectorAll('li')];
+    items.forEach((li) => li.classList.remove('af'));
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('af');
+            io.unobserve(e.target);
+          }
+        }),
+      { rootMargin: '0px 0px -30% 0px' },
+    );
+    items.forEach((li) => io.observe(li));
+  }
+</script>
+
+<style>
+  .sectie {
+    padding-block: clamp(72px, 9vw, 120px);
+  }
+  .rand {
+    border-top: 1px solid var(--line);
+  }
+  .h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+  }
+  .h2.klein {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    margin-top: clamp(56px, 7vw, 88px);
+  }
+  .controle {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+  }
+  .lijst {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .lijst li {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .lijst h3 {
+    margin: 0 0 2px;
+  }
+  .lijst p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .vink {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    transition:
+      background 0.4s var(--ease),
+      border-color 0.4s var(--ease);
+  }
+  .af .vink {
+    border-color: var(--blue-text);
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+        center / 15px no-repeat,
+      var(--blue-text);
+  }
+  .storing {
+    position: sticky;
+    top: 100px;
+    padding: clamp(24px, 3vw, 36px);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(70% 70% at 80% 0%, rgb(234 91 12 / 0.3), transparent 70%),
+      var(--ink);
+    color: var(--text-on-dark);
+  }
+  .storing .eyebrow {
+    color: var(--orange-hot);
+  }
+  .groot {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0 0 12px;
+  }
+  .nummer {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-decoration: none;
+    margin-bottom: 12px;
+  }
+  .storing .muted {
+    color: var(--muted-on-dark);
+    margin: 0;
+  }
+  .faq {
+    max-width: 860px;
+    margin-top: clamp(56px, 7vw, 88px);
+  }
+  .faq .h2.klein {
+    margin-top: 0;
+  }
+  @media (max-width: 860px) {
+    .controle {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .storing {
+      position: static;
+    }
+  }
+</style>

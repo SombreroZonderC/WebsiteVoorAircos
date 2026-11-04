@@ -11,9 +11,11 @@ interface Props {
   noindex?: boolean;
   /** Extra schema.org-objecten voor deze pagina (Service, FAQPage, …) */
   schema?: object[];
+  /** Header meteen donker (zie Header.astro) */
+  kopVast?: boolean;
 }
 
-const { title, description, noindex = false, schema = [] } = Astro.props;
+const { title, description, noindex = false, schema = [], kopVast = false } = Astro.props;
 const fullTitle = title.includes(bedrijf.naam) ? title : `${title} | ${bedrijf.naam}`;
 const pad = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
 const canonical = new URL(pad || '/', bedrijf.url).href;
@@ -78,7 +80,7 @@ const localBusiness = {
   </head>
   <body>
     <a class="skip-link" href="#main">Naar de inhoud</a>
-    <Header />
+    <Header vast={kopVast} />
     <main id="main">
       <slot />
     </main>
@@ -86,6 +88,9 @@ const localBusiness = {
     <MobileCta />
 
     <script>
+      import { startDiepte } from '../scripts/diepte';
+      startDiepte();
+
       const els = document.querySelectorAll('[data-reveal]');
       if (!('IntersectionObserver' in window)) {
         els.forEach((el) => el.classList.add('is-visible'));

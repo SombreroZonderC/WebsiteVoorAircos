@@ -28,7 +28,8 @@ npx astro check   # type- en schemacontrole
 | Schema's (welke velden verplicht zijn) | `src/content.config.ts`, `src/lib/bedrijf.ts` |
 | Huisstijl (kleuren, letters, basisstijlen) | `src/styles/global.css` |
 | Componenten | `src/components/` |
-| Pagina's / routes | `src/pages/` |
+| Pagina's / routes | `src/pages/` (elke dienst heeft een eigen pagina: `airconditioning.astro`, `warmtepompen.astro`, `onderhoud.astro`) |
+| Diepte-effect (sitebreed) | `src/scripts/diepte.ts` + klassen `.paar/.vlak/.plak/.paneel` in `global.css` |
 
 Een veld op `null` of een lege lijst in `bedrijf.json` betekent "nog niet bekend": het wordt dan niet getoond, of als placeholder.
 
@@ -47,6 +48,15 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
 - Donkere hero, daarna afwisselend lichte en donkere vlakken. Op de homepage ligt donker "achter" en schuift licht er recht overheen (diepte-effect).
 - Het diepte-effect staat alleen aan bij `prefers-reduced-motion: no-preference`, schermbreedte > 860px en als elk donker vlak in het scherm past. Anders is het een gewone afwisseling.
 - Koelen = blauw, verwarmen = oranje. De keuze "Wat zoek je?" op de homepage stuurt teksten, kaarten, tekening en thermometer aan.
+- Elke pagina heeft een reuzenwoord in de hero en een eigen opvallend element:
+  - airconditioning: opstelling-kiezer (single/multi-split), scroll-verhaal van de binnenunit, seizoensband
+  - warmtepompen: huis-doorsnede (hybride/all-electric), geschiktheidscheck, scroll-uitleg van de kringloop
+  - onderhoud: manometer en een checklist die zich afvinkt
+  - over Sjoerd: portret, reuzen-"20+", tijdlijn, citaat
+  - werkgebied: gestileerde kaart met afstandsringen
+  - vragen: zoekveld en onderwerptegels
+  - contact: gesplitst scherm met keuzetegels (voorgevuld vanaf de dienstpagina's)
+- Alle interactieve elementen werken zonder JavaScript (je ziet dan de standaardstand of een gewone lijst).
 - Achtergrond en beslissingen: [`docs/plan.md`](docs/plan.md). Ontwerprondes: `docs/prototype-ronde-*/` (screenshots).
 
 ## Vindbaarheid

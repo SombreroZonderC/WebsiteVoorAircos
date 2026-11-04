@@ -1,0 +1,114 @@
+---
+// Het jaar in één balk: wanneer een airco typisch koelt (blauw) en zuinig bijverwarmt (oranje). Indicatief.
+const maanden = [
+  { m: 'jan', s: 'rust' },
+  { m: 'feb', s: 'rust' },
+  { m: 'mrt', s: 'warm2' },
+  { m: 'apr', s: 'warm1' },
+  { m: 'mei', s: 'koel2' },
+  { m: 'jun', s: 'koel1' },
+  { m: 'jul', s: 'koel0' },
+  { m: 'aug', s: 'koel0' },
+  { m: 'sep', s: 'koel1' },
+  { m: 'okt', s: 'warm1' },
+  { m: 'nov', s: 'warm2' },
+  { m: 'dec', s: 'rust' },
+];
+---
+
+<figure class="band">
+  <ol aria-label="Gebruik van een airco door het jaar heen (indicatief)">
+    {
+      maanden.map((x) => (
+        <li class={x.s}>
+          <span class="sr-only">
+            {x.m}: {x.s.startsWith('koel') ? 'koelen' : x.s.startsWith('warm') ? 'bijverwarmen' : 'weinig gebruik'}
+          </span>
+          <span aria-hidden="true">{x.m}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <figcaption>
+    <span class="leg koel">Koelen</span>
+    <span class="leg warm">Zuinig bijverwarmen</span>
+    <span class="muted">Indicatief, hangt af van je huis en het weer.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .band {
+    margin: 0;
+  }
+  ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 4px;
+  }
+  li {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 72px;
+    padding-bottom: 6px;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text);
+    background: #e3e8e6;
+  }
+  .koel0 {
+    background: #3a74b0;
+    color: #fff;
+  }
+  .koel1 {
+    background: #8fc1f0;
+  }
+  .koel2 {
+    background: #cfe3f7;
+  }
+  .warm1 {
+    background: #ff9a5a;
+  }
+  .warm2 {
+    background: #ffcaa3;
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin-top: 14px;
+    font-size: 0.9rem;
+  }
+  .leg {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+  .leg::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+  }
+  .leg.koel::before {
+    background: #3a74b0;
+  }
+  .leg.warm::before {
+    background: #ff9a5a;
+  }
+  @media (max-width: 560px) {
+    li {
+      height: 54px;
+      font-size: 0.6rem;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      align-items: center;
+      padding: 6px 0;
+    }
+  }
+</style>

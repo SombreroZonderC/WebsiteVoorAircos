@@ -1,0 +1,60 @@
+---
+// Manometer waarvan de naald bij het laden naar "in orde" draait.
+const ticks = Array.from({ length: 11 }, (_, i) => -120 + i * 24);
+---
+
+<svg class="mano" viewBox="0 0 220 150" aria-hidden="true">
+  <path class="boog" d="M30 120 A80 80 0 1 1 190 120" />
+  <path class="goed" d="M150 52 A80 80 0 0 1 190 120" />
+  {
+    ticks.map((a) => {
+      const r = (a - 90) * (Math.PI / 180);
+      return <line x1={110 + Math.cos(r) * 70} y1={120 + Math.sin(r) * 70} x2={110 + Math.cos(r) * 62} y2={120 + Math.sin(r) * 62} />;
+    })
+  }
+  <g class="naald"><line x1="110" y1="120" x2="110" y2="56" /></g>
+  <circle cx="110" cy="120" r="7" class="as" />
+  <text x="150" y="146">in orde</text>
+</svg>
+
+<style>
+  .mano {
+    width: min(100%, 260px);
+    height: auto;
+    fill: none;
+    stroke: rgb(232 240 243 / 0.6);
+    stroke-width: 2;
+    stroke-linecap: round;
+    margin-bottom: 18px;
+  }
+  .boog {
+    stroke-width: 3;
+  }
+  .goed {
+    stroke: var(--blue-ice);
+    stroke-width: 6;
+  }
+  .naald {
+    transform-origin: 110px 120px;
+    transform: rotate(62deg);
+    animation: draai 1.6s cubic-bezier(0.3, 0.7, 0.2, 1.15) both;
+  }
+  .naald line {
+    stroke: var(--text-on-dark);
+    stroke-width: 3.5;
+  }
+  .as {
+    fill: var(--blue-ice);
+    stroke: none;
+  }
+  text {
+    font: 500 12px var(--font-mono);
+    fill: var(--blue-ice);
+    stroke: none;
+  }
+  @keyframes draai {
+    from {
+      transform: rotate(-110deg);
+    }
+  }
+</style>

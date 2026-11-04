@@ -1,0 +1,208 @@
+---
+// Airco: kies het aantal ruimtes; de tekening schakelt tussen single- en multi-split.
+import Icon from './Icon.astro';
+
+interface Props {
+  prijsVanaf?: Record<string, string | null>;
+}
+const { prijsVanaf = {} } = Astro.props;
+const opties = [
+  { n: 1, label: '1', type: 'Single-split', regel: '1 buitenunit · 1 binnenunit', tekst: 'Eén ruimte, één binnenunit. Ideaal voor de woonkamer of slaapkamer.' },
+  { n: 2, label: '2', type: 'Multi-split', regel: '1 buitenunit · 2 binnenunits', tekst: 'Twee ruimtes op één buitenunit, elk apart regelbaar.' },
+  { n: 3, label: '3', type: 'Multi-split', regel: '1 buitenunit · 3 binnenunits', tekst: 'Eén unit aan de gevel, elke ruimte apart regelbaar.' },
+  { n: 4, label: '4+', type: 'Multi-split', regel: '1 of meer buitenunits · 4+ binnenunits', tekst: 'Bij veel ruimtes kijk ik ter plekke wat de slimste verdeling is.' },
+];
+const y = [36, 92, 148, 204];
+---
+
+<div class="kiezer" data-kiezer data-n="1">
+  <div class="kop">
+    <p class="eyebrow cold" id="kiezer-vraag">Welke opstelling past bij jou?</p>
+    <h2>Hoeveel ruimtes wil je koelen?</h2>
+    <div class="seg" role="radiogroup" aria-labelledby="kiezer-vraag">
+      {
+        opties.map((o) => (
+          <button role="radio" aria-checked={o.n === 1 ? 'true' : 'false'} tabindex={o.n === 1 ? 0 : -1} data-kies={o.n}>
+            {o.label}
+            <span class="sr-only"> {o.n === 1 ? 'ruimte' : 'ruimtes'}</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="raster">
+    <svg class="tek" viewBox="0 0 340 240" aria-hidden="true">
+      <rect x="18" y="140" width="84" height="66" rx="8" />
+      <circle cx="54" cy="173" r="22" />
+      <path class="dun" d="M54 151 V195 M32 173 H76" />
+      <circle cx="54" cy="173" r="5" class="stip" />
+      <path class="dun" d="M86 154 h10 M86 162 h10 M86 170 h10" />
+      {
+        y.map((yy, i) => (
+          <g class:list={['unit', { aan: i === 0 }]} data-vanaf={i + 1}>
+            <rect x="216" y={yy - 13} width="106" height="26" rx="9" />
+            <circle cx="308" cy={yy - 2} r="2.5" class="stip" />
+            <path class="leiding" d={`M102 ${166 + i * 6} C156 ${166 + i * 6} 160 ${yy} 216 ${yy}`} />
+          </g>
+        ))
+      }
+    </svg>
+
+    {
+      opties.map((o) => (
+        <div class="uitkomst" data-optie={o.n} hidden={o.n !== 1}>
+          <p class="type">{o.type}</p>
+          <p class="regel">{o.regel}</p>
+          <p class="muted">{o.tekst}</p>
+          <p class="prijs">
+            {prijsVanaf[o.label] ? (
+              <>
+                Indicatie vanaf <b>{prijsVanaf[o.label]}</b>
+              </>
+            ) : (
+              <span class="todo">prijsindicatie</span>
+            )}
+          </p>
+          <a class="btn" href={`/contact?onderwerp=airconditioning&ruimtes=${o.label}`}>
+            Offerte voor deze opstelling <Icon name="arrow" />
+          </a>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-kiezer]').forEach((root) => {
+    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-kies]')];
+    const zet = (n: number, focus = false) => {
+      root.dataset.n = String(n);
+      knoppen.forEach((b) => {
+        const aan = Number(b.dataset.kies) === n;
+        b.setAttribute('aria-checked', String(aan));
+        b.tabIndex = aan ? 0 : -1;
+        if (aan && focus) b.focus();
+      });
+      root.querySelectorAll<HTMLElement>('[data-optie]').forEach((u) => (u.hidden = Number(u.dataset.optie) !== n));
+      root.querySelectorAll<SVGGElement>('.unit').forEach((g) => g.classList.toggle('aan', Number(g.dataset.vanaf) <= n));
+    };
+    knoppen.forEach((b) => {
+      b.addEventListener('click', () => zet(Number(b.dataset.kies)));
+      b.addEventListener('keydown', (e) => {
+        const nu = Number(root.dataset.n);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') (e.preventDefault(), zet(nu === 4 ? 1 : nu + 1, true));
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') (e.preventDefault(), zet(nu === 1 ? 4 : nu - 1, true));
+      });
+    });
+    zet(1);
+  });
+</script>
+
+<style>
+  .kop {
+    margin-bottom: 28px;
+  }
+  h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.04em;
+    margin-bottom: 18px;
+  }
+  .seg {
+    display: inline-flex;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+  }
+  .seg button {
+    min-width: 56px;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 11px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background 0.25s,
+      color 0.25s;
+  }
+  .seg [aria-checked='true'] {
+    background: var(--blue-text);
+    color: #fff;
+  }
+  .raster {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    padding: clamp(24px, 3vw, 40px);
+    border-radius: var(--radius-lg);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+  }
+  .tek {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: #24343a;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .dun {
+    stroke-width: 1.2;
+    opacity: 0.5;
+  }
+  .stip {
+    fill: var(--blue-text);
+    stroke: none;
+  }
+  .unit {
+    opacity: 0.14;
+    transition: opacity 0.4s var(--ease);
+  }
+  .unit.aan {
+    opacity: 1;
+  }
+  .leiding {
+    stroke: var(--blue-text);
+    stroke-dasharray: 6 7;
+  }
+  .unit.aan .leiding {
+    animation: stroom 1.6s linear infinite;
+  }
+  @keyframes stroom {
+    to {
+      stroke-dashoffset: -26;
+    }
+  }
+  .type {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-text);
+    margin: 0 0 6px;
+  }
+  .regel {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  .prijs {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+  @media (max-width: 860px) {
+    .raster {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -2,10 +2,15 @@
 import Icon from './Icon.astro';
 import { bedrijf, nav, telLink } from '../lib/bedrijf';
 
+interface Props {
+  /** Header meteen donker en compact (voor pagina's met licht direct onder de header) */
+  vast?: boolean;
+}
+const { vast = false } = Astro.props;
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
 ---
 
-<header class="header" data-header>
+<header class:list={['header', { scrolled: vast }]} data-header data-vast={vast ? '' : undefined}>
   <div class="bar">
     <a href="/" class="logo" aria-label={`${bedrijf.naam} – home`}>
       <img src="/images/logo-op-donker.svg" alt="" width="132" height="73" />
@@ -45,7 +50,8 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
   const header = document.querySelector<HTMLElement>('[data-header]')!;
   const toggle = header.querySelector<HTMLButtonElement>('[data-toggle]')!;
 
-  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 24);
+  const vast = header.hasAttribute('data-vast');
+  const onScroll = () => header.classList.toggle('scrolled', vast || window.scrollY > 24);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 

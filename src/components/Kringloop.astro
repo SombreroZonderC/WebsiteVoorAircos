@@ -1,0 +1,113 @@
+---
+// Gestileerde warmtepompkringloop voor het scroll-verhaal; stap n licht op via data-actief op een ouder.
+import Thermometer from './Thermometer.astro';
+---
+
+<div class="kl">
+  <svg viewBox="0 0 420 300" role="img" aria-label="Kringloop van een warmtepomp in vier stappen">
+    <rect class="baan" x="50" y="50" width="320" height="200" rx="80" />
+    <path class="stroom" d="M130 50 H290" />
+    <path class="stroom koud" d="M290 250 H130" />
+    <g class="stap stap-0">
+      <circle cx="50" cy="150" r="22" />
+      <path d="M38 150 h24 M50 138 v24 M42 142 l16 16 M58 142 l-16 16" class="dun" />
+      <text x="10" y="196">1 buitenlucht</text>
+    </g>
+    <g class="stap stap-1">
+      <circle cx="210" cy="50" r="22" />
+      <path d="M200 56 l10 -14 l10 14" class="dun" />
+      <text x="168" y="98">2 compressor</text>
+    </g>
+    <g class="stap stap-2">
+      <circle cx="370" cy="150" r="22" />
+      <path d="M362 158 q8 -24 16 0" class="dun" />
+      <text x="300" y="196">3 warmte naar huis</text>
+    </g>
+    <g class="stap stap-3">
+      <circle cx="210" cy="250" r="22" />
+      <path d="M200 250 h20" class="dun" />
+      <text x="170" y="292">4 opnieuw</text>
+    </g>
+  </svg>
+  <div class="th"><Thermometer id="kl-binnen" label="Binnen" temp={21} /></div>
+</div>
+
+<style>
+  .kl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: center;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: rgb(232 240 243 / 0.5);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .baan {
+    stroke-width: 1.5;
+    opacity: 0.6;
+  }
+  .dun {
+    stroke-width: 1.4;
+  }
+  .stroom {
+    stroke: var(--orange-hot);
+    stroke-dasharray: 6 8;
+    animation: stroom 2s linear infinite;
+  }
+  .stroom.koud {
+    stroke: var(--blue-ice);
+  }
+  @keyframes stroom {
+    to {
+      stroke-dashoffset: -56;
+    }
+  }
+  text {
+    font: 500 12px var(--font-mono);
+    fill: rgb(232 240 243 / 0.5);
+    stroke: none;
+  }
+  .stap circle {
+    fill: var(--ink);
+    transition:
+      stroke 0.4s,
+      fill 0.4s;
+  }
+  :global([data-actief='0']) .stap-0 circle {
+    stroke: var(--blue-ice);
+    fill: rgb(127 180 234 / 0.15);
+  }
+  :global([data-actief='1']) .stap-1 circle,
+  :global([data-actief='2']) .stap-2 circle,
+  :global([data-actief='3']) .stap-3 circle {
+    stroke: var(--orange-hot);
+    fill: rgb(255 122 47 / 0.15);
+  }
+  :global([data-actief='0']) .stap-0 text,
+  :global([data-actief='1']) .stap-1 text,
+  :global([data-actief='2']) .stap-2 text,
+  :global([data-actief='3']) .stap-3 text {
+    fill: var(--text-on-dark);
+  }
+  .th :global(.thermo) {
+    --kwik-kleur: var(--orange-hot);
+    width: 96px;
+  }
+  .th :global(.thermo svg) {
+    width: 96px;
+  }
+  @media (max-width: 560px) {
+    .kl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .th {
+      display: none;
+    }
+  }
+</style>
