@@ -1,0 +1,15 @@
+{
+  "controle": {
+    "eyebrow": "Wat ik controleer",
+    "titel": "Een onderhoudsbeurt, stap voor stap.",
+    "punten": [
+      { "titel": "Werking en foutcodes", "tekst": "Draait alles zoals het hoort, en zijn er meldingen?" },
+      { "titel": "Filters en binnenunit", "tekst": "Reinigen waar nodig, voor schone lucht en een zuinig systeem." },
+      { "titel": "Buitenunit en afvoer", "tekst": "Vrij van vuil en bladeren, condensafvoer in orde." },
+      { "titel": "Drukken en temperaturen", "tekst": "Meten of het systeem binnen de juiste waarden werkt." },
+      { "titel": "Advies", "tekst": "Je hoort wat ik heb gezien en of er iets aandacht nodig heeft." }
+    ]
+  },
+  "storing": { "titel": "Bel direct.", "tekst": "Werkt je airco of warmtepomp niet goed? Dan kijken we samen wat er aan de hand is." },
+  "ctaTitel": "Onderhoud inplannen?"
+}

@@ -6,18 +6,15 @@ import Reviews from '../components/Reviews.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { bedrijf, bedrijfId, home, telLink } from '../lib/bedrijf';
+import { over } from '../lib/inhoud';
 
 const pagina = (await getEntry('paginas', 'over-sjoerd'))!;
 const { Content } = await render(pagina);
 const p = pagina.data;
 const citaat = (await getCollection('reviews')).find((r) => r.id === 'google-reviewer') ?? (await getCollection('reviews'))[0];
 
-// Tijdlijn: jaartallen en mijlpalen vult Sjoerd aan (null = placeholder)
-const tijdlijn = [
-  { jaar: null, titel: 'In het vak', tekst: null },
-  { jaar: null, titel: 'The CoolFactory', tekst: 'Eigen bedrijf in Heeten.' },
-  { jaar: 'Nu', titel: 'Mitsubishi Electric-specialist', tekst: `Ruim ${bedrijf.jarenErvaring} jaar ervaring, één merk, één aanspreekpunt.` },
-];
+// Tijdlijn: staat in over.json; jaartallen en mijlpalen vult Sjoerd aan (null = placeholder)
+const tijdlijn = over.tijdlijn;
 
 const schema = [
   {

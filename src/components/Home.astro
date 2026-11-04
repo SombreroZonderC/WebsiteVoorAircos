@@ -5,6 +5,7 @@ import Thermometer from './Thermometer.astro';
 import TechTekening from './TechTekening.astro';
 import Visual from './Visual.astro';
 import CtaBand from './CtaBand.astro';
+import RuimteKaarten from './RuimteKaarten.astro';
 import { bedrijf, home, telLink } from '../lib/bedrijf';
 
 const reviews = (await getCollection('reviews')).sort((a, b) => b.data.datum.valueOf() - a.data.datum.valueOf()).slice(0, 3);
@@ -91,22 +92,8 @@ const k = home.keuze;
       <div class="wrap">
         {
           kanten.map((m) => (
-            <div class="ruimtes" data-m={m} hidden={verborgen(m)}>
-              {k[m].ruimtes.map((r) => (
-                <a class="ruimte" href={`/${k[m].dienst}`}>
-                  <span class="soort">{m === 'koel' ? 'Airco' : 'Warmtepomp'}</span>
-                  <h3>{r.titel}</h3>
-                  <p>{r.tekst}</p>
-                  <span class="prijs">
-                    {r.prijsVanaf ? (
-                      <>Indicatie vanaf <b>{r.prijsVanaf}</b></>
-                    ) : (
-                      <span class="todo">prijsindicatie</span>
-                    )}
-                    <Icon name="arrow" size={18} />
-                  </span>
-                </a>
-              ))}
+            <div data-m={m} hidden={verborgen(m)}>
+              <RuimteKaarten ruimtes={k[m].ruimtes} soort={m === 'koel' ? 'Airco' : 'Warmtepomp'} href={`/${k[m].dienst}`} />
             </div>
           ))
         }
@@ -424,58 +411,6 @@ const k = home.keuze;
     margin: 0 auto 26px;
     max-width: 46ch;
   }
-  .ruimtes:not([hidden]) {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-  .ruimte {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 24px;
-    border-radius: 20px;
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    text-decoration: none;
-    transition:
-      transform 0.3s var(--ease),
-      box-shadow 0.3s var(--ease);
-  }
-  .ruimte:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 40px -26px rgb(12 29 35 / 0.4);
-  }
-  .soort {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-  .ruimte h3 {
-    margin: 0;
-  }
-  .ruimte p {
-    margin: 0;
-    color: var(--muted);
-    flex: 1;
-  }
-  .prijs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-top: 8px;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
-    font-size: 0.88rem;
-    color: var(--muted);
-  }
-  .prijs :global(svg) {
-    color: var(--accent);
-    flex: none;
-  }
 
   /* ---------- zo werkt het ---------- */
   .zo .vlak-inhoud {
@@ -632,7 +567,6 @@ const k = home.keuze;
     .thermos :global(.thermo svg) {
       width: 84px;
     }
-    .ruimtes:not([hidden]),
     .reviews {
       grid-template-columns: minmax(0, 1fr);
     }

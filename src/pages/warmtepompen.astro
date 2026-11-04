@@ -10,6 +10,7 @@ import Stappen from '../components/Stappen.astro';
 import FaqLijst from '../components/FaqLijst.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
+import { warmtepomp } from '../lib/inhoud';
 import { bedrijf, telLink } from '../lib/bedrijf';
 import { laadDienst } from '../lib/dienst';
 
@@ -32,17 +33,7 @@ const { Content } = await render(dienst);
   </div>
 
   <section class="vlak donker">
-    <ScrollUitleg
-      eyebrow="Zo werkt het"
-      titel="Warmte uit de buitenlucht, ook bij −4°."
-      accent="warm"
-      stappen={[
-        { titel: 'Warmte uit de buitenlucht', tekst: 'Ook koude buitenlucht bevat warmte. De buitenunit haalt die eruit met een koudemiddel dat al bij lage temperaturen verdampt.' },
-        { titel: 'De compressor', tekst: 'De compressor drukt het koudemiddel samen. Daardoor stijgt de temperatuur flink.' },
-        { titel: 'Warmte naar je huis', tekst: 'Die warmte gaat naar je cv-water: radiatoren of vloerverwarming, en vaak ook je tapwater.' },
-        { titel: 'En weer opnieuw', tekst: 'Het afgekoelde koudemiddel gaat terug naar buiten, en de kringloop begint opnieuw.' },
-      ]}
-    >
+    <ScrollUitleg eyebrow={warmtepomp.kringloop.eyebrow} titel={warmtepomp.kringloop.titel} accent="warm" stappen={warmtepomp.kringloop.stappen}>
       <Kringloop slot="beeld" />
     </ScrollUitleg>
   </section>
@@ -52,10 +43,10 @@ const { Content } = await render(dienst);
       <div class="subsidie">
         <div>
           <p class="eyebrow">Subsidie</p>
-          <h2 class="h3">ISDE-subsidie voor warmtepompen</h2>
-          <p class="muted">Voor warmtepompen bestaat landelijke subsidie. De voorwaarden en bedragen veranderen regelmatig; de actuele regels staan bij RVO.</p>
+          <h2 class="h3">{warmtepomp.subsidie.titel}</h2>
+          <p class="muted">{warmtepomp.subsidie.tekst}</p>
         </div>
-        <a class="btn ghost" href="https://www.rvo.nl/subsidies-financiering/isde" rel="noopener">Bekijk bij RVO <Icon name="arrow" /></a>
+        <a class="btn ghost" href={warmtepomp.subsidie.link} rel="noopener">Bekijk bij RVO <Icon name="arrow" /></a>
       </div>
 
       <div class="body">
@@ -82,7 +73,7 @@ const { Content } = await render(dienst);
     </div>
   </section>
 
-  <CtaBand titel="Klaar voor een warme winter?" />
+  <CtaBand titel={warmtepomp.ctaTitel} />
 </Base>
 
 <style>

@@ -2,16 +2,21 @@
 // Warmtepomp: drie klikvragen die een eerlijke eerste richting geven (geen belofte, wel een startpunt).
 import Icon from './Icon.astro';
 
+import { warmtepomp } from '../lib/inhoud';
+
+// De vraag-ids en waarden zijn vast (de logica hangt ervan af); de teksten komen uit warmtepompen.json.
+const c = warmtepomp.check;
+const v = c.vragen;
 const vragen = [
-  { id: 'isolatie', label: 'Hoe is je huis geïsoleerd?', opties: [['goed', 'Goed'], ['matig', 'Matig'], ['weet', 'Weet ik niet']] },
-  { id: 'afgifte', label: 'Hoe verwarm je nu?', opties: [['vloer', 'Vloerverwarming'], ['radiatoren', 'Radiatoren'], ['beide', 'Allebei']] },
-  { id: 'buiten', label: 'Is er ruimte voor een buitenunit?', opties: [['ja', 'Ja'], ['weet', 'Weet ik niet']] },
+  { id: 'isolatie', label: v.isolatie.label, opties: [['goed', v.isolatie.goed], ['matig', v.isolatie.matig], ['weet', v.isolatie.weet]] },
+  { id: 'afgifte', label: v.afgifte.label, opties: [['vloer', v.afgifte.vloer], ['radiatoren', v.afgifte.radiatoren], ['beide', v.afgifte.beide]] },
+  { id: 'buiten', label: v.buiten.label, opties: [['ja', v.buiten.ja], ['weet', v.buiten.weet]] },
 ] as const;
 ---
 
-<form class="check" data-check aria-labelledby="check-titel">
-  <p class="eyebrow">Is mijn huis geschikt?</p>
-  <h2 id="check-titel">Drie vragen, een eerste richting.</h2>
+<form class="check" data-check data-uitkomsten={JSON.stringify(c.uitkomsten)} aria-labelledby="check-titel">
+  <p class="eyebrow">{c.eyebrow}</p>
+  <h2 id="check-titel">{c.titel}</h2>
   <div class="vragen">
     {
       vragen.map((v) => (
@@ -31,36 +36,29 @@ const vragen = [
   </div>
   <output class="uitkomst" data-uitkomst aria-live="polite">
     <span class="eyebrow">Eerste richting</span>
-    <b data-richting>Een hybride warmtepomp is waarschijnlijk een goede start.</b>
-    <span class="muted" data-toelichting>Hij werkt samen met je cv-ketel en past ook in huizen die nog niet perfect geïsoleerd zijn.</span>
+    <b data-richting>{c.uitkomsten.hybride.richting}</b>
+    <span class="muted" data-toelichting>{c.uitkomsten.hybride.toelichting}</span>
   </output>
   <div class="actions">
-    <a class="btn" href="/contact?onderwerp=warmtepompen">Plan advies aan huis <Icon name="arrow" /></a>
+    <a class="btn" href="/contact?onderwerp=warmtepompen">{c.cta} <Icon name="arrow" /></a>
   </div>
-  <p class="klein muted">Dit is een algemene indicatie. Wat echt past, bekijk ik bij je thuis.</p>
+  <p class="klein muted">{c.disclaimer}</p>
 </form>
 
 <script>
   document.querySelectorAll<HTMLFormElement>('[data-check]').forEach((form) => {
     const richting = form.querySelector<HTMLElement>('[data-richting]')!;
     const toelichting = form.querySelector<HTMLElement>('[data-toelichting]')!;
+    const u = JSON.parse(form.dataset.uitkomsten!);
     const update = () => {
       const d = new FormData(form);
       const isolatie = d.get('isolatie');
       const afgifte = d.get('afgifte');
-      const buiten = d.get('buiten');
-      let r = 'Een hybride warmtepomp is waarschijnlijk een goede start.';
-      let t = 'Hij werkt samen met je cv-ketel en past ook in huizen die nog niet perfect geïsoleerd zijn.';
-      if (isolatie === 'goed' && afgifte !== 'radiatoren') {
-        r = 'All-electric kan goed bij je huis passen.';
-        t = 'Met goede isolatie en (deels) vloerverwarming kun je mogelijk helemaal van het gas af.';
-      } else if (isolatie === 'goed') {
-        r = 'Hybride of all-electric: allebei het bekijken waard.';
-        t = 'Met goede isolatie kan all-electric, maar het hangt af van je radiatoren.';
-      }
-      if (buiten === 'weet') t += ' Waar de buitenunit kan staan, bekijk ik ter plekke.';
-      richting.textContent = r;
-      toelichting.textContent = t;
+      let keuze = u.hybride;
+      if (isolatie === 'goed' && afgifte !== 'radiatoren') keuze = u.electric;
+      else if (isolatie === 'goed') keuze = u.beide;
+      richting.textContent = keuze.richting;
+      toelichting.textContent = d.get('buiten') === 'weet' ? `${keuze.toelichting} ${u.buitenOnbekend}` : keuze.toelichting;
     };
     form.addEventListener('change', update);
     form.addEventListener('submit', (e) => e.preventDefault());

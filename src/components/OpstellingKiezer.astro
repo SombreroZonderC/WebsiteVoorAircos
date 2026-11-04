@@ -2,23 +2,17 @@
 // Airco: kies het aantal ruimtes; de tekening schakelt tussen single- en multi-split.
 import Icon from './Icon.astro';
 
-interface Props {
-  prijsVanaf?: Record<string, string | null>;
-}
-const { prijsVanaf = {} } = Astro.props;
-const opties = [
-  { n: 1, label: '1', type: 'Single-split', regel: '1 buitenunit · 1 binnenunit', tekst: 'Eén ruimte, één binnenunit. Ideaal voor de woonkamer of slaapkamer.' },
-  { n: 2, label: '2', type: 'Multi-split', regel: '1 buitenunit · 2 binnenunits', tekst: 'Twee ruimtes op één buitenunit, elk apart regelbaar.' },
-  { n: 3, label: '3', type: 'Multi-split', regel: '1 buitenunit · 3 binnenunits', tekst: 'Eén unit aan de gevel, elke ruimte apart regelbaar.' },
-  { n: 4, label: '4+', type: 'Multi-split', regel: '1 of meer buitenunits · 4+ binnenunits', tekst: 'Bij veel ruimtes kijk ik ter plekke wat de slimste verdeling is.' },
-];
+import { airco } from '../lib/inhoud';
+
+const k = airco.kiezer;
+const opties = k.opties.map((o, i) => ({ ...o, n: i + 1 }));
 const y = [36, 92, 148, 204];
 ---
 
 <div class="kiezer" data-kiezer data-n="1">
   <div class="kop">
-    <p class="eyebrow cold" id="kiezer-vraag">Welke opstelling past bij jou?</p>
-    <h2>Hoeveel ruimtes wil je koelen?</h2>
+    <p class="eyebrow cold" id="kiezer-vraag">{k.eyebrow}</p>
+    <h2>{k.titel}</h2>
     <div class="seg" role="radiogroup" aria-labelledby="kiezer-vraag">
       {
         opties.map((o) => (
@@ -56,9 +50,9 @@ const y = [36, 92, 148, 204];
           <p class="regel">{o.regel}</p>
           <p class="muted">{o.tekst}</p>
           <p class="prijs">
-            {prijsVanaf[o.label] ? (
+            {o.prijsVanaf ? (
               <>
-                Indicatie vanaf <b>{prijsVanaf[o.label]}</b>
+                Indicatie vanaf <b>{o.prijsVanaf}</b>
               </>
             ) : (
               <span class="todo">prijsindicatie</span>

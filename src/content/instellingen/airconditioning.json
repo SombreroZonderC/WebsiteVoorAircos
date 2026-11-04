@@ -1,0 +1,24 @@
+{
+  "kiezer": {
+    "eyebrow": "Welke opstelling past bij jou?",
+    "titel": "Hoeveel ruimtes wil je koelen?",
+    "opties": [
+      { "label": "1", "type": "Single-split", "regel": "1 buitenunit · 1 binnenunit", "tekst": "Eén ruimte, één binnenunit. Ideaal voor de woonkamer of slaapkamer.", "prijsVanaf": null },
+      { "label": "2", "type": "Multi-split", "regel": "1 buitenunit · 2 binnenunits", "tekst": "Twee ruimtes op één buitenunit, elk apart regelbaar.", "prijsVanaf": null },
+      { "label": "3", "type": "Multi-split", "regel": "1 buitenunit · 3 binnenunits", "tekst": "Eén unit aan de gevel, elke ruimte apart regelbaar.", "prijsVanaf": null },
+      { "label": "4+", "type": "Multi-split", "regel": "1 of meer buitenunits · 4+ binnenunits", "tekst": "Bij veel ruimtes kijk ik ter plekke wat de slimste verdeling is.", "prijsVanaf": null }
+    ]
+  },
+  "opengewerkt": {
+    "eyebrow": "Opengewerkt",
+    "titel": "Wat er bij je aan de muur komt.",
+    "stappen": [
+      { "titel": "Stil", "tekst": "Een moderne binnenunit is binnen nauwelijks te horen, ook ’s nachts in de slaapkamer." },
+      { "titel": "Koelen én verwarmen", "tekst": "Een split-airco is een lucht-lucht warmtepomp: koel in de zomer, zuinig bijverwarmen in het voor- en najaar." },
+      { "titel": "Instelbare luchtstroom", "tekst": "De klep verdeelt de lucht door de ruimte, zonder dat je in de tocht zit." },
+      { "titel": "Strak leidingwerk", "tekst": "Leidingen netjes weggewerkt naar de buitenunit. Ik kijk samen met je naar de beste route." }
+    ]
+  },
+  "seizoen": { "eyebrow": "Het hele jaar", "titel": "Niet alleen voor de zomer." },
+  "ctaTitel": "Klaar voor een koele zomer?"
+}

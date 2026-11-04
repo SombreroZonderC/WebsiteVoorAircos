@@ -10,6 +10,8 @@ import Stappen from '../components/Stappen.astro';
 import FaqLijst from '../components/FaqLijst.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
+import RuimteKaarten from '../components/RuimteKaarten.astro';
+import { airco } from '../lib/inhoud';
 import { bedrijf, home, telLink } from '../lib/bedrijf';
 import { laadDienst } from '../lib/dienst';
 
@@ -30,37 +32,18 @@ const ruimtes = home.keuze.koel.ruimtes;
   </div>
 
   <section class="vlak donker">
-    <ScrollUitleg
-      eyebrow="Opengewerkt"
-      titel="Wat er bij je aan de muur komt."
-      stappen={[
-        { titel: 'Stil', tekst: 'Een binnenunit van Mitsubishi Electric is binnen nauwelijks te horen, ook ’s nachts in de slaapkamer.' },
-        { titel: 'Koelen én verwarmen', tekst: 'Een split-airco is een lucht-lucht warmtepomp: koel in de zomer, zuinig bijverwarmen in het voor- en najaar.' },
-        { titel: 'Instelbare luchtstroom', tekst: 'De klep verdeelt de lucht door de ruimte, zonder dat je in de tocht zit.' },
-        { titel: 'Strak leidingwerk', tekst: 'Leidingen netjes weggewerkt naar de buitenunit. Ik kijk samen met je naar de beste route.' },
-      ]}
-    >
+    <ScrollUitleg eyebrow={airco.opengewerkt.eyebrow} titel={airco.opengewerkt.titel} stappen={airco.opengewerkt.stappen}>
       <AircoOpengewerkt slot="beeld" />
     </ScrollUitleg>
   </section>
 
   <section class="vlak licht sectie">
     <div class="wrap">
-      <p class="eyebrow cold">Het hele jaar</p>
-      <h2 class="h2">Niet alleen voor de zomer.</h2>
+      <p class="eyebrow cold">{airco.seizoen.eyebrow}</p>
+      <h2 class="h2">{airco.seizoen.titel}</h2>
       <Seizoensband />
 
-      <div class="ruimtes">
-        {
-          ruimtes.map((r) => (
-            <div class="ruimte">
-              <span class="soort">Airco</span>
-              <h3>{r.titel}</h3>
-              <p>{r.tekst}</p>
-            </div>
-          ))
-        }
-      </div>
+      <div class="ruimte-rij"><RuimteKaarten ruimtes={ruimtes} soort="Airco" accent="koud" metPrijs={false} /></div>
     </div>
   </section>
 
@@ -89,7 +72,7 @@ const ruimtes = home.keuze.koel.ruimtes;
     </div>
   </section>
 
-  <CtaBand titel="Klaar voor een koele zomer?" />
+  <CtaBand titel={airco.ctaTitel} />
 </Base>
 
 <style>
@@ -108,31 +91,8 @@ const ruimtes = home.keuze.koel.ruimtes;
     font-size: clamp(1.6rem, 3vw, 2.2rem);
     margin-top: clamp(56px, 7vw, 88px);
   }
-  .ruimtes {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+  .ruimte-rij {
     margin-top: 40px;
-  }
-  .ruimte {
-    padding: 22px;
-    border-radius: 20px;
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-  }
-  .soort {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--blue-text);
-  }
-  .ruimte h3 {
-    margin: 6px 0 4px;
-  }
-  .ruimte p {
-    margin: 0;
-    color: var(--muted);
   }
   .body {
     display: grid;
@@ -171,7 +131,6 @@ const ruimtes = home.keuze.koel.ruimtes;
     margin-top: 0;
   }
   @media (max-width: 860px) {
-    .ruimtes,
     .body {
       grid-template-columns: minmax(0, 1fr);
     }

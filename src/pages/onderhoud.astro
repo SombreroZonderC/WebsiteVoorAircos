@@ -9,16 +9,11 @@ import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { bedrijf, telLink } from '../lib/bedrijf';
 import { laadDienst } from '../lib/dienst';
+import { onderhoud } from '../lib/inhoud';
 
 const { dienst, d, faqs, schema } = await laadDienst('onderhoud');
 const { Content } = await render(dienst);
-const controle = [
-  { titel: 'Werking en foutcodes', tekst: 'Draait alles zoals het hoort, en zijn er meldingen?' },
-  { titel: 'Filters en binnenunit', tekst: 'Reinigen waar nodig, voor schone lucht en een zuinig systeem.' },
-  { titel: 'Buitenunit en afvoer', tekst: 'Vrij van vuil en bladeren, condensafvoer in orde.' },
-  { titel: 'Drukken en temperaturen', tekst: 'Meten of het systeem binnen de juiste waarden werkt.' },
-  { titel: 'Advies', tekst: 'Je hoort wat ik heb gezien en of er iets aandacht nodig heeft.' },
-];
+const { controle, storing } = onderhoud;
 ---
 
 <Base title={d.seoTitel} description={d.seoOmschrijving} schema={schema}>
@@ -32,11 +27,11 @@ const controle = [
     <section class="vlak licht paneel sectie">
       <div class="wrap controle">
         <div>
-          <p class="eyebrow cold">Wat ik controleer</p>
-          <h2 class="h2">Een onderhoudsbeurt, stap voor stap.</h2>
+          <p class="eyebrow cold">{controle.eyebrow}</p>
+          <h2 class="h2">{controle.titel}</h2>
           <ol class="lijst" data-afvinken>
             {
-              controle.map((c) => (
+              controle.punten.map((c) => (
                 <li class="af">
                   <span class="vink" aria-hidden="true" />
                   <div>
@@ -50,9 +45,9 @@ const controle = [
         </div>
         <aside class="storing">
           <p class="eyebrow">Storing?</p>
-          <p class="groot">Bel direct.</p>
+          <p class="groot">{storing.titel}</p>
           <a class="nummer" href={telLink}>{bedrijf.telefoon.weergave}</a>
-          <p class="muted">Werkt je airco of warmtepomp niet goed? Dan kijken we samen wat er aan de hand is.</p>
+          <p class="muted">{storing.tekst}</p>
         </aside>
       </div>
     </section>
@@ -75,7 +70,7 @@ const controle = [
     </div>
   </section>
 
-  <CtaBand titel="Onderhoud inplannen?" />
+  <CtaBand titel={onderhoud.ctaTitel} />
 </Base>
 
 <script>

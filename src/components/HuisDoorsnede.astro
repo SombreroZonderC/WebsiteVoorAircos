@@ -1,26 +1,16 @@
 ---
-// Warmtepomp: doorsnede van een huis met schakelaar hybride / all-electric.
-const systemen = {
-  hybride: {
-    label: 'Hybride',
-    titel: 'Hybride warmtepomp',
-    tekst: 'De warmtepomp doet het meeste werk. Je cv-ketel springt alleen bij op de koudste dagen en voor warm water.',
-    punten: ['Past ook in oudere huizen', 'Fors minder gas', 'Je ketel blijft als back-up'],
-  },
-  electric: {
-    label: 'All-electric',
-    titel: 'All-electric warmtepomp',
-    tekst: 'De warmtepomp verwarmt je huis en meestal ook je tapwater, volledig zonder gas.',
-    punten: ['Helemaal van het gas af', 'Het beste in een goed geïsoleerd huis', 'Ideaal met vloerverwarming'],
-  },
-} as const;
+// Warmtepomp: doorsnede van een huis met schakelaar hybride / all-electric. Teksten: warmtepompen.json.
+import { warmtepomp } from '../lib/inhoud';
+
+const h = warmtepomp.huis;
+const systemen = { hybride: h.hybride, electric: h.electric };
 const sleutels = ['hybride', 'electric'] as const;
 ---
 
 <div class="huis" data-huis data-systeem="hybride">
   <div class="kop">
-    <p class="eyebrow">Hybride of all-electric?</p>
-    <h2 id="huis-vraag">Welk systeem past bij jouw huis?</h2>
+    <p class="eyebrow">{h.eyebrow}</p>
+    <h2 id="huis-vraag">{h.titel}</h2>
     <div class="seg" role="radiogroup" aria-labelledby="huis-vraag">
       {
         sleutels.map((k) => (

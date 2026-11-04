@@ -1,0 +1,51 @@
+{
+  "huis": {
+    "eyebrow": "Hybride of all-electric?",
+    "titel": "Welk systeem past bij jouw huis?",
+    "hybride": {
+      "label": "Hybride",
+      "titel": "Hybride warmtepomp",
+      "tekst": "De warmtepomp doet het meeste werk. Je cv-ketel springt alleen bij op de koudste dagen en voor warm water.",
+      "punten": ["Past ook in oudere huizen", "Fors minder gas", "Je ketel blijft als back-up"]
+    },
+    "electric": {
+      "label": "All-electric",
+      "titel": "All-electric warmtepomp",
+      "tekst": "De warmtepomp verwarmt je huis en meestal ook je tapwater, volledig zonder gas.",
+      "punten": ["Helemaal van het gas af", "Het beste in een goed geïsoleerd huis", "Ideaal met vloerverwarming"]
+    }
+  },
+  "check": {
+    "eyebrow": "Is mijn huis geschikt?",
+    "titel": "Drie vragen, een eerste richting.",
+    "vragen": {
+      "isolatie": { "label": "Hoe is je huis geïsoleerd?", "goed": "Goed", "matig": "Matig", "weet": "Weet ik niet" },
+      "afgifte": { "label": "Hoe verwarm je nu?", "vloer": "Vloerverwarming", "radiatoren": "Radiatoren", "beide": "Allebei" },
+      "buiten": { "label": "Is er ruimte voor een buitenunit?", "ja": "Ja", "weet": "Weet ik niet" }
+    },
+    "uitkomsten": {
+      "hybride": { "richting": "Een hybride warmtepomp is waarschijnlijk een goede start.", "toelichting": "Hij werkt samen met je cv-ketel en past ook in huizen die nog niet perfect geïsoleerd zijn." },
+      "electric": { "richting": "All-electric kan goed bij je huis passen.", "toelichting": "Met goede isolatie en (deels) vloerverwarming kun je mogelijk helemaal van het gas af." },
+      "beide": { "richting": "Hybride of all-electric: allebei het bekijken waard.", "toelichting": "Met goede isolatie kan all-electric, maar het hangt af van je radiatoren." },
+      "buitenOnbekend": "Waar de buitenunit kan staan, bekijk ik ter plekke."
+    },
+    "cta": "Plan advies aan huis",
+    "disclaimer": "Dit is een algemene indicatie. Wat echt past, bekijk ik bij je thuis."
+  },
+  "kringloop": {
+    "eyebrow": "Zo werkt het",
+    "titel": "Warmte uit de buitenlucht, ook bij −4°.",
+    "stappen": [
+      { "titel": "Warmte uit de buitenlucht", "tekst": "Ook koude buitenlucht bevat warmte. De buitenunit haalt die eruit met een koudemiddel dat al bij lage temperaturen verdampt." },
+      { "titel": "De compressor", "tekst": "De compressor drukt het koudemiddel samen. Daardoor stijgt de temperatuur flink." },
+      { "titel": "Warmte naar je huis", "tekst": "Die warmte gaat naar je cv-water: radiatoren of vloerverwarming, en vaak ook je tapwater." },
+      { "titel": "En weer opnieuw", "tekst": "Het afgekoelde koudemiddel gaat terug naar buiten, en de kringloop begint opnieuw." }
+    ]
+  },
+  "subsidie": {
+    "titel": "ISDE-subsidie voor warmtepompen",
+    "tekst": "Voor warmtepompen bestaat landelijke subsidie. De voorwaarden en bedragen veranderen regelmatig; de actuele regels staan bij RVO.",
+    "link": "https://www.rvo.nl/subsidies-financiering/isde"
+  },
+  "ctaTitel": "Klaar voor een warme winter?"
+}
