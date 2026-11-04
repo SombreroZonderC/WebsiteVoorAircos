@@ -1,5 +1,7 @@
 ---
 import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import projectFoto from '../assets/project-dakopstelling.jpg';
 import Base from '../layouts/Base.astro';
 import ReuzenHero from '../components/ReuzenHero.astro';
 import OpstellingKiezer from '../components/OpstellingKiezer.astro';
@@ -44,6 +46,15 @@ const ruimtes = home.keuze.koel.ruimtes;
       <Seizoensband />
 
       <div class="ruimte-rij"><RuimteKaarten ruimtes={ruimtes} soort="Airco" accent="koud" metPrijs={false} /></div>
+
+      <figure class="project">
+        <Image src={projectFoto} alt="Buitenunit met donkere lamellen-omkasting op een plat dak" widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 55vw" />
+        <figcaption>
+          <span class="eyebrow cold">Recent werk</span>
+          <b>Netjes weggewerkt, ook op het dak.</b>
+          <span class="muted">Buitenunit op een plat dak, met een strakke omkasting die past bij de gevel.</span>
+        </figcaption>
+      </figure>
     </div>
   </section>
 
@@ -59,7 +70,7 @@ const ruimtes = home.keuze.koel.ruimtes;
     </div>
     <div class="wrap">
       <h2 class="h2 klein">Zo werk ik</h2>
-      <Stappen stappen={d.stappen} />
+      <Stappen stappen={home.werkwijze} />
       {
         faqs.length > 0 && (
           <div class="faq">
@@ -93,6 +104,30 @@ const ruimtes = home.keuze.koel.ruimtes;
   }
   .ruimte-rij {
     margin-top: 40px;
+  }
+  .project {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+    margin: clamp(56px, 7vw, 88px) 0 0;
+  }
+  .project :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+  .project figcaption {
+    display: grid;
+    gap: 8px;
+  }
+  .project b {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
   }
   .body {
     display: grid;
@@ -131,7 +166,8 @@ const ruimtes = home.keuze.koel.ruimtes;
     margin-top: 0;
   }
   @media (max-width: 860px) {
-    .body {
+    .body,
+    .project {
       grid-template-columns: minmax(0, 1fr);
     }
     .contact-kaart {

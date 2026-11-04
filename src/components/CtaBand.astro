@@ -17,7 +17,7 @@ const { titel = home.cta.titel, tekst = home.cta.tekst } = Astro.props;
     <a class="btn" href="/contact">Offerte aanvragen <Icon name="arrow" /></a>
     <a class="btn ghost" href={mailLink}><Icon name="mail" /> {bedrijf.email}</a>
   </div>
-  <p class="nummer">{bedrijf.telefoon.weergave}</p>
+  <a class="nummer" href={telLink}>{bedrijf.telefoon.weergave}</a>
 </section>
 
 <style>
@@ -68,8 +68,13 @@ const { titel = home.cta.titel, tekst = home.cta.tekst } = Astro.props;
     justify-content: center;
   }
   .nummer {
-    font-family: var(--font-mono);
-    color: var(--muted-on-dark);
-    margin: 24px 0 0;
+    margin-top: 28px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    letter-spacing: -0.02em;
+    color: var(--text-on-dark);
+    text-decoration: none;
+    user-select: all;
   }
 </style>

@@ -17,13 +17,6 @@ voordelen:
     tekst: Kleine problemen worden op tijd gesignaleerd, voordat ze grote en dure storingen worden.
   - titel: Gezonde lucht
     tekst: Een schone binnenunit blaast schone lucht. Dat merk je aan de geur en aan het comfort.
-stappen:
-  - titel: Controle
-    tekst: Ik controleer de werking, drukken, temperaturen en eventuele foutmeldingen.
-  - titel: Reinigen
-    tekst: Filters, binnenunit en buitenunit worden gereinigd waar nodig.
-  - titel: Advies
-    tekst: Je hoort wat ik heb gezien en of er iets aandacht nodig heeft.
 ---
 
 ## Wat houdt onderhoud in?

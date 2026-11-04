@@ -85,9 +85,15 @@ const tegels = [
             <label for="telefoon">Telefoonnummer <span class="opt">optioneel</span></label>
             <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" />
           </div>
-          <div class="field">
-            <label for="plaats">Postcode en plaats <span class="opt">optioneel</span></label>
-            <input id="plaats" name="postcode-plaats" type="text" autocomplete="postal-code" placeholder="8111 AB Heeten" />
+          <div class="field duo">
+            <div>
+              <label for="postcode">Postcode <span class="opt">optioneel</span></label>
+              <input id="postcode" name="postcode" type="text" autocomplete="postal-code" placeholder="8111 AB" />
+            </div>
+            <div>
+              <label for="plaats">Plaats <span class="opt">optioneel</span></label>
+              <input id="plaats" name="plaats" type="text" autocomplete="address-level2" placeholder="Heeten" />
+            </div>
           </div>
         </div>
         <div class="row">
@@ -119,7 +125,7 @@ const tegels = [
         </div>
 
         <p class="note">
-          <span aria-hidden="true">*</span> verplicht. Je gegevens gebruik ik alleen om contact met je op te nemen. Zie de
+          <span aria-hidden="true">*</span> verplicht. Je gegevens gebruik ik alleen om contact met je op te nemen. Zie de{' '}
           <a href="/privacy">privacyverklaring</a>.
         </p>
         <button class="btn" type="submit">Verstuur aanvraag <Icon name="arrow" /></button>
@@ -327,6 +333,15 @@ const tegels = [
   .field label {
     font-weight: 600;
     font-size: 0.95rem;
+  }
+  .duo {
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 10px;
+  }
+  .duo > div {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
   }
   .req {
     color: var(--orange-text);

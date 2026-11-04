@@ -17,15 +17,6 @@ voordelen:
     tekst: Een hybride warmtepomp werkt samen met je cv-ketel. All-electric verwarmt je huis volledig zonder gas. Ik leg de verschillen eerlijk uit.
   - titel: Eén aanspreekpunt
     tekst: "Van advies tot installatie en onderhoud: je hebt met mij te maken, niet met wisselende monteurs."
-stappen:
-  - titel: Kennismaking
-    tekst: We bespreken je woning, je huidige verwarming en wat je wilt bereiken.
-  - titel: Opname aan huis
-    tekst: Ik bekijk isolatie, radiatoren of vloerverwarming en de plek voor de buitenunit.
-  - titel: Advies en offerte
-    tekst: Je krijgt een onderbouwd advies en een vrijblijvende offerte.
-  - titel: Installatie en inregelen
-    tekst: Ik installeer de warmtepomp, regel het systeem in en leg uit hoe je er het meeste uithaalt.
 ---
 
 ## Hybride warmtepomp

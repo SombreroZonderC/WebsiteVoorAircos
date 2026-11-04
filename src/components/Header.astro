@@ -13,7 +13,7 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
 <header class:list={['header', { scrolled: vast }]} data-header data-vast={vast ? '' : undefined}>
   <div class="bar">
     <a href="/" class="logo" aria-label={`${bedrijf.naam} – home`}>
-      <img src="/images/logo-op-donker.svg" alt="" width="132" height="73" />
+      <img src="/images/logo-header.svg" alt="" width="132" height="58" />
     </a>
 
     <nav class="nav" id="hoofdmenu" aria-label="Hoofdmenu">
@@ -100,12 +100,12 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
     height: 64px;
   }
   .logo img {
-    height: 50px;
+    height: 44px;
     width: auto;
     transition: height 0.3s var(--ease);
   }
   .scrolled .logo img {
-    height: 40px;
+    height: 36px;
   }
   .nav {
     margin-left: auto;

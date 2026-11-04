@@ -11,7 +11,7 @@ import FaqLijst from '../components/FaqLijst.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { warmtepomp } from '../lib/inhoud';
-import { bedrijf, telLink } from '../lib/bedrijf';
+import { bedrijf, home, telLink } from '../lib/bedrijf';
 import { laadDienst } from '../lib/dienst';
 
 const { dienst, d, faqs, schema } = await laadDienst('warmtepompen');
@@ -60,7 +60,7 @@ const { Content } = await render(dienst);
       </div>
 
       <h2 class="h2 klein">Zo werk ik</h2>
-      <Stappen stappen={d.stappen} />
+      <Stappen stappen={home.werkwijze} />
       {
         faqs.length > 0 && (
           <div class="faq">

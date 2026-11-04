@@ -49,7 +49,7 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
                 <Icon name={g.icoon} size={26} />
                 <span>
                   <b>{g.titel}</b>
-                  <small>{g.items.length} vragen</small>
+                  <small data-teller={g.id}>{g.items.length} {g.items.length === 1 ? 'vraag' : 'vragen'}</small>
                 </span>
               </a>
             ))
@@ -76,19 +76,44 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
 </Base>
 
 <script>
+  // Zoeken op woorddelen, met een paar synoniemen voor veelgezochte begrippen; tellers lopen mee.
+  const synoniemen: Record<string, string[]> = {
+    kosten: ['kost', 'prijs', 'offerte', 'betalen'],
+    prijs: ['kost', 'prijs', 'offerte'],
+    geluid: ['geluid', 'stil', 'herrie', 'lawaai'],
+    lawaai: ['geluid', 'stil'],
+    subsidie: ['subsidie', 'isde', 'rvo'],
+    onderhoud: ['onderhoud', 'storing', 'service'],
+    storing: ['storing', 'onderhoud'],
+    verwarmen: ['verwarm', 'warmte', 'warmtepomp'],
+    koelen: ['koel', 'airco'],
+    regio: ['regio', 'werkgebied', 'plaats'],
+  };
   const veld = document.querySelector<HTMLInputElement>('[data-zoekveld]');
   if (veld) {
     const items = [...document.querySelectorAll<HTMLDetailsElement>('[data-zoek]')];
     const groepen = [...document.querySelectorAll<HTMLElement>('[data-groep]')];
+    const tellers = [...document.querySelectorAll<HTMLElement>('[data-teller]')];
     const geen = document.querySelector<HTMLElement>('[data-geen]')!;
+    const termen = (q: string) =>
+      q.split(/\s+/).filter(Boolean).map((w) => {
+        const stam = w.length > 5 ? w.slice(0, -2) : w;
+        return [stam, ...(synoniemen[w] ?? [])];
+      });
     veld.addEventListener('input', () => {
       const q = veld.value.trim().toLowerCase();
+      const t = termen(q);
       items.forEach((d) => {
-        const past = !q || d.dataset.zoek!.includes(q);
+        const tekst = d.dataset.zoek!;
+        const past = !q || t.every((opties) => opties.some((o) => tekst.includes(o)));
         d.hidden = !past;
         d.open = Boolean(q) && past;
       });
       groepen.forEach((g) => (g.hidden = !g.querySelector('[data-zoek]:not([hidden])')));
+      tellers.forEach((el) => {
+        const n = document.querySelectorAll(`#${el.dataset.teller} [data-zoek]:not([hidden])`).length;
+        el.textContent = `${n} ${n === 1 ? 'vraag' : 'vragen'}`;
+      });
       geen.hidden = groepen.some((g) => !g.hidden);
     });
   }

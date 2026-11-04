@@ -3,7 +3,12 @@ import { getCollection } from 'astro:content';
 import Icon from './Icon.astro';
 import { bedrijf } from '../lib/bedrijf';
 
-const reviews = (await getCollection('reviews')).sort((a, b) => b.data.datum.valueOf() - a.data.datum.valueOf());
+interface Props {
+  /** id van een review die elders op de pagina al groot staat */
+  uitsluiten?: string;
+}
+const { uitsluiten } = Astro.props;
+const reviews = (await getCollection('reviews', (r) => r.id !== uitsluiten)).sort((a, b) => b.data.datum.valueOf() - a.data.datum.valueOf());
 const datum = new Intl.DateTimeFormat('nl-NL', { month: 'long', year: 'numeric' });
 ---
 

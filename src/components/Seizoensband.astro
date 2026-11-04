@@ -102,13 +102,12 @@ const maanden = [
     background: #ff9a5a;
   }
   @media (max-width: 560px) {
+    ol {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
     li {
-      height: 54px;
-      font-size: 0.6rem;
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      align-items: center;
-      padding: 6px 0;
+      height: 52px;
+      font-size: 0.875rem;
     }
   }
 </style>

@@ -17,15 +17,6 @@ voordelen:
     tekst: Ik kijk samen met je naar de beste plek voor binnen- en buitenunit, zodat je er zo weinig mogelijk van ziet en hoort.
   - titel: Nette montage
     tekst: Leidingen strak weggewerkt, alles getest en opgeruimd. Na afloop leg ik uit hoe je de airco het beste gebruikt.
-stappen:
-  - titel: Advies aan huis
-    tekst: Ik bekijk de ruimtes, de isolatie en de mogelijke plekken voor de units.
-  - titel: Offerte op maat
-    tekst: Je krijgt een duidelijke, vrijblijvende offerte met het advies dat bij jouw situatie past.
-  - titel: Installatie
-    tekst: Ik plaats binnen- en buitenunit, werk de leidingen netjes weg en stel het systeem in.
-  - titel: Uitleg en nazorg
-    tekst: Ik loop alles met je door en blijf aanspreekpunt voor onderhoud en vragen.
 ---
 
 ## Waarom een airco van Mitsubishi Electric?

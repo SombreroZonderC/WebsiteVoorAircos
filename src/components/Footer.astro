@@ -57,7 +57,7 @@ const year = new Date().getFullYear();
 
     <div class="bottom">
       <span>© {year} {bedrijf.naam}</span>
-      {bedrijf.kvk && <span>KvK {bedrijf.kvk}</span>}
+      <span>KvK {bedrijf.kvk ?? <span class="todo">KvK-nummer</span>}</span>
       {bedrijf.btw && <span>Btw {bedrijf.btw}</span>}
       <a href="/privacy">Privacyverklaring</a>
     </div>
@@ -95,7 +95,11 @@ const year = new Date().getFullYear();
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 10px;
+    gap: 2px;
+  }
+  ul a {
+    display: inline-block;
+    padding: 10px 0;
   }
   a {
     text-decoration: none;

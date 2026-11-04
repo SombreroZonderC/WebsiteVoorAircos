@@ -28,18 +28,26 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
               <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
             </div>
           </div>
-          <svg class="kaart" viewBox="0 0 420 380" role="img" aria-label={`Gestileerde kaart met ${a.plaats} in het midden`}>
-            <circle class="ring r3" cx="210" cy="190" r="170" />
-            <circle class="ring r2" cx="210" cy="190" r="115" />
-            <circle class="ring r1" cx="210" cy="190" r="60" />
-            <path class="weg" d="M10 300 C90 260 140 320 230 280 S360 230 410 250" />
-            <path class="weg" d="M60 20 C120 90 150 120 200 180 S270 300 300 370" />
-            <path class="water" d="M0 120 C70 140 110 100 180 120 S300 160 420 130" />
+          <figure class="kaart-fig">
+          <svg class="kaart" viewBox="0 0 420 380" role="img" aria-label={`Kaart ter oriëntatie met ${a.plaats} in het midden en plaatsen in de buurt`}>
+            <circle class="ring r2" cx="210" cy="190" r="170" />
+            <circle class="ring r1" cx="210" cy="190" r="85" />
+            <text class="km" x="214" y="100">10 km</text>
+            <text class="km" x="214" y="16">20 km</text>
+            <g class="plaats"><circle cx="214" cy="135" r="3.5" /><text x="221" y="139">Raalte</text></g>
+            <g class="plaats"><circle cx="150" cy="261" r="3.5" /><text x="157" y="265">Deventer</text></g>
+            <g class="plaats"><circle cx="296" cy="234" r="3.5" /><text x="303" y="238">Holten</text></g>
+            <g class="plaats"><circle cx="248" cy="83" r="3.5" /><text x="255" y="87">Lemelerveld</text></g>
+            <g class="plaats"><circle cx="132" cy="137" r="3.5" /><text x="139" y="141">Wijhe</text></g>
+            <g class="plaats"><circle cx="118" cy="182" r="3.5" /><text x="125" y="186">Olst</text></g>
+            <g class="plaats"><circle cx="221" cy="265" r="3.5" /><text x="228" y="269">Bathmen</text></g>
+            <g class="plaats"><circle cx="322" cy="159" r="3.5" /><text x="329" y="163">Nijverdal</text></g>
             <circle class="puls" cx="210" cy="190" r="14" />
             <circle class="pin" cx="210" cy="190" r="7" />
-            <text x="226" y="186">{a.plaats}</text>
-            <text class="klein" x="216" y="214">gemeente {a.gemeente}</text>
+            <text class="hoofd" x="222" y="196">{a.plaats}</text>
           </svg>
+          <figcaption>Plaatsen ter oriëntatie, ringen op 10 en 20 km. Geen toezegging over het werkgebied.</figcaption>
+          </figure>
         </section>
       </div>
     </div>
@@ -142,13 +150,25 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
   .r3 {
     stroke: rgb(143 193 240 / 0.2);
   }
-  .weg {
-    stroke: rgb(232 240 243 / 0.22);
-    stroke-width: 3;
+  .plaats circle {
+    fill: rgb(232 240 243 / 0.6);
   }
-  .water {
-    stroke: rgb(127 180 234 / 0.35);
-    stroke-width: 5;
+  .plaats text {
+    font: 500 12px var(--font-body);
+    fill: var(--muted-on-dark);
+  }
+  .km {
+    font: 500 10px var(--font-mono);
+    fill: rgb(143 193 240 / 0.7);
+  }
+  .kaart-fig {
+    position: relative;
+    margin: 0;
+  }
+  .kaart-fig figcaption {
+    font-size: 0.85rem;
+    color: var(--muted-on-dark);
+    margin-top: 8px;
   }
   .pin {
     fill: var(--orange-hot);
@@ -168,13 +188,9 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
       opacity: 0;
     }
   }
-  text {
-    font: 700 15px var(--font-display);
+  .hoofd {
+    font: 700 16px var(--font-display);
     fill: var(--text-on-dark);
-  }
-  text.klein {
-    font: 500 11px var(--font-mono);
-    fill: var(--muted-on-dark);
   }
   .sectie {
     padding-block: clamp(72px, 9vw, 120px);
@@ -240,8 +256,8 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
     .layout {
       grid-template-columns: minmax(0, 1fr);
     }
-    .kaart {
-      max-width: 360px;
+    .kaart-fig {
+      max-width: 380px;
     }
   }
 </style>

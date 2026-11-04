@@ -148,9 +148,9 @@ p {
   align-items: center;
   gap: 10px;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--orange-text);
   margin-bottom: 14px;
@@ -425,8 +425,11 @@ html.diepte .plak {
 html.diepte .paneel {
   box-shadow: 0 -24px 48px -24px rgb(0 0 0 / 0.55);
 }
+/* Het effect begint pas als het lichte vlak een derde van het scherm heeft bedekt, zodat knoppen
+   onderin de hero niet "uitgeschakeld" lijken terwijl ze nog bruikbaar zijn. */
 html.diepte .plak .vlak-inhoud {
-  transform: scale(calc(1 - var(--p, 0) * 0.03));
-  opacity: calc(1 - var(--p, 0) * 0.5);
+  --q: clamp(0, (var(--p, 0) - 0.35) * 1.54, 1);
+  transform: scale(calc(1 - var(--q) * 0.03));
+  opacity: calc(1 - var(--q) * 0.5);
   transform-origin: 50% 40%;
 }

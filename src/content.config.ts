@@ -22,7 +22,6 @@ const diensten = defineCollection({
     accent: z.enum(['koud', 'warm']),
     beeld: z.enum(['airco', 'warmtepomp', 'onderhoud']),
     voordelen: z.array(kaart),
-    stappen: z.array(kaart).default([]),
     faqCategorie: z.enum(['airco', 'warmtepomp', 'onderhoud', 'algemeen']),
   }),
 });

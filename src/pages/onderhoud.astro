@@ -7,7 +7,7 @@ import Stappen from '../components/Stappen.astro';
 import FaqLijst from '../components/FaqLijst.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
-import { bedrijf, telLink } from '../lib/bedrijf';
+import { bedrijf, home, telLink } from '../lib/bedrijf';
 import { laadDienst } from '../lib/dienst';
 import { onderhoud } from '../lib/inhoud';
 
@@ -18,7 +18,7 @@ const { controle, storing } = onderhoud;
 
 <Base title={d.seoTitel} description={d.seoOmschrijving} schema={schema}>
   <div class="paar">
-    <ReuzenHero woord="Zorge­loos." kleur="koud" verhouding="smal" eyebrow="Onderhoud & service" titel={d.titel} tekst={d.intro}>
+    <ReuzenHero woord="Zorgeloos." kleur="koud" verhouding="smal" eyebrow="Onderhoud & service" titel={d.titel} tekst={d.intro}>
       <Manometer slot="beeld" />
       <a class="btn" href="/contact?onderwerp=onderhoud">Onderhoud aanvragen <Icon name="arrow" /></a>
       <a class="btn ghost" href={telLink}><Icon name="phone" /> {bedrijf.telefoon.weergave}</a>
@@ -43,21 +43,37 @@ const { controle, storing } = onderhoud;
             }
           </ol>
         </div>
-        <aside class="storing">
-          <p class="eyebrow">Storing?</p>
-          <p class="groot">{storing.titel}</p>
-          <a class="nummer" href={telLink}>{bedrijf.telefoon.weergave}</a>
-          <p class="muted">{storing.tekst}</p>
-        </aside>
       </div>
     </section>
   </div>
 
-  <section class="vlak licht sectie rand">
+  <div class="paar">
+    <section class="vlak donker plak" data-diepte-vlak aria-labelledby="storing-titel">
+      <div class="vlak-inhoud storing">
+        <div class="wrap storing-raster">
+          <div>
+            <p class="eyebrow">Storing?</p>
+            <h2 class="groot" id="storing-titel">{storing.titel}</h2>
+            <p class="muted">{storing.tekst}</p>
+          </div>
+          <a class="nummer" href={telLink}><Icon name="phone" size={28} /> {bedrijf.telefoon.weergave}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="vlak licht paneel sectie">
     <div class="wrap">
-      <div class="prose"><Content /></div>
+      <div class="body">
+        <div class="prose"><Content /></div>
+        <aside class="contact-kaart card">
+          <h2 class="h3">Onderhoud inplannen?</h2>
+          <p class="muted">Bel of stuur een bericht, dan spreken we een moment af.</p>
+          <a class="btn" href="/contact?onderwerp=onderhoud">Onderhoud aanvragen</a>
+          <a class="tel" href={telLink}><Icon name="phone" size={18} /> {bedrijf.telefoon.weergave}</a>
+        </aside>
+      </div>
       <h2 class="h2 klein">Zo werk ik</h2>
-      <Stappen stappen={d.stappen} />
+      <Stappen stappen={home.werkwijze} />
       {
         faqs.length > 0 && (
           <div class="faq">
@@ -68,7 +84,8 @@ const { controle, storing } = onderhoud;
         )
       }
     </div>
-  </section>
+    </section>
+  </div>
 
   <CtaBand titel={onderhoud.ctaTitel} />
 </Base>
@@ -97,9 +114,6 @@ const { controle, storing } = onderhoud;
   .sectie {
     padding-block: clamp(72px, 9vw, 120px);
   }
-  .rand {
-    border-top: 1px solid var(--line);
-  }
   .h2 {
     font-size: clamp(2rem, 4vw, 3.2rem);
     letter-spacing: -0.04em;
@@ -110,10 +124,7 @@ const { controle, storing } = onderhoud;
     margin-top: clamp(56px, 7vw, 88px);
   }
   .controle {
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-    gap: clamp(32px, 6vw, 88px);
-    align-items: start;
+    max-width: 860px;
   }
   .lijst {
     list-style: none;
@@ -152,34 +163,65 @@ const { controle, storing } = onderhoud;
       var(--blue-text);
   }
   .storing {
+    padding-block: clamp(72px, 9vw, 120px);
+    background:
+      radial-gradient(50% 80% at 85% 50%, rgb(234 91 12 / 0.28), transparent 70%),
+      var(--ink);
+  }
+  .storing-raster {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 28px;
+  }
+  .body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: clamp(40px, 6vw, 88px);
+    align-items: start;
+  }
+  .contact-kaart {
     position: sticky;
     top: 100px;
-    padding: clamp(24px, 3vw, 36px);
-    border-radius: var(--radius-lg);
-    background:
-      radial-gradient(70% 70% at 80% 0%, rgb(234 91 12 / 0.3), transparent 70%),
-      var(--ink);
-    color: var(--text-on-dark);
+    display: grid;
+    gap: 12px;
   }
-  .storing .eyebrow {
-    color: var(--orange-hot);
+  .contact-kaart p {
+    margin: 0 0 4px;
+  }
+  .h3 {
+    font-size: 1.35rem;
+    margin: 0;
+  }
+  .tel {
+    display: inline-flex;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    text-decoration: none;
   }
   .groot {
     font-family: var(--font-display);
     font-stretch: 112%;
     font-weight: 800;
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-size: clamp(2.6rem, 6vw, 5rem);
     letter-spacing: -0.04em;
     line-height: 1;
     margin: 0 0 12px;
   }
   .nummer {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 28px;
+    border-radius: 999px;
+    background: var(--orange-btn);
+    color: #fff;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: clamp(1.4rem, 2.6vw, 2rem);
     text-decoration: none;
-    margin-bottom: 12px;
   }
   .storing .muted {
     color: var(--muted-on-dark);
@@ -193,10 +235,10 @@ const { controle, storing } = onderhoud;
     margin-top: 0;
   }
   @media (max-width: 860px) {
-    .controle {
+    .body {
       grid-template-columns: minmax(0, 1fr);
     }
-    .storing {
+    .contact-kaart {
       position: static;
     }
   }
