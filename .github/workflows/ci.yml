@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  bouwen-en-testen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Type- en schemacontrole
+        run: npx astro check
+      - name: Bouwen
+        run: npm run build
+      - name: Browser voor tests installeren
+        run: npx playwright install --with-deps chromium
+      - name: Tests (interacties, toegankelijkheid, structured data)
+        run: npm test
+      - name: Lighthouse (drempel 95 op alle categorieën)
+        run: npx @lhci/cli@0.15.1 autorun
