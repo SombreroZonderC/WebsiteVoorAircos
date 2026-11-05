@@ -1,0 +1,178 @@
+---
+// Lijntekening bij een kennisbankartikel (zelfde stijl als de tekeningen op de dienstpagina's).
+// Regel: elk artikel van meer dan twee alinea's heeft er minimaal één (zie tests/site.spec.ts).
+import type { IllustratieSoort } from '../content.config';
+interface Props {
+  soort: IllustratieSoort;
+  bijschrift: string;
+}
+const { soort, bijschrift } = Astro.props;
+const labels: Record<Props['soort'], string> = {
+  'hybride-vs-electric': 'Twee huizen naast elkaar: links een hybride warmtepomp met cv-ketel, rechts een all-electric warmtepomp met voorraadvat en zonder gas',
+  'airco-verwarmen': 'Doorsnede van een muur: de buitenunit haalt warmte uit de buitenlucht, de binnenunit blaast warme lucht in één ruimte',
+  'geluid-perceel': 'Bovenaanzicht van twee percelen: de buitenunit staat in de tuin, op de perceelgrens mag het geluid maximaal 40 dB zijn',
+  'onderhoud-taken': 'Wat je zelf doet en wat een vakman doet: filter schoonmaken, buitenunit vrijhouden, koudemiddelcircuit door een vakman',
+};
+---
+
+<figure class="illustratie">
+  <svg viewBox="0 0 480 260" role="img" aria-label={labels[soort]}>
+    {
+      soort === 'hybride-vs-electric' && (
+        <>
+          <path class="grond" d="M10 220 H470" />
+          <text class="titel" x="40" y="40">hybride</text>
+          <path d="M28 118 L100 60 L172 118 M40 110 V220 H160 V110" />
+          <rect x="56" y="180" width="30" height="30" rx="3" />
+          <path class="dun" d="M64 184 v22 M71 184 v22 M78 184 v22" />
+          <rect class="warm" x="120" y="132" width="26" height="40" rx="3" />
+          <path class="warm dun" d="M127 160 q6 -14 12 0 q-6 6 -12 0" />
+          <path class="dun" d="M133 172 V220" />
+          <text x="112" y="124">gas</text>
+          <rect x="178" y="188" width="34" height="32" rx="3" />
+          <circle cx="195" cy="204" r="9" />
+          <path class="stroom warm" d="M178 200 H90" />
+          <text x="40" y="248">warmtepomp + cv-ketel</text>
+
+          <text class="titel" x="270" y="40">all-electric</text>
+          <path d="M258 118 L330 60 L402 118 M270 110 V220 H390 V110" />
+          <rect x="286" y="180" width="30" height="30" rx="3" />
+          <path class="dun" d="M294 184 v22 M301 184 v22 M308 184 v22" />
+          <rect class="koud" x="364" y="128" width="20" height="52" rx="10" />
+          <text x="284" y="146">geen gas</text>
+          <rect x="408" y="188" width="34" height="32" rx="3" />
+          <circle cx="425" cy="204" r="9" />
+          <path class="stroom warm" d="M408 200 H320" />
+          <text x="270" y="248">alleen warmtepomp</text>
+        </>
+      )
+    }
+    {
+      soort === 'airco-verwarmen' && (
+        <>
+          <path class="grond" d="M10 230 H470" />
+          <path class="muur" d="M196 24 V230 M204 24 V230" />
+          <text class="titel" x="20" y="40">buiten</text>
+          <text class="titel" x="220" y="40">binnen</text>
+          <path class="stroom koud" d="M16 184 q8 -6 16 0 t16 0 M16 200 q8 -6 16 0 t16 0 M16 216 q8 -6 16 0 t16 0" />
+          <text x="16" y="160">buitenlucht</text>
+          <rect x="60" y="170" width="80" height="56" rx="4" />
+          <circle cx="100" cy="198" r="18" />
+          <path class="dun" d="M100 180 v36 M82 198 h36" />
+          <path class="dun" d="M140 190 H176 Q184 190 184 182 V84 Q184 76 192 76 H300" />
+          <text x="212" y="122">koudemiddel</text>
+          <rect x="300" y="56" width="150" height="44" rx="10" />
+          <path class="dun" d="M312 70 H438 M312 80 H438" />
+          <path class="stroom warm" d="M330 116 c8 14 -8 26 0 40 M375 116 c8 14 -8 26 0 40 M420 116 c8 14 -8 26 0 40" />
+          <text x="318" y="180">warme lucht</text>
+          <text x="220" y="214">alleen deze ruimte</text>
+        </>
+      )
+    }
+    {
+      soort === 'geluid-perceel' && (
+        <>
+          <path class="grens" d="M300 16 V244" />
+          <text x="308" y="34">perceelgrens</text>
+          <rect x="30" y="60" width="150" height="130" rx="3" />
+          <text x="62" y="130">jouw huis</text>
+          <rect x="340" y="60" width="120" height="130" rx="3" />
+          <text x="376" y="130">buren</text>
+          <rect x="200" y="150" width="40" height="30" rx="3" />
+          <circle cx="220" cy="165" r="8" />
+          <path class="stroom koud" d="M252 149 a22 22 0 0 1 0 32 M264 139 a36 36 0 0 1 0 52 M276 129 a50 50 0 0 1 0 72" />
+          <text x="176" y="206">buitenunit</text>
+          <circle class="punt" cx="300" cy="165" r="5" />
+          <text class="warm-tekst" x="308" y="222">max. 40 dB</text>
+        </>
+      )
+    }
+    {
+      soort === 'onderhoud-taken' && (
+        <>
+          <rect x="30" y="40" width="200" height="56" rx="10" />
+          <path class="dun" d="M44 56 H216 M44 66 H216" />
+          <path class="dun" d="M110 100 V114 M104 108 l6 6 l6 -6" />
+          <rect class="koud" x="50" y="120" width="120" height="40" rx="3" />
+          <path class="koud dun" d="M70 120 v40 M90 120 v40 M110 120 v40 M130 120 v40 M150 120 v40 M50 140 h120" />
+          <text x="30" y="190">filter: zelf schoonmaken</text>
+          <path class="dun" d="M230 74 H260 Q270 74 270 84 V160 H300" />
+          <path class="warm" d="M262 122 l8 -8 a6 6 0 1 1 4 4 l-8 8 z" />
+          <text x="282" y="100">koudemiddel: vakman</text>
+          <rect x="300" y="130" width="120" height="80" rx="4" />
+          <circle cx="360" cy="170" r="24" />
+          <path class="dun" d="M360 146 v48 M336 170 h48" />
+          <path class="koud dun" d="M286 222 c4 -14 20 -18 28 -12 c-4 12 -18 18 -28 12 z M290 220 l18 -8 M428 214 c4 -14 20 -18 28 -12 c-4 12 -18 18 -28 12 z M432 212 l18 -8" />
+          <text x="470" y="248" text-anchor="end">buitenunit vrijhouden</text>
+        </>
+      )
+    }
+  </svg>
+  <figcaption>{bijschrift}</figcaption>
+</figure>
+
+<style>
+  .illustratie {
+    margin: 0 0 40px;
+    padding: clamp(16px, 3vw, 28px);
+    background: var(--ink);
+    color: var(--text-on-dark);
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    fill: none;
+    stroke: rgb(232 240 243 / 0.6);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .dun {
+    stroke-width: 1.3;
+  }
+  .grond,
+  .muur {
+    stroke-width: 1;
+    opacity: 0.45;
+  }
+  .grens {
+    stroke-width: 1.4;
+    stroke-dasharray: 5 7;
+  }
+  .koud {
+    stroke: var(--blue-ice);
+  }
+  .warm {
+    stroke: var(--orange-hot);
+  }
+  .stroom {
+    stroke-dasharray: 6 8;
+  }
+  .punt {
+    fill: var(--orange-hot);
+    stroke: none;
+  }
+  text {
+    font: 500 14px var(--font-mono);
+    fill: rgb(232 240 243 / 0.75);
+    letter-spacing: 0.04em;
+    /* donkere rand zodat een label leesbaar blijft als het een lijn raakt */
+    stroke: var(--ink);
+    stroke-width: 6px;
+    paint-order: stroke;
+  }
+  .titel {
+    font: 700 17px var(--font-display);
+    fill: var(--text-on-dark);
+    letter-spacing: 0;
+  }
+  .warm-tekst {
+    fill: var(--orange-hot);
+  }
+  figcaption {
+    margin-top: 14px;
+    font-size: 0.95rem;
+    color: var(--muted-on-dark);
+  }
+</style>

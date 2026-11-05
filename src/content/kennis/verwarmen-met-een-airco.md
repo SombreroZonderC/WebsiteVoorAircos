@@ -14,6 +14,9 @@ kernpunten:
   - Hij verwarmt alleen de ruimte met een binnenunit, en levert geen warm water.
   - Kies een split-model met energielabel A++ of hoger.
   - Voor een lucht-lucht warmtepomp krijg je geen ISDE-subsidie.
+illustratie:
+  soort: airco-verwarmen
+  bijschrift: "De buitenunit haalt warmte uit de buitenlucht, via het koudemiddel komt die binnen als warme lucht. Alleen in de ruimte met een binnenunit."
 bronnen:
   - naam: Milieu Centraal – Airco en ventilatoren
     url: https://www.milieucentraal.nl/energie-besparen/duurzaam-verwarmen-en-koelen/airco-en-ventilatoren/

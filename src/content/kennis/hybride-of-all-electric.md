@@ -14,6 +14,9 @@ kernpunten:
   - Een all-electric warmtepomp vervangt de ketel en vraagt een redelijk tot goed geïsoleerd huis.
   - De verwarmingstest (ketel een koude week op 50 °C) geeft een eerste indruk of je huis geschikt is.
   - Voor beide bestaat ISDE-subsidie; voorwaarden en bedragen veranderen regelmatig.
+illustratie:
+  soort: hybride-vs-electric
+  bijschrift: "Hybride: de warmtepomp doet het meeste werk, de cv-ketel springt bij. All-electric: alles via de warmtepomp, warm water uit een voorraadvat."
 bronnen:
   - naam: Milieu Centraal – Hybride warmtepomp
     url: https://www.milieucentraal.nl/energie-besparen/duurzaam-verwarmen-en-koelen/hybride-warmtepomp/

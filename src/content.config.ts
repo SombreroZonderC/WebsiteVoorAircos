@@ -56,6 +56,10 @@ const paginas = defineCollection({
   }),
 });
 
+// Tekeningen voor kennisbankartikelen (src/components/KennisIllustratie.astro).
+export const illustratieSoorten = ['hybride-vs-electric', 'airco-verwarmen', 'geluid-perceel', 'onderhoud-taken'] as const;
+export type IllustratieSoort = (typeof illustratieSoorten)[number];
+
 // Kennisbank: algemene vakinformatie met bronnen, geen beloftes namens het bedrijf.
 const kennis = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/kennis' }),
@@ -75,6 +79,8 @@ const kennis = defineCollection({
     kernpunten: z.array(z.string()).min(2).max(5),
     bronnen: z.array(z.object({ naam: z.string(), url: z.url() })).min(1),
     verwant: z.array(z.string()).default([]),
+    /** Verplicht bij meer dan twee alinea's (gecontroleerd in de tests) */
+    illustratie: z.object({ soort: z.enum(illustratieSoorten), bijschrift: z.string() }).optional(),
   }),
 });
 

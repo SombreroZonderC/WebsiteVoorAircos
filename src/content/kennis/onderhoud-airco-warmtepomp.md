@@ -14,6 +14,9 @@ kernpunten:
   - Houd de buitenunit vrij van bladeren, sneeuw en planten.
   - Werk aan het koudemiddelcircuit is voorbehouden aan F-gassen-gecertificeerde bedrijven.
   - Een periodieke lekcontrole is wettelijk verplicht vanaf 5 ton CO2-equivalent koudemiddel; veel kleine split-airco's zitten daaronder.
+illustratie:
+  soort: onderhoud-taken
+  bijschrift: "Filter en buitenunit: dat doe je zelf. Het koudemiddelcircuit: alleen een gecertificeerde vakman."
 bronnen:
   - naam: Verordening (EU) 2024/573 – F-gassen
     url: https://eur-lex.europa.eu/eli/reg/2024/573/oj

@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import ReuzenHero from '../../components/ReuzenHero.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import Icon from '../../components/Icon.astro';
+import KennisIllustratie from '../../components/KennisIllustratie.astro';
 import { bedrijf, bedrijfId } from '../../lib/bedrijf';
 
 export async function getStaticPaths() {
@@ -49,6 +50,7 @@ const schema = [
             <h2>In het kort</h2>
             <ul>{a.kernpunten.map((k) => <li>{k}</li>)}</ul>
           </div>
+          {a.illustratie && <KennisIllustratie soort={a.illustratie.soort} bijschrift={a.illustratie.bijschrift} />}
           <div class="prose"><Content /></div>
           <div class="bronnen">
             <h2>Bronnen</h2>

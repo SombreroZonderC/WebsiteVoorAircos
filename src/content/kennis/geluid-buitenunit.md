@@ -14,6 +14,9 @@ kernpunten:
   - Die waarde wordt berekend met een vaste rekenmethode, niet even gemeten met een app.
   - De plek maakt het grootste verschil, meer dan alleen het type unit.
   - Het meeste geluid hoor je bij verwarmen op koude dagen en bij het opwarmen van tapwater.
+illustratie:
+  soort: geluid-perceel
+  bijschrift: "Het geluid telt bij de buren: op de perceelgrens met een naastgelegen woning maximaal 40 dB."
 bronnen:
   - naam: IPLO – Geluid van bouwwerkinstallaties
     url: https://iplo.nl/regelgeving/regels-voor-activiteiten/technische-bouwactiviteit/verbouw/geluid-bouwwerkinstallaties/

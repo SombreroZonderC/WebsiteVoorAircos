@@ -71,6 +71,7 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
 - schema.org: `HVACBusiness` (elke pagina), `Service` (dienstpagina's), `FAQPage`, `AboutPage`, `Article` (kennisbank), `BreadcrumbList` (alle subpagina's)
 - Eigen deelafbeelding per pagina (`public/images/og/`, gemaakt met `npm run og`)
 - Kennisbank: algemene vakuitleg met bronvermelding en datum 'bijgewerkt'; geen beloftes namens het bedrijf
+- Kennisbank-regel: elk artikel van meer dan twee alinea's heeft minimaal één illustratie (`illustratie` in de frontmatter, tekeningen in `src/components/KennisIllustratie.astro`). Een test bewaakt dit.
 - `sitemap-index.xml` (automatisch), `robots.txt`, `llms.txt` (samenvatting voor AI-assistenten)
 - Elke pagina heeft een eigen titel en omschrijving (in de content-bestanden)
 

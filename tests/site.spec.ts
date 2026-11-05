@@ -115,16 +115,27 @@ test('labels in tekeningen vallen binnen de tekening', async ({ page }) => {
     await page.goto(pad);
     await page.evaluate(() => document.fonts.ready);
     const uit = await page.evaluate(() =>
-      [...document.querySelectorAll('svg text')]
+      [...document.querySelectorAll<SVGTextElement>('svg text')]
         .map((t) => {
           const vb = t.ownerSVGElement?.viewBox.baseVal;
           if (!vb || !vb.width) return null;
-          const bb = (t as SVGTextElement).getBBox();
+          const bb = t.getBBox();
           const buiten = bb.x < vb.x - 1 || bb.x + bb.width > vb.x + vb.width + 1;
           return buiten ? t.textContent?.trim() : null;
         })
         .filter(Boolean),
     );
     expect(uit, `${pad}: ${uit.join(', ')}`).toEqual([]);
+  }
+});
+
+test('kennisbank: artikelen met meer dan twee alinea’s hebben minimaal één illustratie', async ({ page }) => {
+  await page.goto('/kennisbank');
+  const artikelen = await page.locator('a.artikel').evaluateAll((as) => as.map((a) => a.getAttribute('href')!));
+  expect(artikelen.length).toBeGreaterThan(0);
+  for (const pad of artikelen) {
+    await page.goto(pad);
+    const alineas = await page.locator('.prose p').count();
+    if (alineas > 2) await expect(page.locator('figure.illustratie svg'), pad).not.toHaveCount(0);
   }
 });
