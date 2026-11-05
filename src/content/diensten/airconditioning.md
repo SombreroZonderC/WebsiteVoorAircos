@@ -4,7 +4,7 @@ menuLabel: Airconditioning
 seoTitel: Airco laten plaatsen in Heeten en omgeving
 seoOmschrijving: Airco laten plaatsen door een ervaren vakman uit Heeten. Stille Mitsubishi Electric-airco's om te koelen én te verwarmen. Advies aan huis, vrijblijvende offerte.
 eyebrow: Airconditioning
-intro: Een koel huis in de zomer en snel extra warmte in het voor- en najaar. Ik adviseer je aan huis, plaats je airco netjes en zorg dat hij jarenlang goed blijft werken.
+intro: Een koel huis in de zomer en snel extra warmte in het voor- en najaar. Ik adviseer je aan huis, plaats je airco netjes en kan hem daarna ook onderhouden.
 volgorde: 1
 icoon: snow
 accent: koud
@@ -36,4 +36,4 @@ De prijs hangt af van het aantal ruimtes, het vermogen, de lengte van de leiding
 
 ## Garantie en certificering
 
-<span class="todo">Sjoerd: welke garantie geef je op installatie en apparatuur, en welke certificeringen heb je (bijv. F-gassen)?</span>
+Mitsubishi Electric geeft in Nederland 5 jaar garantie op de onderdelen van een airco; die garantie loopt via de installateur. <span class="todo">Sjoerd: welke garantie geef je zelf op de installatie, en welke certificeringen heb je (bijv. F-gassen)?</span>

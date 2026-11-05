@@ -12,7 +12,8 @@ leestijd: 3
 kernpunten:
   - Een airco met buitenunit is een lucht-lucht warmtepomp en kan zuinig verwarmen.
   - Hij verwarmt alleen de ruimte met een binnenunit, en levert geen warm water.
-  - Kies een split-model met energielabel A++ of hoger.
+  - Kies een split-model met energielabel A++ of hoger voor verwarmen.
+  - Voor een single-split adviseert Milieu Centraal het koudemiddel R290 (propaan).
   - Voor een lucht-lucht warmtepomp krijg je geen ISDE-subsidie.
 illustratie:
   soort: airco-verwarmen
@@ -20,6 +21,8 @@ illustratie:
 bronnen:
   - naam: Milieu Centraal – Airco en ventilatoren
     url: https://www.milieucentraal.nl/energie-besparen/duurzaam-verwarmen-en-koelen/airco-en-ventilatoren/
+  - naam: Mitsubishi Electric – RZ-lijn (R290)
+    url: https://mitsubishicomfort.nl/producten/rz-lijn/
   - naam: Milieu Centraal – Welke warmtepompen zijn er?
     url: https://www.milieucentraal.nl/energie-besparen/duurzaam-verwarmen-en-koelen/welke-warmtepompen-zijn-er/
 verwant:
@@ -49,7 +52,9 @@ Volgens Milieu Centraal is het rendement van een moderne airco ongeveer gelijk a
 
 ## Waar let je op bij aanschaf?
 
-Kies een split-model (met binnen- én buitenunit) met energielabel A++ of hoger. Laat het vermogen afstemmen op de ruimte: te klein werkt niet goed, te groot slaat steeds aan en uit. En laat de installatie doen door een gecertificeerd bedrijf, want werken aan het koudemiddelcircuit is wettelijk voorbehouden aan F-gassen-gecertificeerde installateurs.
+Kies een split-model (met binnen- én buitenunit) met energielabel A++ of hoger **voor verwarmen**; niet elk model haalt dat.
+
+Milieu Centraal adviseert bij een nieuwe single-split airco het koudemiddel **R290** (propaan), omdat dat een veel kleinere klimaatimpact heeft dan het gangbare R32. Bij Mitsubishi Electric is dat de RZ-lijn (MSZ-RZ, 2,5 tot 5 kW). De andere wandunits en de multi-split-systemen gebruiken R32. Laat het vermogen afstemmen op de ruimte: te klein werkt niet goed, te groot slaat steeds aan en uit. En laat de installatie doen door een gecertificeerd bedrijf, want werken aan het koudemiddelcircuit is wettelijk voorbehouden aan F-gassen-gecertificeerde installateurs.
 
 ## Verder
 

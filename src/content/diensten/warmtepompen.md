@@ -21,7 +21,7 @@ voordelen:
 
 ## Hybride warmtepomp
 
-Een hybride warmtepomp werkt samen met je bestaande cv-ketel. De warmtepomp neemt het grootste deel van de verwarming voor zijn rekening; alleen op de koudste dagen of voor warm water springt de ketel bij. Een goede eerste stap naar minder gasverbruik, ook in huizen die nog niet perfect geïsoleerd zijn.
+Een hybride warmtepomp werkt samen met je bestaande cv-ketel. Bij een goed afgestemde hybride neemt de warmtepomp het grootste deel van de verwarming voor zijn rekening; de ketel springt bij op koude dagen en meestal voor warm water. Een goede eerste stap naar minder gasverbruik, ook in huizen die nog niet perfect geïsoleerd zijn.
 
 ## All-electric warmtepomp
 

@@ -19,7 +19,9 @@ Alles wat alleen Sjoerd kan aanleveren of bevestigen. Op de site staan deze punt
 ## 3. Vakinhoud en beloftes
 
 - [ ] Welke certificeringen heb je? Bijvoorbeeld F-gassen (persoons- en bedrijfscertificaat), STEK, BRL 100. → `certificeringen` in `bedrijf.json`
-- [ ] Ben je erkend Mitsubishi Electric-installateur of "Comfort Coach"?
+- [ ] Ben je erkend Mitsubishi Electric-installateur of "Comfort Coach"? (Comfort Coaches krijgen de offerte-aanvragen via mitsubishicomfort.nl.)
+- [ ] Welke series plaats je? Wandunits: RZ (R290), LN, EF, AY, HR? Multi-split MXZ? Ecodan hybride (AER), split of monoblock R290? Zie `docs/onderzoek-mitsubishi-vs-merken.md`. Dan kunnen we per serie feiten tonen (geluid, label, verwarmen tot welke buitentemperatuur).
+- [ ] Klopt het dat de fabrieksgarantie (5 jaar op onderdelen airco, 3 jaar Ecodan volgens Alklima) via jou loopt? Wat geef je zelf op arbeid?
 - [ ] Welke garantie geef je op installatie en op apparatuur? → `src/content/diensten/*.md`
 - [ ] Wil je indicatieve "vanaf"-prijzen tonen? Zo ja: per ruimte en systeem. → `prijsVanaf` in `src/content/instellingen/home.json` en de dienstpagina's
 - [ ] Is het adviesbezoek aan huis gratis? (De offerte is volgens de huidige site vrijblijvend.) → `src/content/faq/offerte-kosten.md`
