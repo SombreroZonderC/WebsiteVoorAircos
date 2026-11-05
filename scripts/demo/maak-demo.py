@@ -21,14 +21,22 @@ VERVANG = [
     ('thecoolfactory.nl', 'aircopompshot.example'),
     ('The CoolFactory', 'AircoPompShot'), ('CoolFactory', 'AircoPompShot'),
     ('Sjoerd Moller', 'Samson Gertson'), ('Moller', 'Gertson'), ('Sjoerd', 'Samson'), ('sjoerd', 'samson'),
-    ('Mitsubishi Electric', 'Voorbeeldmerk'), ('Mitsubishi', 'Voorbeeldmerk'),
+    # Merk blijft staan, maar zonder te suggereren dat het fictieve bedrijf een erkende specialist is.
+    ('Specialist in {bedrijf.merk}.', 'Werkt met {bedrijf.merk}.'),
+    ('<span>Specialist <b>{bedrijf.merk}</b></span>', '<span>Werkt met <b>{bedrijf.merk}</b></span>'),
+    ('Specialist in ${bedrijf.merk}.', 'Werkt met ${bedrijf.merk}.'),
+    ('<dt>Specialisme</dt>', '<dt>Merk</dt>'),
+    ('specialist in Mitsubishi Electric', 'werkt met Mitsubishi Electric'),
+    ('Specialist in Mitsubishi Electric', 'Werkt met Mitsubishi Electric'),
+    ('"Mitsubishi Electric-specialist"', '"Werkt met Mitsubishi Electric"'),
+    ('topkwaliteit van Mitsubishi Electric', 'Mitsubishi Electric'),
     ('aan de Spekhoekweg', 'aan de Voorbeeldstraat'),
     ('Spekhoekweg 8', 'Voorbeeldstraat 1'), ('Spekhoekweg', 'Voorbeeldstraat'), ('8111 RR', '1234 AB'), ('8111 AB', '1234 AB'),
     ('Heeten', 'Voorbeeldstad'), ('Raalte', 'Voorbeeldgemeente'), ('Overijssel', 'Voorbeeldprovincie'),
     ('06 211 276 12', '06 12 34 56 78'), ('+31621127612', '+31612345678'), ('31621127612', '31612345678'),
 ]
 # Wat na afloop nergens meer in de uitvoer mag staan.
-VERBODEN = re.compile(r'Sjoerd|Moller|CoolFactory|Heeten|Mitsubishi|Spekhoek|8111|Raalte|thecoolfactory|211 ?276|0621127612|Josien|Eenkhoorn', re.I)
+VERBODEN = re.compile(r'[Ss]pecialist\W+(in\W+)?(<b>)?Mitsubishi|Mitsubishi Electric-specialist|Sjoerd|Moller|CoolFactory|Heeten|Spekhoek|8111|Raalte|thecoolfactory|211 ?276|0621127612|Josien|Eenkhoorn', re.I)
 TEKST = ('.astro', '.ts', '.json', '.md', '.yaml', '.txt', '.css', '.mjs')
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900'
@@ -146,7 +154,13 @@ def anonimiseer(d):
                 s = lees(p)
                 m = re.search(r'^seoOmschrijving: (.*)$', s, re.M)
                 if m and len(m.group(1)) > 170:
-                    kort = m.group(1)[:166].rsplit(' ', 1)[0].rstrip(',.;:') + '.'
+                    # op hele zinnen inkorten
+                    zinnen, kort = re.split(r'(?<=\.) ', m.group(1)), ''
+                    for z in zinnen:
+                        if len((kort + ' ' + z).strip()) > 170:
+                            break
+                        kort = (kort + ' ' + z).strip()
+                    kort = kort or m.group(1)[:166].rsplit(' ', 1)[0] + '.'
                     schrijf(p, s.replace(m.group(0), f'seoOmschrijving: {kort}'))
 
 
