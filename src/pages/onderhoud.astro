@@ -5,6 +5,8 @@ import Base from '../layouts/Base.astro';
 import ReuzenHero from '../components/ReuzenHero.astro';
 import Manometer from '../components/Manometer.astro';
 import Stappen from '../components/Stappen.astro';
+import Storingswijzer from '../components/Storingswijzer.astro';
+import Onderhoudskalender from '../components/Onderhoudskalender.astro';
 import FaqLijst from '../components/FaqLijst.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
@@ -26,25 +28,7 @@ const { controle, storing } = onderhoud;
     </ReuzenHero>
 
     <section class="vlak licht paneel sectie">
-      <div class="wrap controle">
-        <div>
-          <p class="eyebrow cold">{controle.eyebrow}</p>
-          <h2 class="h2">{controle.titel}</h2>
-          <ol class="lijst" data-afvinken>
-            {
-              controle.punten.map((c) => (
-                <li class="af">
-                  <span class="vink" aria-hidden="true" />
-                  <div>
-                    <h3>{c.titel}</h3>
-                    <p>{c.tekst}</p>
-                  </div>
-                </li>
-              ))
-            }
-          </ol>
-        </div>
-      </div>
+      <div class="wrap"><Storingswijzer /></div>
     </section>
   </div>
 
@@ -64,6 +48,26 @@ const { controle, storing } = onderhoud;
 
     <section class="vlak licht paneel sectie">
     <div class="wrap">
+      <Onderhoudskalender />
+      <div class="controle">
+        <div>
+          <p class="eyebrow cold">{controle.eyebrow}</p>
+          <h2 class="h2">{controle.titel}</h2>
+          <ol class="lijst" data-afvinken>
+            {
+              controle.punten.map((c) => (
+                <li class="af">
+                  <span class="vink" aria-hidden="true" />
+                  <div>
+                    <h3>{c.titel}</h3>
+                    <p>{c.tekst}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </div>
       <div class="body">
         <div class="prose"><Content /></div>
         <aside class="contact-kaart card">
@@ -127,6 +131,10 @@ const { controle, storing } = onderhoud;
   }
   .controle {
     max-width: 860px;
+    margin-top: clamp(64px, 8vw, 104px);
+  }
+  .body {
+    margin-top: clamp(64px, 8vw, 104px);
   }
   .lijst {
     list-style: none;

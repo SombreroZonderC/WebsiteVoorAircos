@@ -1,0 +1,134 @@
+---
+// Wat je zelf per seizoen doet. Het huidige seizoen krijgt met JS een label "Nu".
+// Teksten: src/content/instellingen/onderhoud.json (kalender).
+import Icon from './Icon.astro';
+import { onderhoud } from '../lib/inhoud';
+
+const k = onderhoud.kalender;
+---
+
+<div class="kalender" data-kalender>
+  <p class="eyebrow cold">{k.eyebrow}</p>
+  <h2>{k.titel}</h2>
+  <ol class="seizoenen">
+    {
+      k.seizoenen.map((s, i) => (
+        <li class:list={['seizoen', s.accent]} data-seizoen={i}>
+          <p class="maanden">{s.maanden}</p>
+          <h3>
+            {s.naam} <span class="nu" hidden>Nu</span>
+          </h3>
+          <ul>
+            {s.taken.map((t) => (
+              <li>
+                <Icon name="check" size={18} />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<script>
+  // Voorjaar = mrt–mei (0), zomer (1), najaar (2), winter = dec–feb (3)
+  const m = new Date().getMonth();
+  const index = m >= 2 && m <= 4 ? 0 : m >= 5 && m <= 7 ? 1 : m >= 8 && m <= 10 ? 2 : 3;
+  const huidig = document.querySelector<HTMLElement>(`[data-kalender] [data-seizoen="${index}"]`);
+  if (huidig) {
+    huidig.classList.add('is-nu');
+    huidig.querySelector<HTMLElement>('.nu')!.hidden = false;
+  }
+</script>
+
+<style>
+  h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.04em;
+    margin: 0 0 clamp(24px, 3vw, 36px);
+    max-width: 18ch;
+  }
+  .seizoenen {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .seizoen {
+    padding: 22px 22px 26px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--blue-text);
+  }
+  .seizoen.warm {
+    border-top-color: var(--orange-text);
+  }
+  .seizoen.is-nu {
+    background: var(--ink);
+    color: var(--text-on-dark);
+    border-color: var(--ink);
+    border-top-color: var(--orange-hot);
+  }
+  .maanden {
+    margin: 0 0 4px;
+    font: 500 0.875rem var(--font-mono);
+    color: var(--muted);
+  }
+  .is-nu .maanden {
+    color: var(--muted-on-dark);
+  }
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+  }
+  .nu {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--orange-btn);
+    color: #fff;
+    font: 700 0.75rem var(--font-body);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  ul li {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+  }
+  ul :global(svg) {
+    margin-top: 3px;
+    color: var(--blue-text);
+  }
+  .warm ul :global(svg) {
+    color: var(--orange-text);
+  }
+  .is-nu ul :global(svg) {
+    color: var(--orange-hot);
+  }
+  @media (max-width: 1000px) {
+    .seizoenen {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .seizoenen {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

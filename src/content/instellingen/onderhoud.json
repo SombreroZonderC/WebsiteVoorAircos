@@ -3,13 +3,163 @@
     "eyebrow": "Wat ik controleer",
     "titel": "Een onderhoudsbeurt, stap voor stap.",
     "punten": [
-      { "titel": "Werking en foutcodes", "tekst": "Draait alles zoals het hoort, en zijn er meldingen?" },
-      { "titel": "Filters en binnenunit", "tekst": "Reinigen waar nodig, voor schone lucht en een zuinig systeem." },
-      { "titel": "Buitenunit en afvoer", "tekst": "Vrij van vuil en bladeren, condensafvoer in orde." },
-      { "titel": "Drukken en temperaturen", "tekst": "Meten of het systeem binnen de juiste waarden werkt." },
-      { "titel": "Advies", "tekst": "Je hoort wat ik heb gezien en of er iets aandacht nodig heeft." }
+      {
+        "titel": "Werking en foutcodes",
+        "tekst": "Draait alles zoals het hoort, en zijn er meldingen?"
+      },
+      {
+        "titel": "Filters en binnenunit",
+        "tekst": "Reinigen waar nodig, voor schone lucht en een zuinig systeem."
+      },
+      {
+        "titel": "Buitenunit en afvoer",
+        "tekst": "Vrij van vuil en bladeren, condensafvoer in orde."
+      },
+      {
+        "titel": "Drukken en temperaturen",
+        "tekst": "Meten of het systeem binnen de juiste waarden werkt."
+      },
+      {
+        "titel": "Advies",
+        "tekst": "Je hoort wat ik heb gezien en of er iets aandacht nodig heeft."
+      }
     ]
   },
-  "storing": { "titel": "Bel direct.", "tekst": "Werkt je airco of warmtepomp niet goed? Dan kijken we samen wat er aan de hand is." },
-  "ctaTitel": "Onderhoud inplannen?"
+  "storing": {
+    "titel": "Bel direct.",
+    "tekst": "Werkt je airco of warmtepomp niet goed? Dan kijken we samen wat er aan de hand is."
+  },
+  "ctaTitel": "Onderhoud inplannen?",
+  "wijzer": {
+    "eyebrow": "Storingswijzer",
+    "titel": "Wat zie of hoor je?",
+    "intro": "Kies wat er aan de hand is. Je ziet direct wat je zelf veilig kunt checken, wat normaal is en wanneer je beter even belt.",
+    "veilig": "Open nooit zelf de buitenunit of het koudemiddelcircuit. Twijfel je, zet het systeem uit en bel.",
+    "klachten": [
+      {
+        "id": "koelt-niet",
+        "label": "Koelt of verwarmt niet goed",
+        "icoon": "snow",
+        "zelf": [
+          "Staat de afstandsbediening op de goede stand (koelen, verwarmen of auto) en klopt de ingestelde temperatuur?",
+          "Zijn de batterijen van de afstandsbediening nog goed?",
+          "Zijn de filters van de binnenunit schoon?",
+          "Staan er ramen of deuren open, of hangt er iets voor de binnenunit?",
+          "Is de buitenunit vrij van bladeren, sneeuw of spullen?"
+        ],
+        "normaal": "Bij verwarmen in de winter stopt de airco af en toe even om de buitenunit te ontdooien. Dat duurt meestal een paar minuten.",
+        "bellen": "Na schone filters en de juiste stand wordt het nog steeds niet koel of warm, of er zit ijs op de leidingen binnen."
+      },
+      {
+        "id": "lekt-water",
+        "label": "Er druppelt water uit de binnenunit",
+        "icoon": "shield",
+        "zelf": [
+          "Zet de airco uit om waterschade te voorkomen.",
+          "Maak de filters schoon: een vol filter kan ijsvorming en daarna druppen veroorzaken.",
+          "Kijk buiten of de afvoerslang van het condenswater niet geknikt of verstopt is."
+        ],
+        "normaal": "Bij koelen komt er buiten via de afvoerslang water uit. Dat is condens en hoort zo.",
+        "bellen": "Het blijft druppelen nadat de filters schoon zijn, of de afvoer is binnen verstopt."
+      },
+      {
+        "id": "geluid",
+        "label": "Vreemd of hard geluid",
+        "icoon": "volume",
+        "zelf": [
+          "Kijk of er iets los zit of tegen de buitenunit aan ligt, zoals takken of bladeren.",
+          "Controleer of de binnenunit recht en stevig aan de muur hangt (alleen kijken)."
+        ],
+        "normaal": "Zacht tikken bij aan- en uitzetten (kunststof dat uitzet of krimpt) en een zacht sissend of stromend geluid (koudemiddel dat stroomt) zijn normaal.",
+        "bellen": "Je hoort ratelen, piepen of een hard brommend geluid dat blijft, of het geluid is nieuw en wordt erger."
+      },
+      {
+        "id": "geur",
+        "label": "Het ruikt muf",
+        "icoon": "leaf",
+        "zelf": [
+          "Maak de filters schoon en laat ze goed drogen voor je ze terugplaatst.",
+          "Laat na het koelen de ventilator nog even draaien, zodat de binnenunit kan opdrogen."
+        ],
+        "normaal": "De eerste keer verwarmen na lange tijd kan het kort naar stof ruiken. Dat trekt meestal snel weg.",
+        "bellen": "De geur blijft na schone filters. Dan moet de binnenunit vanbinnen gereinigd worden."
+      },
+      {
+        "id": "ijs-buiten",
+        "label": "IJs of damp bij de buitenunit",
+        "icoon": "snow",
+        "zelf": [
+          "Haal sneeuw voorzichtig weg rond de buitenunit, zonder in de lamellen te prikken of te hakken.",
+          "Zorg dat de afvoer onder de buitenunit vrij kan weglopen."
+        ],
+        "normaal": "Bij verwarmen in de winter ontdooit de buitenunit af en toe. Er komt dan damp of water uit; dat is normaal.",
+        "bellen": "De buitenunit blijft dichtgevroren of het ijs groeit steeds verder aan."
+      },
+      {
+        "id": "foutcode",
+        "label": "Knipperend lampje of foutcode",
+        "icoon": "clock",
+        "zelf": [
+          "Noteer de code of het knipperpatroon, of maak er een foto van.",
+          "Zet het systeem uit en na een paar minuten weer aan."
+        ],
+        "normaal": "Sommige lampjes geven alleen een melding, zoals 'filter reinigen'. Dat staat in de handleiding.",
+        "bellen": "De code komt terug. Geef hem door, dan weet ik vooraf wat er speelt."
+      },
+      {
+        "id": "warmtepomp-koud",
+        "label": "Warmtepomp: radiatoren koud of geen warm water",
+        "icoon": "flame",
+        "zelf": [
+          "Kijk op de manometer van de installatie: de waterdruk ligt meestal tussen 1 en 2 bar. Je handleiding noemt de juiste waarde.",
+          "Staat de thermostaat goed en zijn de batterijen nog vol?",
+          "Staat er een melding op het display van de warmtepomp?"
+        ],
+        "normaal": "Een warmtepomp verwarmt rustiger dan een cv-ketel: radiatoren worden lauw-warm in plaats van heet. Na het opwarmen van tapwater duurt het even voor de verwarming weer bijspringt.",
+        "bellen": "De druk zakt steeds opnieuw, of er staat een storingsmelding op het display."
+      }
+    ]
+  },
+  "kalender": {
+    "eyebrow": "Zelf doen",
+    "titel": "Het jaar rond, in vijf minuten per seizoen.",
+    "seizoenen": [
+      {
+        "naam": "Voorjaar",
+        "maanden": "mrt – mei",
+        "accent": "koud",
+        "taken": [
+          "Filters van de binnenunit schoonmaken",
+          "Koelen even testen, vóór de eerste warme dag"
+        ]
+      },
+      {
+        "naam": "Zomer",
+        "maanden": "jun – aug",
+        "accent": "koud",
+        "taken": [
+          "Filters vaker checken als de airco veel draait",
+          "Na het koelen de ventilator even laten nadraaien"
+        ]
+      },
+      {
+        "naam": "Najaar",
+        "maanden": "sep – nov",
+        "accent": "warm",
+        "taken": [
+          "Bladeren rond de buitenunit weghalen",
+          "Verwarmen testen, vóór de eerste koude dag"
+        ]
+      },
+      {
+        "naam": "Winter",
+        "maanden": "dec – feb",
+        "accent": "warm",
+        "taken": [
+          "Sneeuw voorzichtig rond de buitenunit weghalen",
+          "Afvoer onder de buitenunit vrijhouden"
+        ]
+      }
+    ]
+  }
 }

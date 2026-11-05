@@ -141,3 +141,20 @@ test('kennisbank: artikelen met meer dan twee alinea’s hebben minimaal één i
     if (alineas > 2) await expect(page.locator('figure.illustratie svg'), pad).not.toHaveCount(0);
   }
 });
+
+test('onderhoud: storingswijzer wisselt klacht en stuurt die door naar contact', async ({ page }) => {
+  await page.goto('/onderhoud');
+  const knop = page.getByRole('radio', { name: /druppelt water/ });
+  await knop.click();
+  await expect(knop).toHaveAttribute('aria-checked', 'true');
+  const antwoord = page.locator('#klacht-lekt-water');
+  await expect(antwoord).toBeVisible();
+  await expect(page.locator('#klacht-koelt-niet')).toBeHidden();
+  await knop.press('ArrowDown');
+  await expect(page.locator('#klacht-geluid')).toBeVisible();
+  await page.goto('/onderhoud');
+  await page.getByRole('radio', { name: /druppelt water/ }).click();
+  await antwoord.getByRole('link', { name: /Stuur deze klacht door/ }).click();
+  await expect(page).toHaveURL(/klacht=lekt-water/);
+  await expect(page.locator('#bericht')).toHaveValue(/druppelt water/);
+});

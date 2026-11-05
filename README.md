@@ -58,7 +58,7 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
 - Elke pagina heeft een reuzenwoord in de hero en een eigen opvallend element:
   - airconditioning: opstelling-kiezer (single/multi-split), scroll-verhaal van de binnenunit, seizoensband
   - warmtepompen: huis-doorsnede (hybride/all-electric), geschiktheidscheck, scroll-uitleg van de kringloop
-  - onderhoud: manometer en een checklist die zich afvinkt
+  - onderhoud: manometer, storingswijzer (klacht kiezen → zelf checken / normaal / bel als, doorsturen naar contact), onderhoudskalender per seizoen en een checklist die zich afvinkt
   - over Sjoerd: portret, reuzen-"20+", tijdlijn, citaat
   - werkgebied: gestileerde kaart met afstandsringen
   - vragen: zoekveld en onderwerptegels

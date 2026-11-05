@@ -64,7 +64,7 @@ Signatuur per pagina (zelfde systeem, elke pagina een eigen 'pop'):
 | Home | Koel. Warm. | keuze koelen/verwarmen die tekst, kaarten, tekening en thermometer aanstuurt |
 | Airconditioning | Koel. | opstelling-kiezer, scroll-verhaal binnenunit, seizoensband, projectfoto |
 | Warmtepompen | Warm. | huis-doorsnede hybride/all-electric, geschiktheidscheck, kringloop |
-| Onderhoud | Zorgeloos. | manometer, checklist, donkere band "Storing? Bel direct." |
+| Onderhoud | Zorgeloos. | manometer, storingswijzer, onderhoudskalender (huidig seizoen gemarkeerd), checklist, donkere band "Storing? Bel direct." |
 | Over Sjoerd | 20+ | portret, tijdlijn (placeholders), citaat |
 | Werkgebied | Vanuit Heeten. | oriëntatiekaart met ringen op 10 en 20 km (geen toezegging) |
 | Vragen | Vragen? | zoekveld met synoniemen, tellers per onderwerp |

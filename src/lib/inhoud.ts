@@ -57,6 +57,27 @@ export const onderhoud = z
   .object({
     controle: blok.extend({ punten: z.array(kaart).min(1) }),
     storing: z.object({ titel: z.string(), tekst: z.string() }),
+    wijzer: blok.extend({
+      intro: z.string(),
+      veilig: z.string(),
+      klachten: z
+        .array(
+          z.object({
+            id: z.string().regex(/^[a-z-]+$/),
+            label: z.string(),
+            icoon: z.enum(['snow', 'flame', 'shield', 'volume', 'leaf', 'clock', 'wrench']),
+            zelf: z.array(z.string()).min(1),
+            normaal: z.string(),
+            bellen: z.string(),
+          }),
+        )
+        .min(2),
+    }),
+    kalender: blok.extend({
+      seizoenen: z
+        .array(z.object({ naam: z.string(), maanden: z.string(), accent: z.enum(['koud', 'warm']), taken: z.array(z.string()).min(1) }))
+        .length(4),
+    }),
     ctaTitel: z.string(),
   })
   .parse(onderhoudJson);
