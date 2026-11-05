@@ -21,7 +21,7 @@ import Thermometer from './Thermometer.astro';
     <g class="stap stap-2">
       <circle cx="370" cy="150" r="22" />
       <path d="M362 158 q8 -24 16 0" class="dun" />
-      <text x="300" y="196">3 warmte naar huis</text>
+      <text x="414" y="196" text-anchor="end">3 warmte naar huis</text>
     </g>
     <g class="stap stap-3">
       <circle cx="210" cy="250" r="22" />
@@ -71,7 +71,11 @@ import Thermometer from './Thermometer.astro';
   text {
     font: 500 12px var(--font-mono);
     fill: rgb(232 240 243 / 0.5);
-    stroke: none;
+    /* donkere rand zodat een label leesbaar blijft waar het de baan kruist */
+    stroke: var(--ink);
+    stroke-width: 6px;
+    stroke-linejoin: round;
+    paint-order: stroke;
   }
   .stap circle {
     fill: var(--ink);

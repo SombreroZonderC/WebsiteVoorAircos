@@ -109,3 +109,22 @@ test('structured data is geldige JSON op elke pagina', async ({ page }) => {
     for (const b of blokken) expect(() => JSON.parse(b)).not.toThrow();
   }
 });
+
+test('labels in tekeningen vallen binnen de tekening', async ({ page }) => {
+  for (const pad of paginas) {
+    await page.goto(pad);
+    await page.evaluate(() => document.fonts.ready);
+    const uit = await page.evaluate(() =>
+      [...document.querySelectorAll('svg text')]
+        .map((t) => {
+          const vb = t.ownerSVGElement?.viewBox.baseVal;
+          if (!vb || !vb.width) return null;
+          const bb = (t as SVGTextElement).getBBox();
+          const buiten = bb.x < vb.x - 1 || bb.x + bb.width > vb.x + vb.width + 1;
+          return buiten ? t.textContent?.trim() : null;
+        })
+        .filter(Boolean),
+    );
+    expect(uit, `${pad}: ${uit.join(', ')}`).toEqual([]);
+  }
+});
