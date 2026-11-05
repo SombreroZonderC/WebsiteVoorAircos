@@ -54,7 +54,22 @@ Vastgesteld na vijf prototyperondes, elk beoordeeld door de initiatiefnemer en e
 | Werkgebied | `/werkgebied` | plaatsnamen |
 | Veelgestelde vragen | `/veelgestelde-vragen` | long-tail, citeerbaar voor chatbots |
 | Contact / offerte | `/contact` | aanvragen |
+| Kennisbank | `/kennisbank`, `/kennisbank/<artikel>` | informatieve vragen ("hybride of all-electric", "verwarmen met airco"), citeerbaar voor chatbots |
 | Privacyverklaring | `/privacy` | wettelijk |
+
+Signatuur per pagina (zelfde systeem, elke pagina een eigen 'pop'):
+
+| Pagina | Reuzenwoord | Eigen element |
+|---|---|---|
+| Home | Koel. Warm. | keuze koelen/verwarmen die tekst, kaarten, tekening en thermometer aanstuurt |
+| Airconditioning | Koel. | opstelling-kiezer, scroll-verhaal binnenunit, seizoensband, projectfoto |
+| Warmtepompen | Warm. | huis-doorsnede hybride/all-electric, geschiktheidscheck, kringloop |
+| Onderhoud | Zorgeloos. | manometer, checklist, donkere band "Storing? Bel direct." |
+| Over Sjoerd | 20+ | portret, tijdlijn (placeholders), citaat |
+| Werkgebied | Vanuit Heeten. | oriëntatiekaart met ringen op 10 en 20 km (geen toezegging) |
+| Vragen | Vragen? | zoekveld met synoniemen, tellers per onderwerp |
+| Kennisbank | Kennis. / per artikel | "In het kort", bronnen, datum bijgewerkt |
+| Contact | (gesplitst scherm) | keuzetegels, voorgevuld vanaf dienstpagina's |
 
 Projectenpagina pas als Sjoerd foto's levert.
 
@@ -77,6 +92,8 @@ Projectenpagina pas als Sjoerd foto's levert.
 - `llms.txt`, AI-crawlers toegestaan in `robots.txt`.
 - Zelfstandige, feitelijke FAQ-antwoorden.
 - Alle inhoud in HTML, geen JS nodig.
+- `Article` met bronnen (kennisbank) en `BreadcrumbList` op subpagina's.
+- Eigen deelafbeelding per pagina.
 - Geen review-sterren in structured data (Google toont geen sterren voor self-serving reviews).
 
 ## Definition of done v1

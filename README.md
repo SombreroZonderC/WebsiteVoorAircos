@@ -13,7 +13,12 @@ npm run dev       # ontwikkelserver op http://localhost:4321
 npm run build     # bouwt de site naar dist/
 npm run preview   # bekijkt de gebouwde site
 npx astro check   # type- en schemacontrole
+npm test          # Playwright-tests op de gebouwde site (eerst npm run build)
+npm run og        # deelafbeeldingen opnieuw maken (public/images/og/)
+npm run demo      # geanonimiseerde demo (fictief bedrijf) in ../demo-build/pub
 ```
+
+Tests draaien met de vooraf geïnstalleerde Chromium: `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers npm test` (in CI installeert de workflow de browser zelf).
 
 ## Waar staat wat
 
@@ -21,6 +26,8 @@ npx astro check   # type- en schemacontrole
 |---|---|
 | Bedrijfsgegevens (telefoon, adres, KvK, werkgebied, Google-score …) | `src/content/instellingen/bedrijf.json` |
 | Alle teksten van de homepage | `src/content/instellingen/home.json` |
+| Teksten van de interactieve onderdelen per pagina | `src/content/instellingen/{airconditioning,warmtepompen,onderhoud,over}.json` |
+| Kennisbank-artikelen (met bronnen) | `src/content/kennis/*.md` |
 | Dienstpagina's (airco, warmtepompen, onderhoud) | `src/content/diensten/*.md` |
 | Veelgestelde vragen (één bestand per vraag) | `src/content/faq/*.md` |
 | Reviews | `src/content/reviews/*.yaml` |
@@ -61,13 +68,24 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
 
 ## Vindbaarheid
 
-- schema.org: `HVACBusiness` (elke pagina), `Service` (dienstpagina's), `FAQPage`, `AboutPage`
+- schema.org: `HVACBusiness` (elke pagina), `Service` (dienstpagina's), `FAQPage`, `AboutPage`, `Article` (kennisbank), `BreadcrumbList` (alle subpagina's)
+- Eigen deelafbeelding per pagina (`public/images/og/`, gemaakt met `npm run og`)
+- Kennisbank: algemene vakuitleg met bronvermelding en datum 'bijgewerkt'; geen beloftes namens het bedrijf
 - `sitemap-index.xml` (automatisch), `robots.txt`, `llms.txt` (samenvatting voor AI-assistenten)
 - Elke pagina heeft een eigen titel en omschrijving (in de content-bestanden)
 
 ## Formulier
 
 Het contactformulier (`src/pages/contact.astro`) gebruikt Netlify Forms. Lokaal wordt verzenden nagebootst (je gaat direct naar `/bedankt`).
+
+## Kwaliteitscontrole
+
+- `tests/site.spec.ts`: elke pagina laadt zonder fouten, heeft één h1, geen ernstige toegankelijkheidsfouten (axe) en geen horizontale scroll; plus de interactieve onderdelen, het mobiele menu, 'minder beweging' en geldige JSON-LD. Desktop en mobiel.
+- `.github/workflows/ci.yml`: bij elke push `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, `lighthouserc.json`).
+
+## Demo
+
+`scripts/demo/maak-demo.py` maakt een kopie met een fictief bedrijf (AircoPompShot, Samson Gertson, Voorbeeldstad), voorbeeldreviews, een neutraal logo, een roze demo-label en een formulier dat niets verstuurt. Het script stopt als er nog echte gegevens in de uitvoer staan. Bedoeld om het ontwerp te laten zien zonder het echte bedrijf te publiceren.
 
 ## Live zetten
 
@@ -77,5 +95,5 @@ Zie [`docs/domein-en-hosting.md`](docs/domein-en-hosting.md). Kort: Netlify (ins
 
 De inhoud staat bewust in Markdown, YAML en JSON met schema's, zodat er later een git-gebaseerd CMS bovenop kan zonder iets te verplaatsen. Het plan is **Keystatic**:
 
-- collections `diensten`, `faq`, `reviews`, `paginas` → de mappen in `src/content/`
-- singletons `bedrijf` en `home` → de JSON-bestanden in `src/content/instellingen/`
+- collections `diensten`, `faq`, `reviews`, `paginas`, `kennis` → de mappen in `src/content/`
+- singletons `bedrijf`, `home`, `airconditioning`, `warmtepompen`, `onderhoud`, `over` → de JSON-bestanden in `src/content/instellingen/`

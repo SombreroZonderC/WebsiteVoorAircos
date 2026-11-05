@@ -33,12 +33,22 @@ Alles wat alleen Sjoerd kan aanleveren of bevestigen. Op de site staan deze punt
 ## 4. Over jou → `src/content/paginas/over-sjoerd.md`
 
 - [ ] Korte persoonlijke tekst: hoe ben je in het vak gekomen, sinds wanneer bestaat The CoolFactory, wat vind je het mooiste aan je werk?
+- [ ] Tijdlijn: in welk jaar ben je begonnen in het vak, wanneer is The CoolFactory opgericht, en zijn er andere mijlpalen (bijv. eerste warmtepomp, certificering)? → `tijdlijn` in `src/content/instellingen/over.json`
+
+## 4b. Bereikbaarheid
+
+- [ ] Hoe snel reageer je meestal op een aanvraag of storing (bijv. "binnen een werkdag")? Dat kan prominent bij contact en onderhoud.
+- [ ] Kom je bij storingen ook 's avonds of in het weekend?
+
+## 4c. Kennisbank
+
+- [ ] Wil je de kennisbank-artikelen (`src/content/kennis/`) nalezen? Ze bevatten algemene vakuitleg met bronnen (Milieu Centraal, RVO). Over welke onderwerpen krijg je de meeste vragen? Die zijn de beste volgende artikelen.
 
 ## 5. Beeld
 
 - [ ] Foto van jezelf, bij voorkeur aan het werk (portret, liefst rechtop)
 - [ ] Projectfoto's met korte beschrijving en plaatsnaam (bijv. "Multi-split in Raalte"). Daarmee kan later een projectenpagina.
-- [ ] Is de huidige foto (buitenunit met omkasting op een plat dak) jouw werk?
+- [ ] Is de huidige foto (buitenunit met omkasting op een plat dak) jouw werk? (Hij staat nu als 'Recent werk' op de airco-pagina.)
 - [ ] Logo in hoge resolutie of origineel bestand (de SVG van de huidige site werkt al)
 
 ## 6. Juridisch
