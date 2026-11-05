@@ -9,7 +9,7 @@ const k = (await getEntry('kennis', Astro.props.artikel))!;
 
 <a class="lees-ook" href={`/kennisbank/${k.id}`}>
   <span>Lees ook</span>
-  {k.data.titel}
+  <b>{k.data.titel}</b>
 </a>
 
 <style>
@@ -20,6 +20,11 @@ const k = (await getEntry('kennis', Astro.props.artikel))!;
     border-top: 1px solid var(--line);
     font-weight: 600;
     line-height: 1.35;
+    text-decoration: none;
+  }
+  .lees-ook b {
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .lees-ook span {
     display: block;

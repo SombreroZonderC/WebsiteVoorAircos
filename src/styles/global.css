@@ -30,8 +30,9 @@
   --text: #0c1d23;
   --muted: #4d6168;
 
-  --radius: 14px;
-  --radius-lg: 22px;
+  /* Hoekig ontwerp: alleen knoppen zijn rond */
+  --radius: 4px;
+  --radius-lg: 4px;
   --wrap: 1180px;
   --gutter: clamp(16px, 4vw, 32px);
 

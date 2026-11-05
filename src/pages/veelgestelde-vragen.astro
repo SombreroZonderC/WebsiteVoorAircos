@@ -6,6 +6,7 @@ import CtaBand from '../components/CtaBand.astro';
 import Icon from '../components/Icon.astro';
 import { faqSchema } from '../lib/schema';
 
+const kennis = (await getCollection('kennis')).sort((a, b) => a.data.volgorde - b.data.volgorde);
 const alle = (await getCollection('faq')).sort((a, b) => a.data.volgorde - b.data.volgorde);
 const groepen = [
   { id: 'airco', titel: 'Airconditioning', icoon: 'snow', accent: 'koud' },
@@ -68,6 +69,23 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
             ))
           }
         </div>
+
+        <aside class="meer" aria-labelledby="meer-titel">
+          <p class="eyebrow">Kennisbank</p>
+          <h2 id="meer-titel">Liever rustig uitgelegd?</h2>
+          <ul>
+            {
+              kennis.map((k) => (
+                <li>
+                  <a href={`/kennisbank/${k.id}`}>
+                    {k.data.titel} <Icon name="arrow" size={18} />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <a class="alle" href="/kennisbank">Alle artikelen</a>
+        </aside>
       </div>
     </section>
   </div>
@@ -198,7 +216,7 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
     gap: 24px;
     min-height: 130px;
     padding: 20px;
-    border-radius: 20px;
+    border-radius: var(--radius-lg);
     background: var(--paper-2);
     border: 1px solid var(--line);
     text-decoration: none;
@@ -230,6 +248,39 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
   }
   .groepen {
     max-width: 860px;
+  }
+  .meer {
+    max-width: 860px;
+    margin-top: clamp(56px, 7vw, 88px);
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--blue-text);
+  }
+  .meer h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+    margin: 0 0 12px;
+  }
+  .meer ul {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+  }
+  .meer li a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--line);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .meer li a:hover {
+    color: var(--blue-text);
+  }
+  .meer .alle {
+    font-weight: 600;
   }
   .groep {
     margin-top: clamp(48px, 6vw, 72px);

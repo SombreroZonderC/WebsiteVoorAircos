@@ -69,6 +69,7 @@ const kennis = defineCollection({
     woord: z.string().max(12),
     accent: z.enum(['koud', 'warm']),
     volgorde: z.number().default(100),
+    gepubliceerd: z.coerce.date().optional(),
     bijgewerkt: z.coerce.date(),
     leestijd: z.number(),
     kernpunten: z.array(z.string()).min(2).max(5),

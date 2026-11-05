@@ -47,3 +47,7 @@ Volgens Milieu Centraal is het rendement van een moderne airco ongeveer gelijk a
 ## Waar let je op bij aanschaf?
 
 Kies een split-model (met binnen- én buitenunit) met energielabel A++ of hoger. Laat het vermogen afstemmen op de ruimte: te klein werkt niet goed, te groot slaat steeds aan en uit. En laat de installatie doen door een gecertificeerd bedrijf, want werken aan het koudemiddelcircuit is wettelijk voorbehouden aan F-gassen-gecertificeerde installateurs.
+
+## Verder
+
+Lees meer over [een airco laten plaatsen](/airconditioning), met de keuze tussen single- en multi-split. Wil je je hele huis verwarmen? Kijk dan bij [warmtepompen](/warmtepompen).

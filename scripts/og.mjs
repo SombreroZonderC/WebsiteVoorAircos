@@ -15,9 +15,9 @@ const paginas = [
   { slug: 'over-sjoerd', woord: `${bedrijf.jarenErvaring}`, kleur: 'warm', regel: `${bedrijf.eigenaar}, al ${bedrijf.jarenErvaring} jaar in het vak` },
   { slug: 'werkgebied', woord: `Vanuit ${bedrijf.adres.plaats}.`, kleur: 'koud', regel: 'Werkgebied' },
   { slug: 'veelgestelde-vragen', woord: 'Vragen?', kleur: 'wit', regel: 'Veelgestelde vragen' },
-  { slug: 'kennisbank', woord: 'Kennis.', kleur: 'koud', regel: 'Kennisbank: uitleg over airco en warmtepompen' },
-  { slug: 'kennisbank/hybride-of-all-electric', woord: 'Hybride?', kleur: 'warm', regel: 'Hybride of all-electric warmtepomp?' },
-  { slug: 'kennisbank/verwarmen-met-een-airco', woord: 'Warmte?', kleur: 'koud', regel: 'Kun je verwarmen met een airco?' },
+  { slug: 'kennisbank', woord: 'Kennis.', kleur: 'koud', regel: 'Kennisbank' },
+  { slug: 'kennisbank/hybride-of-all-electric', woord: 'Hybride?', kleur: 'warm', regel: 'Hybride of all-electric?' },
+  { slug: 'kennisbank/verwarmen-met-een-airco', woord: 'Warmte?', kleur: 'koud', regel: 'Verwarmen met een airco' },
   { slug: 'contact', woord: `Bel ${bedrijf.eigenaar.split(' ')[0]}.`, kleur: 'wit', regel: 'Contact & offerte' },
 ];
 

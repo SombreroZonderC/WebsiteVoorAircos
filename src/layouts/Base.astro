@@ -14,11 +14,13 @@ interface Props {
   schema?: object[];
   /** Header meteen donker (zie Header.astro) */
   kopVast?: boolean;
+  /** og:type, standaard 'website' */
+  ogType?: 'website' | 'article';
 }
 
-const { title, description, noindex = false, schema = [], kopVast = false } = Astro.props;
+const { title, description, noindex = false, schema = [], kopVast = false, ogType = 'website' } = Astro.props;
 const fullTitle = title.includes(bedrijf.naam) ? title : `${title} | ${bedrijf.naam}`;
-const pad = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
+const pad = Astro.url.pathname.replace(/\.html$/, '').replace(/\/(index)?$/, '');
 const canonical = new URL(pad || '/', bedrijf.url).href;
 
 // Deelafbeelding per pagina (gegenereerd met scripts/og.mjs), anders de algemene.
@@ -29,7 +31,7 @@ const ogImage = new URL(ogPad, bedrijf.url).href;
 // Kruimelpad voor zoekmachines (Home → [tussenniveau] → pagina)
 const tussen: Record<string, string> = { kennisbank: 'Kennisbank' };
 const delen = pad.split('/').filter(Boolean);
-const paginaNaam = nav.find((n) => n.href === pad)?.label ?? (delen.length === 1 && tussen[delen[0]]) ?? title;
+const paginaNaam = nav.find((n) => n.href === pad)?.label ?? (delen.length === 1 ? tussen[delen[0]] : undefined) ?? title;
 const niveaus = [
   { name: 'Home', item: `${bedrijf.url}/` },
   ...(delen.length > 1 && tussen[delen[0]] ? [{ name: tussen[delen[0]], item: `${bedrijf.url}/${delen[0]}` }] : []),
@@ -85,7 +87,7 @@ const localBusiness = {
     <meta name="theme-color" content="#061419" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="nl_NL" />
     <meta property="og:site_name" content={bedrijf.naam} />
     <meta property="og:title" content={fullTitle} />

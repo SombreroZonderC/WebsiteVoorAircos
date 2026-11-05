@@ -54,3 +54,7 @@ Er zijn hybride systemen met een groter vermogen die later, als je huis beter ge
 ## Subsidie
 
 Voor zowel hybride als all-electric warmtepompen bestaat de landelijke ISDE-subsidie. De voorwaarden en bedragen veranderen regelmatig; kijk voor de actuele stand op de site van RVO.
+
+## Verder
+
+Wil je weten wat in jouw huis past? Lees meer over [een warmtepomp laten installeren](/warmtepompen) of doe daar de korte geschiktheidscheck.

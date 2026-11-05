@@ -24,7 +24,9 @@ const schema = [
     '@type': 'Article',
     headline: a.titel,
     description: a.seoOmschrijving,
+    datePublished: (a.gepubliceerd ?? a.bijgewerkt).toISOString().slice(0, 10),
     dateModified: a.bijgewerkt.toISOString().slice(0, 10),
+    image: `${bedrijf.url}/images/og/kennisbank/${artikel.id}.jpg`,
     inLanguage: 'nl-NL',
     mainEntityOfPage: url,
     author: { '@id': bedrijfId },
@@ -34,7 +36,7 @@ const schema = [
 ];
 ---
 
-<Base title={a.seoTitel} description={a.seoOmschrijving} schema={schema}>
+<Base title={a.seoTitel} description={a.seoOmschrijving} schema={schema} ogType="article">
   <div class="paar">
     <ReuzenHero woord={a.woord} kleur={a.accent} verhouding="smal" eyebrow={a.eyebrow} titel={a.titel} tekst={a.intro} />
     <article class="vlak licht paneel sectie">
@@ -66,7 +68,7 @@ const schema = [
           <div class="card">
             <h2 class="h3">Twijfel je?</h2>
             <p>Een vakman ziet in één bezoek wat in jouw huis past.</p>
-            <a class="btn" href="/contact">Vraag advies aan huis <Icon name="arrow" /></a>
+            <a class="btn" href={`/contact?onderwerp=${a.accent === 'warm' ? 'warmtepompen' : 'airconditioning'}`}>Vraag advies aan huis <Icon name="arrow" /></a>
           </div>
           {
             verwant.length > 0 && (
