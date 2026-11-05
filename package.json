@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "test": "playwright test",
     "check": "astro check",
-    "og": "node scripts/og.mjs"
+    "og": "node scripts/og.mjs",
+    "demo": "python3 scripts/demo/maak-demo.py ../demo-build"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
