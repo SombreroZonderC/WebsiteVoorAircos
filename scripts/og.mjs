@@ -18,6 +18,8 @@ const paginas = [
   { slug: 'kennisbank', woord: 'Kennis.', kleur: 'koud', regel: 'Kennisbank' },
   { slug: 'kennisbank/hybride-of-all-electric', woord: 'Hybride?', kleur: 'warm', regel: 'Hybride of all-electric?' },
   { slug: 'kennisbank/verwarmen-met-een-airco', woord: 'Warmte?', kleur: 'koud', regel: 'Verwarmen met een airco' },
+  { slug: 'kennisbank/geluid-buitenunit', woord: '40 dB.', kleur: 'koud', regel: 'Geluid van een buitenunit' },
+  { slug: 'kennisbank/onderhoud-airco-warmtepomp', woord: 'Schoon.', kleur: 'koud', regel: 'Onderhoud airco en warmtepomp' },
   { slug: 'contact', woord: `Bel ${bedrijf.eigenaar.split(' ')[0]}.`, kleur: 'wit', regel: 'Contact & offerte' },
 ];
 

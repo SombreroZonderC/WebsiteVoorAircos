@@ -23,6 +23,7 @@ bronnen:
     url: https://www.rvo.nl/subsidies-financiering/isde
 verwant:
   - verwarmen-met-een-airco
+  - geluid-buitenunit
 ---
 
 ## Het verschil in één zin

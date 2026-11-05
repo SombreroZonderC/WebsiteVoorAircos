@@ -13,6 +13,8 @@ const paginas = [
   '/kennisbank',
   '/kennisbank/hybride-of-all-electric',
   '/kennisbank/verwarmen-met-een-airco',
+  '/kennisbank/geluid-buitenunit',
+  '/kennisbank/onderhoud-airco-warmtepomp',
   '/privacy',
   '/bedankt',
 ];
