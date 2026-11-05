@@ -32,11 +32,14 @@ VERVANG = [
     ('topkwaliteit van Mitsubishi Electric', 'Mitsubishi Electric'),
     ('aan de Spekhoekweg', 'aan de Voorbeeldstraat'),
     ('Spekhoekweg 8', 'Voorbeeldstraat 1'), ('Spekhoekweg', 'Voorbeeldstraat'), ('8111 RR', '1234 AB'), ('8111 AB', '1234 AB'),
+    # Plaatsen rond de echte vestiging verraden de locatie: op de kaart fictieve namen.
+    ('>Raalte<', '>Plaats A<'), ('>Deventer<', '>Plaats B<'), ('>Holten<', '>Plaats C<'), ('>Lemelerveld<', '>Plaats D<'),
+    ('>Wijhe<', '>Plaats E<'), ('>Olst<', '>Plaats F<'), ('>Bathmen<', '>Plaats G<'), ('>Nijverdal<', '>Plaats H<'),
     ('Heeten', 'Voorbeeldstad'), ('Raalte', 'Voorbeeldgemeente'), ('Overijssel', 'Voorbeeldprovincie'),
     ('06 211 276 12', '06 12 34 56 78'), ('+31621127612', '+31612345678'), ('31621127612', '31612345678'),
 ]
 # Wat na afloop nergens meer in de uitvoer mag staan.
-VERBODEN = re.compile(r'[Ss]pecialist\W+(in\W+)?(<b>)?Mitsubishi|Mitsubishi Electric-specialist|Sjoerd|Moller|CoolFactory|Heeten|Spekhoek|8111|Raalte|thecoolfactory|211 ?276|0621127612|Josien|Eenkhoorn', re.I)
+VERBODEN = re.compile(r'\b(Deventer|Holten|Lemelerveld|Wijhe|Olst|Bathmen|Nijverdal|Salland|Hellendoorn)\b|[Ss]pecialist\W+(in\W+)?(<b>)?Mitsubishi|Mitsubishi Electric-specialist|Sjoerd|Moller|CoolFactory|Heeten|Spekhoek|8111|Raalte|thecoolfactory|211 ?276|0621127612|Josien|Eenkhoorn', re.I)
 TEKST = ('.astro', '.ts', '.json', '.md', '.yaml', '.txt', '.css', '.mjs')
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
          '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900'

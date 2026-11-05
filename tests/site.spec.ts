@@ -15,6 +15,8 @@ const paginas = [
   '/kennisbank/verwarmen-met-een-airco',
   '/kennisbank/geluid-buitenunit',
   '/kennisbank/onderhoud-airco-warmtepomp',
+  '/kennisbank/welke-airco-welke-ruimte',
+  '/kennisbank/verwarmen-bij-vorst',
   '/privacy',
   '/bedankt',
 ];

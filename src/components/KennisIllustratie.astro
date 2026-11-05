@@ -11,6 +11,8 @@ const labels: Record<Props['soort'], string> = {
   'hybride-vs-electric': 'Twee huizen naast elkaar: links een hybride warmtepomp met cv-ketel, rechts een all-electric warmtepomp met voorraadvat en zonder gas',
   'airco-verwarmen': 'Doorsnede van een muur: de buitenunit haalt warmte uit de buitenlucht, de binnenunit blaast warme lucht in één ruimte',
   'geluid-perceel': 'Bovenaanzicht van twee percelen: de buitenunit staat in de tuin, op de perceelgrens mag het geluid maximaal 40 dB zijn',
+  'warmtelast-ruimte': 'Doorsnede van een kamer onder het dak: zon door het raam, warmte van het dak, een persoon en een computer bepalen samen hoeveel vermogen de airco nodig heeft',
+  'werkbereik-vorst': 'Staafdiagram: Basis-lijn verwarmt tot −10 °C, Diamond-lijn tot −15 °C, RZ met Hyper Heating tot −30 °C buitentemperatuur',
   'onderhoud-taken': 'Wat je zelf doet en wat een vakman doet: filter schoonmaken, buitenunit vrijhouden, koudemiddelcircuit door een vakman',
 };
 ---
@@ -107,6 +109,54 @@ const labels: Record<Props['soort'], string> = {
         </>
       )
     }
+    {
+      soort === 'warmtelast-ruimte' && (
+        <>
+          <path class="grond" d="M20 230 H460" />
+          <path d="M40 90 L240 30 L440 90 M60 84 V230 H420 V84" />
+          <path class="dun" d="M76 92 L240 44 L404 92" />
+          <path class="warm" d="M200 60 v22 m-5 -6 l5 6 l5 -6 M260 60 v22 m-5 -6 l5 6 l5 -6 M310 66 v18 m-5 -6 l5 6 l5 -6" />
+          <text x="196" y="108">warm dak</text>
+          <rect class="koud" x="404" y="122" width="16" height="56" rx="2" />
+          <circle class="warm" cx="452" cy="58" r="12" />
+          <path class="warm dun" d="M452 38 v-8 M472 58 h-6 M438 44 l-5 -5 M466 44 l5 -5" />
+          <path class="stroom warm" d="M444 76 L398 136 M450 82 L404 160" />
+          <text x="420" y="24">zon</text>
+          <rect x="72" y="104" width="96" height="24" rx="6" />
+          <path class="dun" d="M80 114 H160" />
+          <text x="72" y="148">airco</text>
+          <circle cx="230" cy="168" r="9" />
+          <path d="M230 177 V206 M230 186 L218 198 M230 186 L242 198 M230 206 L221 228 M230 206 L239 228" />
+          <text x="204" y="252">mensen</text>
+          <path d="M300 200 H356 M306 200 V228 M350 200 V228" />
+          <rect x="314" y="178" width="26" height="18" rx="2" />
+          <text x="290" y="252">apparaten</text>
+        </>
+      )
+    }
+    {
+      soort === 'werkbereik-vorst' && (
+        <>
+          <path class="grens" d="M360 28 V200" />
+          <text x="440" y="44" text-anchor="end">Basis-lijn (HR)</text>
+          <rect class="balk" x="280" y="52" width="160" height="24" />
+          <text class="in-balk" x="288" y="69">tot −10 °C</text>
+          <text x="440" y="100" text-anchor="end">Diamond-lijn (LN)</text>
+          <rect class="balk" x="240" y="108" width="200" height="24" />
+          <text class="in-balk" x="248" y="125">tot −15 °C</text>
+          <text x="440" y="156" text-anchor="end">RZ met Hyper Heating</text>
+          <rect class="balk warm-balk" x="120" y="164" width="320" height="24" />
+          <text class="in-balk" x="128" y="181">tot −30 °C</text>
+          <path class="dun" d="M120 204 H440 M120 204 v6 M200 204 v6 M280 204 v6 M360 204 v6 M440 204 v6" />
+          <text x="120" y="228" text-anchor="middle">−30°</text>
+          <text x="200" y="228" text-anchor="middle">−20°</text>
+          <text x="280" y="228" text-anchor="middle">−10°</text>
+          <text x="360" y="228" text-anchor="middle">0°</text>
+          <text x="440" y="228" text-anchor="middle">+10°</text>
+          <text x="20" y="252">buitentemperatuur</text>
+        </>
+      )
+    }
   </svg>
   <figcaption>{bijschrift}</figcaption>
 </figure>
@@ -149,6 +199,15 @@ const labels: Record<Props['soort'], string> = {
   .stroom {
     stroke-dasharray: 6 8;
   }
+  .balk {
+    fill: rgb(127 180 234 / 0.22);
+    stroke: var(--blue-ice);
+    stroke-width: 1.5;
+  }
+  .warm-balk {
+    fill: rgb(255 122 47 / 0.22);
+    stroke: var(--orange-hot);
+  }
   .punt {
     fill: var(--orange-hot);
     stroke: none;
@@ -166,6 +225,10 @@ const labels: Record<Props['soort'], string> = {
     font: 700 17px var(--font-display);
     fill: var(--text-on-dark);
     letter-spacing: 0;
+  }
+  .in-balk {
+    stroke: none;
+    fill: var(--text-on-dark);
   }
   .warm-tekst {
     fill: var(--orange-hot);

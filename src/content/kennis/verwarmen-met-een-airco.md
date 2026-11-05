@@ -26,6 +26,8 @@ bronnen:
   - naam: Milieu Centraal – Welke warmtepompen zijn er?
     url: https://www.milieucentraal.nl/energie-besparen/duurzaam-verwarmen-en-koelen/welke-warmtepompen-zijn-er/
 verwant:
+  - verwarmen-bij-vorst
+  - welke-airco-welke-ruimte
   - hybride-of-all-electric
 ---
 

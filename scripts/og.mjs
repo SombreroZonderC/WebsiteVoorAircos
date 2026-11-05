@@ -20,6 +20,8 @@ const paginas = [
   { slug: 'kennisbank/verwarmen-met-een-airco', woord: 'Warmte?', kleur: 'koud', regel: 'Verwarmen met een airco' },
   { slug: 'kennisbank/geluid-buitenunit', woord: '40 dB.', kleur: 'koud', regel: 'Geluid van een buitenunit' },
   { slug: 'kennisbank/onderhoud-airco-warmtepomp', woord: 'Schoon.', kleur: 'koud', regel: 'Onderhoud airco en warmtepomp' },
+  { slug: 'kennisbank/welke-airco-welke-ruimte', woord: 'Op maat.', kleur: 'koud', regel: 'Welke airco past bij welke ruimte?' },
+  { slug: 'kennisbank/verwarmen-bij-vorst', woord: '−15°?', kleur: 'warm', regel: 'Verwarmen met een airco bij vorst' },
   { slug: 'contact', woord: `Bel ${bedrijf.eigenaar.split(' ')[0]}.`, kleur: 'wit', regel: 'Contact & offerte' },
 ];
 
