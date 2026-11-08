@@ -8,7 +8,7 @@ const { Content } = await render(pagina);
 const p = pagina.data;
 ---
 
-<Base title={p.seoTitel} description={p.seoOmschrijving}>
+<Base title={p.seoTitel} description={p.seoOmschrijving} kruimelNaam="Privacyverklaring">
   <div class="paar">
     <ReuzenHero woord="Privacy." kleur="koud" verhouding="smal" eyebrow={p.eyebrow} titel={p.titel} tekst={p.intro} />
     <section class="vlak licht paneel sectie">

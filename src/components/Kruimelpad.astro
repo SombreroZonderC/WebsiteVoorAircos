@@ -1,0 +1,71 @@
+---
+// Zichtbaar kruimelpad bovenin de (donkere) hero van subpagina's. De structured data
+// (BreadcrumbList) wordt in Base.astro uit dezelfde niveaus gemaakt.
+interface Props {
+  niveaus: { name: string; item: string }[];
+}
+const { niveaus } = Astro.props;
+const pad = (url: string) => new URL(url).pathname.replace(/\/$/, '') || '/';
+---
+
+<nav class="kruimelpad" aria-label="Kruimelpad">
+  <ol>
+    {
+      niveaus.map((n, i) => (
+        <li>
+          {i < niveaus.length - 1 ? <a href={pad(n.item)}>{n.name}</a> : <span aria-current="page">{n.name}</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .kruimelpad {
+    position: absolute;
+    z-index: 5;
+    top: calc(var(--kop-h) + 4px);
+    left: clamp(16px, 4vw, 56px);
+    right: clamp(16px, 4vw, 56px);
+    font: 500 0.8rem var(--font-mono);
+    letter-spacing: 0.04em;
+    color: var(--muted-on-dark);
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    flex: none;
+    white-space: nowrap;
+  }
+  li:last-child {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  li + li::before {
+    content: '›';
+    margin: 0 10px;
+    opacity: 0.6;
+  }
+  a {
+    color: var(--text-on-dark);
+    text-decoration: none;
+    padding-block: 6px;
+  }
+  a:hover,
+  a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

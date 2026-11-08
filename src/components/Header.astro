@@ -18,6 +18,9 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
 
     <nav class="nav" id="hoofdmenu" aria-label="Hoofdmenu">
       <ul>
+        <li class="alleen-mobiel">
+          <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
+        </li>
         {
           nav.map((item) => (
             <li>
@@ -134,7 +137,8 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
     color: #fff;
     background: rgb(255 255 255 / 0.08);
   }
-  .menu-cta {
+  .menu-cta,
+  .alleen-mobiel {
     display: none;
   }
   .right {
@@ -229,6 +233,9 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
     .nav a[aria-current='page'] {
       background: none;
       color: var(--orange-hot);
+    }
+    .alleen-mobiel {
+      display: block;
     }
     .menu-cta {
       display: flex;

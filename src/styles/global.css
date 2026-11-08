@@ -40,7 +40,9 @@
   --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  --header-h: 76px;
+  --kop-h: 76px;
+  --header-h: var(--kop-h);
+  --kruimel-h: 32px;
 
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
@@ -433,4 +435,13 @@ html.diepte .plak .vlak-inhoud {
   transform: scale(calc(1 - var(--q) * 0.03));
   opacity: calc(1 - var(--q) * 0.5);
   transform-origin: 50% 40%;
+}
+
+/* Ankerpunt voor het kruimelpad bovenin de hero. Staat er een kruimelpad, dan schuift
+   alle hero-inhoud (die met --header-h rekent) een regel omlaag. */
+main {
+  position: relative;
+}
+main:has(> .kruimelpad) {
+  --header-h: calc(var(--kop-h) + var(--kruimel-h));
 }

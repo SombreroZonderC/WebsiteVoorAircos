@@ -37,7 +37,7 @@ const schema = [
 ];
 ---
 
-<Base title={a.seoTitel} description={a.seoOmschrijving} schema={schema} ogType="article">
+<Base title={a.seoTitel} description={a.seoOmschrijving} schema={schema} ogType="article" kruimelNaam={a.titel}>
   <div class="paar">
     <ReuzenHero woord={a.woord} kleur={a.accent} verhouding="smal" eyebrow={a.eyebrow} titel={a.titel} tekst={a.intro} />
     <article class="vlak licht paneel sectie">

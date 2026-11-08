@@ -158,3 +158,14 @@ test('onderhoud: storingswijzer wisselt klacht en stuurt die door naar contact',
   await expect(page).toHaveURL(/klacht=lekt-water/);
   await expect(page.locator('#bericht')).toHaveValue(/druppelt water/);
 });
+
+test('navigatie: kruimelpad op subpagina’s, Home in mobiel menu en footer', async ({ page }) => {
+  await page.goto('/kennisbank/hybride-of-all-electric');
+  const kruimel = page.getByRole('navigation', { name: 'Kruimelpad' });
+  await expect(kruimel.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+  await expect(kruimel.getByRole('link', { name: 'Kennisbank' })).toHaveAttribute('href', '/kennisbank');
+  await expect(kruimel.locator('[aria-current="page"]')).toHaveText('Hybride of all-electric warmtepomp?');
+  await expect(page.locator('footer').getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+  await page.goto('/');
+  await expect(page.getByRole('navigation', { name: 'Kruimelpad' })).toHaveCount(0);
+});
