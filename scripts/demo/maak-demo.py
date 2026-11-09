@@ -60,6 +60,8 @@ LABEL_CSS = '''
   border-radius: 999px; background: #ff2bd6; color: #fff; font: 700 12px/1.2 var(--font-body); pointer-events: none;
 }
 @media (max-width: 720px) { .demo-label { top: 84px; bottom: auto; } }
+/* Niet over het opengeklapte menu heen */
+body:has(.header.open) .demo-label { display: none; }
 '''
 
 
