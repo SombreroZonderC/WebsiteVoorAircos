@@ -445,3 +445,8 @@ main {
 main:has(> .kruimelpad) {
   --header-h: calc(var(--kop-h) + var(--kruimel-h));
 }
+
+/* Onderbalk (Bellen/Offerte) weg zolang het mobiele menu openstaat */
+html.menu-open .mobile-cta {
+  display: none;
+}

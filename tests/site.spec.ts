@@ -169,3 +169,14 @@ test('navigatie: kruimelpad op subpagina’s, Home in mobiel menu en footer', as
   await page.goto('/');
   await expect(page.getByRole('navigation', { name: 'Kruimelpad' })).toHaveCount(0);
 });
+
+test('mobiel menu: actieve pagina gemarkeerd en offerteknop altijd in beeld', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'alleen mobiel');
+  await page.setViewportSize({ width: 390, height: 560 });
+  await page.goto('/warmtepompen');
+  await page.getByRole('button', { name: 'Menu openen' }).click();
+  const menu = page.locator('#hoofdmenu');
+  await expect(menu.locator('a[aria-current="page"]')).toHaveText(/Warmtepompen/);
+  await expect(menu.getByRole('link', { name: 'Offerte aanvragen' })).toBeInViewport();
+  await expect(page.locator('.mobile-cta')).toBeHidden();
+});

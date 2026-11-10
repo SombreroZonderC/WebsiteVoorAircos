@@ -7,6 +7,11 @@ interface Props {
   vast?: boolean;
 }
 const { vast = false } = Astro.props;
+// Diensten krijgen in het menu een eigen gloed en icoon
+const accent: Record<string, { soort: 'koud' | 'warm'; icoon: 'snow' | 'flame' }> = {
+  '/airconditioning': { soort: 'koud', icoon: 'snow' },
+  '/warmtepompen': { soort: 'warm', icoon: 'flame' },
+};
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
 ---
 
@@ -18,14 +23,19 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
 
     <nav class="nav" id="hoofdmenu" aria-label="Hoofdmenu">
       <ul>
-        <li class="alleen-mobiel">
+        <li class="alleen-mobiel" style="--i: 0">
           <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
         </li>
         {
-          nav.map((item) => (
-            <li>
-              <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
-                {item.label}
+          nav.map((item, i) => (
+            <li style={`--i: ${i + 1}`}>
+              <a
+                href={item.href}
+                class:list={[accent[item.href]?.soort]}
+                aria-current={path === item.href || path.startsWith(`${item.href}/`) ? 'page' : undefined}
+              >
+                {accent[item.href] && <Icon name={accent[item.href].icoon} size={22} class="menu-ico" />}
+                <span>{item.label}</span>
               </a>
             </li>
           ))
@@ -40,8 +50,7 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
         <span>{bedrijf.telefoon.weergave}</span>
       </a>
       <a class="btn small" href="/contact">Offerte</a>
-      <button class="toggle" aria-expanded="false" aria-controls="hoofdmenu" data-toggle>
-        <span class="sr-only">Menu</span>
+      <button class="toggle" aria-expanded="false" aria-controls="hoofdmenu" aria-label="Menu openen" data-toggle>
         <Icon name="menu" class="i-open" />
         <Icon name="close" class="i-close" />
       </button>
@@ -58,19 +67,44 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 
+  const menu = header.querySelector<HTMLElement>('#hoofdmenu')!;
+  const breed = matchMedia('(min-width: 1181px)');
   const zetMenu = (open: boolean) => {
     toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
     header.classList.toggle('open', open);
+    document.documentElement.classList.toggle('menu-open', open);
     document.body.style.overflow = open ? 'hidden' : '';
+    // Focus naar het eerste menu-item, zodat toetsenbord en schermlezer meteen in het menu zitten
+    if (open) requestAnimationFrame(() => menu.querySelector<HTMLAnchorElement>('a')?.focus({ preventScroll: true }));
   };
   toggle.addEventListener('click', () => zetMenu(toggle.getAttribute('aria-expanded') !== 'true'));
-  header.querySelectorAll('.nav a').forEach((a) => a.addEventListener('click', () => zetMenu(false)));
+  menu.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      // Tik op de pagina waar je al bent: alleen het menu sluiten en naar boven
+      if (a.getAttribute('aria-current') === 'page' && a.pathname === location.pathname) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      zetMenu(false);
+    }),
+  );
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && header.classList.contains('open')) {
+    if (!header.classList.contains('open')) return;
+    if (e.key === 'Escape') {
       zetMenu(false);
       toggle.focus();
     }
+    // Tab blijft binnen menu en sluitknop
+    if (e.key === 'Tab') {
+      const focusbaar = [...menu.querySelectorAll<HTMLElement>('a'), toggle];
+      const eerste = focusbaar[0];
+      const laatste = focusbaar[focusbaar.length - 1];
+      if (e.shiftKey && document.activeElement === eerste) (e.preventDefault(), laatste.focus());
+      else if (!e.shiftKey && document.activeElement === laatste) (e.preventDefault(), eerste.focus());
+    }
   });
+  breed.addEventListener('change', (e) => e.matches && zetMenu(false));
 </script>
 
 <style>
@@ -137,6 +171,40 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
     color: #fff;
     background: rgb(255 255 255 / 0.08);
   }
+  .nav :global(.menu-ico) {
+    display: none;
+  }
+  /* Actieve pagina op desktop: oranje streep onder het woord */
+  .nav a:not(.btn) {
+    position: relative;
+  }
+  .nav a[aria-current='page']:not(.btn)::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 3px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--orange-hot);
+  }
+  /* Diensten springen er licht uit: blauwe en oranje gloed */
+  .nav a.koud:not(.btn) {
+    color: #cfe4f8;
+    text-shadow: 0 0 18px rgb(127 180 234 / 0.55);
+  }
+  .nav a.warm:not(.btn) {
+    color: #ffd9c2;
+    text-shadow: 0 0 18px rgb(255 122 47 / 0.5);
+  }
+  .nav a.koud:not(.btn):hover,
+  .nav a.koud[aria-current='page'] {
+    background: rgb(127 180 234 / 0.14);
+  }
+  .nav a.warm:not(.btn):hover,
+  .nav a.warm[aria-current='page'] {
+    background: rgb(255 122 47 / 0.14);
+  }
   .menu-cta,
   .alleen-mobiel {
     display: none;
@@ -196,9 +264,10 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
       position: fixed;
       inset: var(--header-h) 0 0;
       margin: 0;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
       background: var(--ink);
-      padding: 16px clamp(16px, 4vw, 40px) 32px;
+      padding: 8px clamp(16px, 4vw, 40px) calc(16px + env(safe-area-inset-bottom));
       opacity: 0;
       visibility: hidden;
       transform: translateY(-8px);
@@ -215,23 +284,85 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
       visibility: visible;
       transform: none;
     }
+    /* De lijst scrollt, de offerteknop blijft altijd onderin zichtbaar */
     .nav ul {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
       flex-direction: column;
       gap: 0;
     }
+    .nav li {
+      opacity: 1;
+    }
     .nav a:not(.btn) {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       font-family: var(--font-display);
       font-stretch: 110%;
       font-weight: 700;
-      font-size: 1.5rem;
-      color: #fff;
-      padding: 14px 0;
+      font-size: clamp(1.2rem, 5.4vw, 1.5rem);
+      color: rgb(232 240 243 / 0.78);
+      padding: 13px 14px;
       border-radius: 0;
       border-bottom: 1px solid var(--line-dark);
+      -webkit-tap-highlight-color: transparent;
+      transition:
+        color 0.2s,
+        background 0.2s,
+        transform 0.12s;
     }
-    .nav a:not(.btn):hover,
+    .nav a:not(.btn):hover {
+      background: rgb(255 255 255 / 0.04);
+      color: #fff;
+    }
+    /* Direct gevoel bij aantikken */
+    .nav a:not(.btn):active {
+      background: rgb(255 255 255 / 0.08);
+      transform: scale(0.985);
+    }
+    /* Actieve pagina: oranje balk en oranje tekst */
     .nav a[aria-current='page'] {
-      background: none;
+      color: var(--orange-hot);
+      background: linear-gradient(90deg, rgb(255 122 47 / 0.12), transparent 70%);
+    }
+    .nav a[aria-current='page']:not(.btn)::after {
+      content: none;
+    }
+    .nav a[aria-current='page']::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      bottom: 10px;
+      width: 3px;
+      background: var(--orange-hot);
+    }
+    .nav :global(.menu-ico) {
+      display: block;
+      flex: none;
+    }
+    .nav a.koud:not(.btn) {
+      color: #cfe4f8;
+      text-shadow: 0 0 22px rgb(127 180 234 / 0.6);
+      background: radial-gradient(70% 140% at 0% 50%, rgb(127 180 234 / 0.14), transparent 70%);
+    }
+    .nav a.koud :global(.menu-ico) {
+      color: var(--blue-ice);
+    }
+    .nav a.warm:not(.btn) {
+      color: #ffd9c2;
+      text-shadow: 0 0 22px rgb(255 122 47 / 0.55);
+      background: radial-gradient(70% 140% at 0% 50%, rgb(255 122 47 / 0.14), transparent 70%);
+    }
+    .nav a.warm :global(.menu-ico) {
+      color: var(--orange-hot);
+    }
+    .nav a.koud[aria-current='page'],
+    .nav a.warm[aria-current='page'] {
       color: var(--orange-hot);
     }
     .alleen-mobiel {
@@ -239,8 +370,22 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
     }
     .menu-cta {
       display: flex;
+      flex: none;
       width: 100%;
-      margin-top: 28px;
+      margin-top: 16px;
+    }
+    /* Items komen kort na elkaar binnen bij openen */
+    @media (prefers-reduced-motion: no-preference) {
+      .open .nav li {
+        animation: menu-in 0.35s var(--ease) both;
+        animation-delay: calc(var(--i, 0) * 30ms);
+      }
+      @keyframes menu-in {
+        from {
+          opacity: 0;
+          transform: translateX(-10px);
+        }
+      }
     }
   }
   @media (max-width: 640px) {
