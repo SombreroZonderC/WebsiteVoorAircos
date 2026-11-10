@@ -72,7 +72,7 @@ const artikelen = (await getCollection('kennis')).sort((a, b) => a.data.volgorde
     transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
   }
   .artikel.warm {
-    border-top-color: var(--orange-text);
+    border-top-color: #f2b48e;
   }
   .artikel:hover {
     transform: translateY(-3px);
@@ -100,7 +100,7 @@ const artikelen = (await getCollection('kennis')).sort((a, b) => a.data.volgorde
     color: var(--blue-text);
   }
   .warm .lees {
-    color: var(--orange-text);
+    color: var(--ink);
   }
   @media (max-width: 860px) {
     .lijst {

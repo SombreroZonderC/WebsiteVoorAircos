@@ -22,7 +22,7 @@ import { nav } from '../lib/bedrijf';
         <p class="eyebrow">Populaire pagina's</p>
         <ul class="links">
           {
-            nav.map((n) => (
+            [...nav, { href: '/kennisbank', label: 'Kennisbank' }].map((n) => (
               <li>
                 <a href={n.href}>
                   {n.label} <Icon name="arrow" size={18} />

@@ -65,7 +65,7 @@ export const onderhoud = z
           z.object({
             id: z.string().regex(/^[a-z-]+$/),
             label: z.string(),
-            icoon: z.enum(['snow', 'flame', 'shield', 'volume', 'leaf', 'clock', 'wrench']),
+            icoon: z.enum(['snow', 'flame', 'shield', 'volume', 'leaf', 'clock', 'wrench', 'druppel', 'wind', 'waarschuwing']),
             zelf: z.array(z.string()).min(1),
             normaal: z.string(),
             bellen: z.string(),

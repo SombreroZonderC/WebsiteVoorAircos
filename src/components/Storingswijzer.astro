@@ -55,7 +55,7 @@ const eerste = w.klachten[0].id;
               <p>{k.bellen}</p>
             </div>
             <div class="acties">
-              <a class="btn" href={telLink}>
+              <a class="btn ghost" href={telLink}>
                 <Icon name="phone" /> {bedrijf.telefoon.weergave}
               </a>
               <a class="btn ghost" href={`/contact?onderwerp=onderhoud&klacht=${k.id}`}>
@@ -153,16 +153,15 @@ const eerste = w.klachten[0].id;
     background: var(--ink);
     color: var(--text-on-dark);
     border-color: var(--ink);
-    border-left-color: var(--orange-hot);
+    border-left-color: var(--blue-ice);
   }
   .knoppen button[aria-checked='true'] :global(svg) {
-    color: var(--orange-hot);
+    color: var(--blue-ice);
   }
   .antwoord {
     padding: clamp(24px, 3.5vw, 44px);
     background: var(--ink);
     color: var(--text-on-dark);
-    background-image: radial-gradient(60% 70% at 100% 0%, rgb(66 125 184 / 0.28), transparent 70%);
   }
   .antwoord h3 {
     font-size: clamp(1.4rem, 2.4vw, 1.9rem);

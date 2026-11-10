@@ -1,5 +1,5 @@
 ---
-import { onderhoud } from '../lib/inhoud';
+import { onderhoud, warmtepomp } from '../lib/inhoud';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
@@ -43,7 +43,8 @@ const tegels = [
 
     <section class="vlak licht rechts" aria-labelledby="form-titel" data-geen-mobiele-cta>
       <!-- Netlify Forms: werkt automatisch zodra de site op Netlify staat. Lokaal wordt verzenden nagebootst. -->
-      <form class="form" name="offerte" method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-field" data-form data-klachten={JSON.stringify(Object.fromEntries(onderhoud.wijzer.klachten.map((k) => [k.id, k.label])))}>
+      <form class="form" name="offerte" method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-field" data-form data-klachten={JSON.stringify(Object.fromEntries(onderhoud.wijzer.klachten.map((k) => [k.id, k.label])))}
+        data-adviezen={JSON.stringify({ hybride: warmtepomp.check.uitkomsten.hybride.richting, electric: warmtepomp.check.uitkomsten.electric.richting, beide: warmtepomp.check.uitkomsten.beide.richting })}>
         <input type="hidden" name="form-name" value="offerte" />
         <p class="sr-only">
           <label>Niet invullen: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
@@ -89,11 +90,11 @@ const tegels = [
           <div class="field duo">
             <div>
               <label for="postcode">Postcode <span class="opt">optioneel</span></label>
-              <input id="postcode" name="postcode" type="text" autocomplete="postal-code" placeholder="8111 AB" />
+              <input id="postcode" name="postcode" type="text" autocomplete="postal-code" placeholder="1234 AB" />
             </div>
             <div>
               <label for="plaats">Plaats <span class="opt">optioneel</span></label>
-              <input id="plaats" name="plaats" type="text" autocomplete="address-level2" placeholder="Heeten" />
+              <input id="plaats" name="plaats" type="text" autocomplete="address-level2" />
             </div>
           </div>
         </div>
@@ -156,6 +157,13 @@ const tegels = [
   const klachten = JSON.parse(form.dataset.klachten ?? '{}') as Record<string, string>;
   if (klacht && klachten[klacht] && !bericht.value) {
     bericht.value = `Storing: ${klachten[klacht].toLowerCase()}. `;
+  }
+
+  // Uitkomst van de geschiktheidscheck (warmtepompen) voorinvullen
+  const advies = params.get('advies');
+  const adviezen = JSON.parse(form.dataset.adviezen ?? '{}') as Record<string, string>;
+  if (advies && adviezen[advies] && !bericht.value) {
+    bericht.value = `Uit de geschiktheidscheck: ${adviezen[advies]} Ik hoor graag of dat klopt voor mijn huis.`;
   }
 
   // Lokaal is er geen formulierverwerking: verzending nabootsen.
@@ -344,6 +352,10 @@ const tegels = [
   .duo {
     grid-template-columns: 0.8fr 1.2fr;
     gap: 10px;
+    align-items: end;
+  }
+  .row {
+    align-items: end;
   }
   .duo > div {
     display: grid;

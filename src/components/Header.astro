@@ -8,7 +8,7 @@ interface Props {
 }
 const { vast = false } = Astro.props;
 // Elk menu-item een icoon (mobiel menu); de twee diensten krijgen daarnaast een eigen gloed
-type IcoonNaam = 'home' | 'snow' | 'flame' | 'wrench' | 'user' | 'pin' | 'vraag' | 'chat';
+type IcoonNaam = 'home' | 'snow' | 'flame' | 'wrench' | 'user' | 'pin' | 'vraag' | 'chat' | 'boek';
 const iconen: Record<string, IcoonNaam> = {
   '/': 'home',
   '/airconditioning': 'snow',
@@ -51,6 +51,12 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
             </li>
           ))
         }
+        <li class="alleen-mobiel" style={`--i: ${nav.length + 1}`}>
+          <a href="/kennisbank" aria-current={path === '/kennisbank' || path.startsWith('/kennisbank/') ? 'page' : undefined}>
+            <Icon name="boek" size={22} class="menu-ico" />
+            <span>Kennisbank</span>
+          </a>
+        </li>
       </ul>
       <a class="btn menu-cta" href="/contact">Offerte aanvragen</a>
     </nav>
@@ -421,6 +427,14 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
   @media (max-width: 400px) {
     .phone span {
       display: none;
+    }
+  }
+  /* Belknop in de header: minimaal 44×44 tikvlak op mobiel */
+  @media (max-width: 1180px) {
+    .phone {
+      min-width: 44px;
+      min-height: 44px;
+      justify-content: center;
     }
   }
 </style>

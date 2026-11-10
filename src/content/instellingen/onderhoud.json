@@ -53,7 +53,7 @@
       {
         "id": "lekt-water",
         "label": "Er druppelt water uit de binnenunit",
-        "icoon": "shield",
+        "icoon": "druppel",
         "zelf": [
           "Zet de airco uit om waterschade te voorkomen.",
           "Maak de filters schoon: een vol filter kan ijsvorming en daarna druppen veroorzaken.",
@@ -76,7 +76,7 @@
       {
         "id": "geur",
         "label": "Het ruikt muf",
-        "icoon": "leaf",
+        "icoon": "wind",
         "zelf": [
           "Maak de filters schoon en laat ze goed drogen voor je ze terugplaatst.",
           "Laat na het koelen de ventilator nog even draaien, zodat de binnenunit kan opdrogen."
@@ -98,7 +98,7 @@
       {
         "id": "foutcode",
         "label": "Knipperend lampje of foutcode",
-        "icoon": "clock",
+        "icoon": "waarschuwing",
         "zelf": [
           "Noteer de code of het knipperpatroon, of maak er een foto van.",
           "Zet het systeem uit en na een paar minuten weer aan."

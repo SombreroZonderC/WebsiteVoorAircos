@@ -40,7 +40,7 @@ const vragen = [
     <span class="muted" data-toelichting>{c.uitkomsten.hybride.toelichting}</span>
   </output>
   <div class="actions">
-    <a class="btn" href="/contact?onderwerp=warmtepompen">{c.cta} <Icon name="arrow" /></a>
+    <a class="btn" href="/contact?onderwerp=warmtepompen&advies=hybride" data-check-cta>{c.cta} <Icon name="arrow" /></a>
   </div>
   <p class="klein muted">{c.disclaimer}</p>
 </form>
@@ -54,9 +54,12 @@ const vragen = [
       const d = new FormData(form);
       const isolatie = d.get('isolatie');
       const afgifte = d.get('afgifte');
-      let keuze = u.hybride;
-      if (isolatie === 'goed' && afgifte !== 'radiatoren') keuze = u.electric;
-      else if (isolatie === 'goed') keuze = u.beide;
+      let sleutel = 'hybride';
+      if (isolatie === 'goed' && afgifte !== 'radiatoren') sleutel = 'electric';
+      else if (isolatie === 'goed') sleutel = 'beide';
+      const keuze = u[sleutel];
+      // Uitkomst gaat mee naar het contactformulier
+      form.querySelector<HTMLAnchorElement>('[data-check-cta]')!.href = `/contact?onderwerp=warmtepompen&advies=${sleutel}`;
       richting.textContent = keuze.richting;
       toelichting.textContent = d.get('buiten') === 'weet' ? `${keuze.toelichting} ${u.buitenOnbekend}` : keuze.toelichting;
     };

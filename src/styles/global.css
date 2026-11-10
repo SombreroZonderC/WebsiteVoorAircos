@@ -453,3 +453,35 @@ main:has(> .kruimelpad) {
 html.menu-open .mobile-cta {
   display: none;
 }
+
+/* Tabellen in lopende tekst (kennisbank) */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0 28px;
+  font-size: 0.95rem;
+}
+.prose th,
+.prose td {
+  text-align: left;
+  vertical-align: top;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.prose th {
+  background: var(--paper-2);
+  font-weight: 700;
+  border-bottom: 2px solid var(--ink);
+}
+.prose tbody tr:nth-child(even) {
+  background: rgb(12 29 35 / 0.03);
+}
+@media (max-width: 560px) {
+  .prose table {
+    font-size: 0.88rem;
+  }
+  .prose th,
+  .prose td {
+    padding: 8px 8px;
+  }
+}

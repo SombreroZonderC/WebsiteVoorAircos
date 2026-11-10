@@ -181,3 +181,13 @@ test('mobiel menu: actieve pagina gemarkeerd en offerteknop altijd in beeld', as
   await expect(menu.getByRole('link', { name: 'Offerte aanvragen' })).toBeInViewport();
   await expect(page.locator('.mobile-cta')).toBeHidden();
 });
+
+test('warmtepomp: uitkomst van de check gaat mee naar het contactformulier', async ({ page }) => {
+  await page.goto('/warmtepompen');
+  const check = page.locator('[data-check]');
+  await check.locator('input[name="isolatie"][value="goed"]').check({ force: true });
+  await check.locator('input[name="afgifte"][value="vloer"]').check({ force: true });
+  await expect(page.locator('[data-check-cta]')).toHaveAttribute('href', /advies=electric/);
+  await page.locator('[data-check-cta]').click();
+  await expect(page.locator('#bericht')).toHaveValue(/Uit de geschiktheidscheck/);
+});

@@ -22,7 +22,8 @@ interface Props {
 }
 
 const { title, description, noindex = false, schema = [], kopVast = false, ogType = 'website', kruimelNaam } = Astro.props;
-const fullTitle = title.includes(bedrijf.naam) ? title : `${title} | ${bedrijf.naam}`;
+// Merknaam alleen achter korte titels, zodat Google niets afkapt (richtlijn ~60 tekens)
+const fullTitle = title.includes(bedrijf.naam) || title.length > 42 ? title : `${title} | ${bedrijf.naam}`;
 const pad = Astro.url.pathname.replace(/\.html$/, '').replace(/\/(index)?$/, '');
 const canonical = new URL(pad || '/', bedrijf.url).href;
 
