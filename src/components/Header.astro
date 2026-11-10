@@ -7,11 +7,19 @@ interface Props {
   vast?: boolean;
 }
 const { vast = false } = Astro.props;
-// Diensten krijgen in het menu een eigen gloed en icoon
-const accent: Record<string, { soort: 'koud' | 'warm'; icoon: 'snow' | 'flame' }> = {
-  '/airconditioning': { soort: 'koud', icoon: 'snow' },
-  '/warmtepompen': { soort: 'warm', icoon: 'flame' },
+// Elk menu-item een icoon (mobiel menu); de twee diensten krijgen daarnaast een eigen gloed
+type IcoonNaam = 'home' | 'snow' | 'flame' | 'wrench' | 'user' | 'pin' | 'vraag' | 'chat';
+const iconen: Record<string, IcoonNaam> = {
+  '/': 'home',
+  '/airconditioning': 'snow',
+  '/warmtepompen': 'flame',
+  '/onderhoud': 'wrench',
+  '/over-sjoerd': 'user',
+  '/werkgebied': 'pin',
+  '/veelgestelde-vragen': 'vraag',
+  '/contact': 'chat',
 };
+const accent: Record<string, 'koud' | 'warm'> = { '/airconditioning': 'koud', '/warmtepompen': 'warm' };
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
 ---
 
@@ -24,17 +32,20 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
     <nav class="nav" id="hoofdmenu" aria-label="Hoofdmenu">
       <ul>
         <li class="alleen-mobiel" style="--i: 0">
-          <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
+          <a href="/" aria-current={path === '/' ? 'page' : undefined}>
+            <Icon name="home" size={22} class="menu-ico" />
+            <span>Home</span>
+          </a>
         </li>
         {
           nav.map((item, i) => (
             <li style={`--i: ${i + 1}`}>
               <a
                 href={item.href}
-                class:list={[accent[item.href]?.soort]}
+                class:list={[accent[item.href]]}
                 aria-current={path === item.href || path.startsWith(`${item.href}/`) ? 'page' : undefined}
               >
-                {accent[item.href] && <Icon name={accent[item.href].icoon} size={22} class="menu-ico" />}
+                {iconen[item.href] && <Icon name={iconen[item.href]} size={22} class="menu-ico" />}
                 <span>{item.label}</span>
               </a>
             </li>
@@ -344,6 +355,11 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
     .nav :global(.menu-ico) {
       display: block;
       flex: none;
+      color: rgb(232 240 243 / 0.5);
+      transition: color 0.2s;
+    }
+    .nav a[aria-current='page'] :global(.menu-ico) {
+      color: var(--orange-hot);
     }
     .nav a.koud:not(.btn) {
       color: #cfe4f8;
