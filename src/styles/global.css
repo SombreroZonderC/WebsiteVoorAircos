@@ -155,23 +155,26 @@ p {
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--orange-text);
+  /* Labels zijn neutraal; alleen het streepje draagt de accentkleur (kleurdiscipline) */
+  color: var(--muted);
   margin-bottom: 14px;
+  --streep: var(--orange-text);
 }
 :is(.dark, .donker) .eyebrow {
-  color: var(--orange-hot);
+  color: var(--muted-on-dark);
+  --streep: var(--orange-hot);
 }
 .eyebrow::before {
   content: '';
   width: 22px;
   height: 2px;
-  background: currentColor;
+  background: var(--streep);
 }
 .eyebrow.cold {
-  color: var(--blue-text);
+  --streep: var(--blue-text);
 }
 :is(.dark, .donker) .eyebrow.cold {
-  color: var(--blue-ice);
+  --streep: var(--blue-ice);
 }
 
 .text-cold {
@@ -279,7 +282,7 @@ p {
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
       center / 13px no-repeat,
-    var(--orange);
+    var(--ink);
 }
 
 /* Temperatuurgloed: koud links, warm rechts, zoals in het logo */

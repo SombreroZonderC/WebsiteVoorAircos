@@ -145,8 +145,7 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
   }
   .hero .glow {
     background:
-      radial-gradient(45% 55% at 20% 30%, rgb(66 125 184 / 0.35), transparent 70%),
-      radial-gradient(40% 50% at 70% 90%, rgb(234 91 12 / 0.3), transparent 70%);
+      radial-gradient(45% 45% at 30% 85%, rgb(66 125 184 / 0.32), transparent 70%);
   }
   .inhoud {
     position: relative;
@@ -165,24 +164,28 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
     max-width: 52ch;
     margin: 0 0 28px;
   }
+  /* Het zoekveld is het focal point van deze hero: licht vlak met een koele spotlight */
   .zoek {
     display: flex;
     align-items: center;
     gap: 12px;
     max-width: 620px;
-    padding: 6px 8px 6px 20px;
+    min-height: 60px;
+    padding: 6px 8px 6px 22px;
     border-radius: 999px;
-    border: 1px solid var(--line-dark);
-    background: rgb(255 255 255 / 0.06);
+    border: 1px solid transparent;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 0 0 8px rgb(127 180 234 / 0.12), 0 24px 60px -20px rgb(66 125 184 / 0.7);
   }
   .zoek:focus-within {
-    border-color: var(--orange-hot);
+    box-shadow: 0 0 0 4px var(--blue-ice), 0 24px 60px -20px rgb(66 125 184 / 0.7);
   }
   .zoek svg {
     width: 22px;
     height: 22px;
     fill: none;
-    stroke: var(--muted-on-dark);
+    stroke: var(--muted);
     stroke-width: 2;
     stroke-linecap: round;
     flex: none;
@@ -192,14 +195,14 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
     min-width: 0;
     border: 0;
     background: none;
-    color: var(--text-on-dark);
+    color: var(--ink);
     font: inherit;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     padding: 12px 0;
     outline: none;
   }
   .zoek input::placeholder {
-    color: var(--muted-on-dark);
+    color: var(--muted);
   }
   .sectie {
     padding-block: clamp(64px, 8vw, 110px);

@@ -67,7 +67,7 @@ const schema = [
           </div>
         </div>
         <aside class="zij">
-          <div class="card">
+          <div class="card" data-geen-mobiele-cta>
             <h2 class="h3">Twijfel je?</h2>
             <p>Een vakman ziet in één bezoek wat in jouw huis past.</p>
             <a class="btn" href={`/contact?onderwerp=${a.accent === 'warm' ? 'warmtepompen' : 'airconditioning'}`}>Vraag advies aan huis <Icon name="arrow" /></a>
@@ -122,7 +122,7 @@ const schema = [
     border-left: 4px solid var(--blue-text);
   }
   .kort.warm {
-    border-left-color: var(--orange-text);
+    border-left-color: var(--ink);
   }
   .kort h2,
   .bronnen h2 {

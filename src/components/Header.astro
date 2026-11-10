@@ -201,12 +201,10 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
   }
   /* Diensten springen er licht uit: blauwe en oranje gloed */
   .nav a.koud:not(.btn) {
-    color: #cfe4f8;
-    text-shadow: 0 0 18px rgb(127 180 234 / 0.55);
+    text-shadow: 0 0 16px rgb(127 180 234 / 0.45);
   }
   .nav a.warm:not(.btn) {
-    color: #ffd9c2;
-    text-shadow: 0 0 18px rgb(255 122 47 / 0.5);
+    text-shadow: 0 0 16px rgb(255 122 47 / 0.4);
   }
   .nav a.koud:not(.btn):hover,
   .nav a.koud[aria-current='page'] {
@@ -237,11 +235,19 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
   .phone :global(svg) {
     color: var(--orange-hot);
   }
+  /* Altijd beschikbaar, maar nooit concurrent van de knop op de pagina: omlijnd */
   .btn.small {
+    --bg: transparent;
+    --fg: var(--text-on-dark);
     min-height: 42px;
     padding: 0 18px;
     font-size: 0.92rem;
     box-shadow: none;
+    border-color: rgb(255 255 255 / 0.32);
+  }
+  .btn.small:hover {
+    background: rgb(255 255 255 / 0.1);
+    border-color: rgb(255 255 255 / 0.6);
   }
   .toggle {
     display: none;

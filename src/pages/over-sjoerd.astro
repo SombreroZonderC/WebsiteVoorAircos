@@ -114,8 +114,7 @@ const schema = [
   }
   .hero .glow {
     background:
-      radial-gradient(45% 55% at 70% 40%, rgb(234 91 12 / 0.35), transparent 70%),
-      radial-gradient(40% 50% at 15% 80%, rgb(66 125 184 / 0.3), transparent 70%);
+      radial-gradient(40% 55% at 22% 50%, rgb(66 125 184 / 0.28), transparent 70%);
   }
   .portret,
   .info {
@@ -132,7 +131,7 @@ const schema = [
     font-size: clamp(6rem, 18vw, 16rem);
     line-height: 0.82;
     letter-spacing: -0.07em;
-    background: linear-gradient(100deg, #fff1e6 10%, #ff7a2f 45%, #c2410c 90%);
+    background: linear-gradient(100deg, #fff4ec 10%, #ffbe96 50%, #ec8452 92%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -156,7 +155,7 @@ const schema = [
     padding: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-top: 2px solid var(--orange-text);
+    border-top: 2px solid var(--ink);
   }
   .tijdlijn li {
     position: relative;
@@ -171,11 +170,11 @@ const schema = [
     height: 14px;
     border-radius: 50%;
     background: var(--paper);
-    border: 2px solid var(--orange-text);
+    border: 2px solid var(--ink);
   }
   .jaar {
     font-family: var(--font-mono);
-    color: var(--orange-text);
+    color: var(--muted);
     font-size: 0.9rem;
   }
   .tijdlijn h3 {
@@ -247,7 +246,7 @@ const schema = [
     .tijdlijn {
       grid-template-columns: minmax(0, 1fr);
       border-top: 0;
-      border-left: 2px solid var(--orange-text);
+      border-left: 2px solid var(--ink);
       padding-left: 20px;
     }
     .tijdlijn li {

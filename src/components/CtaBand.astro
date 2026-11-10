@@ -12,12 +12,12 @@ const { titel = home.cta.titel, tekst = home.cta.tekst } = Astro.props;
 <section class="finale dark" aria-label="Contact" data-geen-mobiele-cta>
   <p class="pre">{titel}</p>
   <a class="giant" href={telLink}>Bel Sjoerd <span aria-hidden="true">→</span></a>
+  <a class="nummer" href={telLink}><Icon name="phone" size={20} /> {bedrijf.telefoon.weergave}</a>
   <p class="tekst">{tekst}</p>
   <div class="actions">
-    <a class="btn" href="/contact">Offerte aanvragen <Icon name="arrow" /></a>
-    <a class="btn ghost" href={mailLink}><Icon name="mail" /> {bedrijf.email}</a>
+    <a class="btn ghost" href="/contact">Offerte aanvragen <Icon name="arrow" /></a>
+    <a class="mail" href={mailLink}><Icon name="mail" size={18} /> {bedrijf.email}</a>
   </div>
-  <a class="nummer" href={telLink}>{bedrijf.telefoon.weergave}</a>
 </section>
 
 <style>
@@ -28,9 +28,9 @@ const { titel = home.cta.titel, tekst = home.cta.tekst } = Astro.props;
     justify-items: center;
     text-align: center;
     padding: clamp(96px, 13vw, 170px) 16px;
+    /* Eén warme spotlight achter "Bel Sjoerd": dat is hier het enige focal point */
     background:
-      radial-gradient(40% 60% at 35% 100%, rgb(66 125 184 / 0.3), transparent 70%),
-      radial-gradient(40% 60% at 65% 100%, rgb(234 91 12 / 0.3), transparent 70%),
+      radial-gradient(38% 34% at 50% 36%, rgb(234 91 12 / 0.24), transparent 72%),
       var(--ink);
     border-top: 1px solid var(--line-dark);
   }
@@ -66,15 +66,32 @@ const { titel = home.cta.titel, tekst = home.cta.tekst } = Astro.props;
   }
   .actions {
     justify-content: center;
+    align-items: center;
+    gap: 20px 28px;
   }
   .nummer {
-    margin-top: 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
     font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
-    letter-spacing: -0.02em;
-    color: var(--text-on-dark);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 2vw, 1.5rem);
+    letter-spacing: -0.01em;
+    color: var(--muted-on-dark);
     text-decoration: none;
-    user-select: all;
+  }
+  .nummer :global(svg) {
+    color: var(--orange-hot);
+  }
+  .mail {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted-on-dark);
+    text-underline-offset: 4px;
+  }
+  .mail:hover {
+    color: var(--text-on-dark);
   }
 </style>

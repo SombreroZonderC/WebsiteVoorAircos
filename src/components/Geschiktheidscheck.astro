@@ -118,8 +118,8 @@ const vragen = [
       color 0.2s;
   }
   .keuzes input:checked + span {
-    background: var(--orange-text);
-    border-color: var(--orange-text);
+    background: var(--ink);
+    border-color: var(--ink);
     color: #fff;
   }
   .keuzes input:focus-visible + span {
@@ -132,11 +132,17 @@ const vragen = [
     margin: 14px 0 18px;
     padding: 20px 22px;
     border-radius: var(--radius-lg);
-    background: var(--paper-2);
-    border: 1.5px solid var(--orange-text);
+    background: var(--ink);
+    color: var(--text-on-dark);
+    border: 0;
+    border-left: 4px solid var(--orange-hot);
   }
   .uitkomst .eyebrow {
     margin: 0;
+    color: var(--muted-on-dark);
+  }
+  .uitkomst .muted {
+    color: var(--muted-on-dark);
   }
   .uitkomst b {
     font-family: var(--font-display);

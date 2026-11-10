@@ -52,29 +52,38 @@ const maanden = [
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    height: 72px;
+    height: 56px;
     padding-bottom: 6px;
     border-radius: 8px;
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--text);
-    background: #e3e8e6;
+    color: var(--muted);
+    background: transparent;
+    box-shadow: inset 0 -2px 0 #d5dbd9;
   }
+  /* Rustiger: alleen de piekmaanden krijgen echte kleur, de rest blijft lijn of zachte tint */
   .koel0 {
-    background: #3a74b0;
+    background: #2a64a3;
     color: #fff;
+    box-shadow: none;
   }
   .koel1 {
-    background: #8fc1f0;
+    background: #b9d6f3;
+    color: var(--text);
+    box-shadow: none;
   }
   .koel2 {
-    background: #cfe3f7;
+    background: transparent;
+    box-shadow: inset 0 -3px 0 #8fc1f0;
   }
   .warm1 {
-    background: #ff9a5a;
+    background: #f7d9c6;
+    color: var(--text);
+    box-shadow: none;
   }
   .warm2 {
-    background: #ffcaa3;
+    background: transparent;
+    box-shadow: inset 0 -3px 0 #f2b48e;
   }
   figcaption {
     display: flex;
@@ -96,10 +105,10 @@ const maanden = [
     border-radius: 4px;
   }
   .leg.koel::before {
-    background: #3a74b0;
+    background: #2a64a3;
   }
   .leg.warm::before {
-    background: #ff9a5a;
+    background: #f7d9c6;
   }
   @media (max-width: 560px) {
     ol {

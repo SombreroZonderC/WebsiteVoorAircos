@@ -42,6 +42,19 @@ Vastgesteld na vijf prototyperondes, elk beoordeeld door de initiatiefnemer en e
 - Geen stockfoto's op de live site. Placeholders (lijntekeningen) tot Sjoerd foto's levert.
 - **Navigatie**: één header voor de hele site (transparant boven de hero, compact en vast na het scrollen, hamburgermenu onder 1180px), doorklik-links per sectie, footer met alle pagina's, vaste belknop op mobiel (verborgen als er al een grote belknop in beeld is).
 
+## Kleurdiscipline (focal points)
+
+Uit de focal-point-review (squint test per scherm):
+
+1. Eén oranje knop per scherm; de headerknop is omlijnd en telt niet mee.
+2. Labels boven koppen zijn neutraal grijs; alleen het streepje draagt de accentkleur.
+3. Maximaal één gloed per scherm, als spotlight achter het focal point.
+4. Decoratie (stapnummers, vinkjes, plusjes, tijdlijn) in inkt of blauw, niet oranje.
+5. Gekozen opties (chips, schakelaars) in inkt; uitzondering: de koelen/verwarmen-keuze op de homepage (merkelement).
+6. Warme reuzenwoorden lopen naar perzik, zodat ze niet concurreren met de oranje knop.
+7. De mobiele belbalk verdwijnt als er al een knop of belactie in beeld is.
+8. Menu: lichte gloed bij Airconditioning en Warmtepompen blijft (keuze opdrachtgever).
+
 ## Pagina's
 
 | Pagina | Route | Zoekintentie |
