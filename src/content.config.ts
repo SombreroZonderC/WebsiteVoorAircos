@@ -57,7 +57,7 @@ const paginas = defineCollection({
 });
 
 // Tekeningen voor kennisbankartikelen (src/components/KennisIllustratie.astro).
-export const illustratieSoorten = ['hybride-vs-electric', 'airco-verwarmen', 'geluid-perceel', 'onderhoud-taken', 'warmtelast-ruimte', 'werkbereik-vorst'] as const;
+export const illustratieSoorten = ['hybride-vs-electric', 'airco-verwarmen', 'geluid-perceel', 'onderhoud-taken', 'warmtelast-ruimte', 'werkbereik-vorst', 'koudemiddel-gwp'] as const;
 export type IllustratieSoort = (typeof illustratieSoorten)[number];
 
 // Kennisbank: algemene vakinformatie met bronnen, geen beloftes namens het bedrijf.

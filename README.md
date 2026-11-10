@@ -63,6 +63,8 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
   - werkgebied: gestileerde kaart met afstandsringen
   - vragen: zoekveld en onderwerptegels
   - contact: gesplitst scherm met keuzetegels (voorgevuld vanaf de dienstpagina's)
+- Navigatie: één header; op mobiel een hamburgermenu met icoon per item, Home bovenaan, actieve pagina oranje gemarkeerd, offerteknop altijd onderin beeld en een lichte gloed bij Airconditioning en Warmtepompen. Subpagina's hebben een zichtbaar kruimelpad (`Kruimelpad.astro`), uit dezelfde bron als de structured data.
+- Kleurdiscipline (focal points): één oranje knop per scherm, neutrale labels, één gloed per scherm, decoratie in inkt. Zie `docs/plan.md` → Kleurdiscipline.
 - Alle interactieve elementen werken zonder JavaScript (je ziet dan de standaardstand of een gewone lijst).
 - Achtergrond en beslissingen: [`docs/plan.md`](docs/plan.md). Ontwerprondes: `docs/prototype-ronde-*/` (screenshots).
 
@@ -82,7 +84,7 @@ Het contactformulier (`src/pages/contact.astro`) gebruikt Netlify Forms. Lokaal 
 ## Kwaliteitscontrole
 
 - `tests/site.spec.ts`: elke pagina laadt zonder fouten, heeft één h1, geen ernstige toegankelijkheidsfouten (axe) en geen horizontale scroll; plus de interactieve onderdelen, het mobiele menu, 'minder beweging' en geldige JSON-LD. Desktop en mobiel.
-- `.github/workflows/ci.yml`: bij elke push `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, `lighthouserc.json`).
+- `.github/workflows/ci.yml`: bij elke push `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, mediaan van 3 metingen per pagina, `lighthouserc.json`).
 
 ## Demo
 

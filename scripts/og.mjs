@@ -22,6 +22,7 @@ const paginas = [
   { slug: 'kennisbank/onderhoud-airco-warmtepomp', woord: 'Schoon.', kleur: 'koud', regel: 'Onderhoud airco en warmtepomp' },
   { slug: 'kennisbank/welke-airco-welke-ruimte', woord: 'Op maat.', kleur: 'koud', regel: 'Welke airco past bij welke ruimte?' },
   { slug: 'kennisbank/verwarmen-bij-vorst', woord: '−15°?', kleur: 'warm', regel: 'Verwarmen met een airco bij vorst' },
+  { slug: 'kennisbank/r32-of-r290', woord: 'R290?', kleur: 'koud', regel: 'R32 of R290: welk koudemiddel?' },
   { slug: 'contact', woord: `Bel ${bedrijf.eigenaar.split(' ')[0]}.`, kleur: 'wit', regel: 'Contact & offerte' },
 ];
 

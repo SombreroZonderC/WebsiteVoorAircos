@@ -17,6 +17,7 @@ const paginas = [
   '/kennisbank/onderhoud-airco-warmtepomp',
   '/kennisbank/welke-airco-welke-ruimte',
   '/kennisbank/verwarmen-bij-vorst',
+  '/kennisbank/r32-of-r290',
   '/privacy',
   '/bedankt',
 ];
