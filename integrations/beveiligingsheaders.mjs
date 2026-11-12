@@ -69,8 +69,13 @@ export default function beveiligingsheaders() {
           '/*',
           ...Object.entries(headers(hashes)).map(([naam, waarde]) => `  ${naam}: ${waarde}`),
           '',
+          // Bestanden met een hash in de naam veranderen nooit
           '/_astro/*',
           '  Cache-Control: public, max-age=31536000, immutable',
+          '',
+          // Logo's, pictogrammen en deelafbeeldingen hebben een vaste naam: een dag bewaren, daarna navragen
+          '/images/*',
+          '  Cache-Control: public, max-age=86400',
           '',
         ];
         await writeFile(join(dist, '_headers'), regels.join('\n'));

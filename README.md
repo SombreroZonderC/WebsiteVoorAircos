@@ -70,9 +70,9 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
   - contact: gesplitst scherm met keuzetegels (voorgevuld vanaf de dienstpagina's)
 - Navigatie: één header; op mobiel een hamburgermenu met icoon per item, Home bovenaan, actieve pagina oranje gemarkeerd, offerteknop altijd onderin beeld en een lichte gloed bij Airconditioning en Warmtepompen. Subpagina's hebben een zichtbaar kruimelpad (`Kruimelpad.astro`), uit dezelfde bron als de structured data.
 - Kleurdiscipline (focal points): één oranje knop per scherm, neutrale labels, één gloed per scherm, decoratie in inkt. Zie `docs/plan.md` → Kleurdiscipline.
-- Alle interactieve elementen werken zonder JavaScript: keuzeknoppen verdwijnen en alle uitkomsten staan onder elkaar (`data-zonder-js-tonen`).
+- Alle interactieve elementen werken zonder JavaScript. Op de dienstpagina's verdwijnen de keuzeknoppen en staan alle uitkomsten onder elkaar (`data-zonder-js-tonen`). Op de homepage wisselt de keuze koelen/verwarmen dan met gewone keuzerondjes en CSS (`home/Keuze.astro`, regels in `global.css`). Het enige wat zonder script ontbreekt is de bewegende thermometer bij verwarmen.
 - Keuzeknoppen delen één toegankelijk patroon (`src/scripts/radiogroep.ts`: pijltjes, Home/End, één knop in de tabvolgorde).
-- Afdrukken: eigen printstijl (zwart op wit, antwoorden uitgeklapt, bronlinks voluit).
+- Afdrukken: eigen printstijl (zwart op wit, antwoorden uitgeklapt, bronlinks voluit, geen menu's; de contactpagina past op één vel).
 - Kennisbankartikelen met drie of meer tussenkoppen krijgen automatisch een inhoudsopgave.
 - Achtergrond en beslissingen: [`docs/plan.md`](docs/plan.md). Ontwerprondes: `docs/prototype-ronde-*/` (screenshots).
 
@@ -96,6 +96,7 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
 - Een half ingevuld formulier (met onderwerp) blijft bewaard in het tabblad (`sessionStorage`) en wordt gewist bij versturen. Er gaat niets naar een server voordat de bezoeker verstuurt; de privacyverklaring noemt dit.
 - Foutmeldingen hebben een vaste plek: er verspringt niets als een melding verschijnt (anders gaat de klik op versturen verloren).
 - Voorinvullen vanaf de dienstpagina's (`?onderwerp=`, `?ruimtes=`, `?klacht=`, `?advies=`) werkt alleen met vaste waarden; vrije tekst uit een link wordt nooit overgenomen.
+- E-mailadressen moeten een punt in het domein hebben (`a@b` laat een browser zelf door).
 - Spam: verborgen lokveld (Netlify honeypot), het spamfilter van Netlify Forms en maximale lengtes. Bewust geen captcha: die laadt scripts van een ander domein en hindert bezoekers. Komt er toch veel spam binnen, dan is een captcha van Netlify de volgende stap (de Content-Security-Policy moet dan worden verruimd).
 - Een naam of bericht van alleen spaties telt als leeg; telefoonnummer en postcode worden op vorm gecontroleerd. Zonder JavaScript controleert de browser zelf (`required`, `pattern`), behalve een bericht van alleen spaties.
 - De echte verzending via Netlify kan pas op een deploy getest worden: zie de controlelijst in [`docs/domein-en-hosting.md`](docs/domein-en-hosting.md).
@@ -117,7 +118,7 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
   - `interacties.spec.ts`, `navigatie.spec.ts`, `formulier.spec.ts`, `kennisbank.spec.ts`: de interactieve onderdelen, menu's, het formulier, inhoudsopgave, feed en afdrukken
   - `zonder-js.spec.ts`: alle inhoud is bereikbaar zonder JavaScript
   - `beveiliging.spec.ts`: headers, CSP, geen externe verzoeken, geen vrije tekst uit links
-  - `visueel.spec.ts`: zeven pagina's als volledig beeld vergeleken met vastgelegde beelden (desktop en mobiel, maximaal 0,5% afwijking). Na een bewuste ontwerpwijziging: `npm run test:beelden`, de nieuwe beelden nakijken en committen. De beelden zijn gemaakt met de Chromium van Playwright 1.63 op Linux; een andere browserversie kan nieuwe beelden vragen.
+  - `visueel.spec.ts`: elke vindbare pagina als volledig beeld vergeleken met een vastgelegd beeld (desktop en mobiel, maximaal 0,5% afwijking), plus drie scrollstanden van de homepage mét het diepte-effect. Na een bewuste ontwerpwijziging: `npm run test:beelden`, de nieuwe beelden nakijken en committen. De beelden (37 stuks, ruim 20 MB) zijn gemaakt met de Chromium van Playwright 1.63 op Linux; een andere browserversie kan nieuwe beelden vragen.
   - `vindbaarheid.spec.ts`: unieke titels en omschrijvingen, canonical, deelafbeelding, alle interne links en ankers, `llms.txt`
 - `.github/workflows/ci.yml`: bij elke push `npm audit`, `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, mediaan van 3 metingen per pagina, `lighthouserc.json`).
 

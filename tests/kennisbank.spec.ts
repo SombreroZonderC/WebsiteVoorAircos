@@ -60,3 +60,38 @@ test('afdrukken: menu en knoppen weg, antwoorden uitgeklapt', async ({ page }) =
   await expect(page.locator('.prose')).toBeVisible();
   await expect(page.locator('a.btn').first()).toBeHidden();
 });
+
+test('afdrukken van contact: gegevens op één vel, geen leeg vlak waar het formulier stond', async ({ page }) => {
+  await page.setViewportSize({ width: 794, height: 1123 }); // A4 op 96 dpi
+  await page.goto('/contact');
+  await page.emulateMedia({ media: 'print' });
+  await expect(page.getByRole('link', { name: /06 211/ }).first()).toBeVisible();
+  await expect(page.locator('form[name="offerte"]')).toBeHidden();
+  const tot = await page.locator('footer').evaluate((el) => el.getBoundingClientRect().bottom + scrollY);
+  expect(tot, 'alles past op één A4').toBeLessThanOrEqual(1123);
+});
+
+test('afdrukken van de homepage en een dienstpagina: geen pagina-hoge lege vlakken', async ({ page }) => {
+  await page.setViewportSize({ width: 794, height: 1123 });
+  for (const pad of ['/', '/warmtepompen']) {
+    await page.goto(pad);
+    await page.emulateMedia({ media: 'print' });
+    // Grootste verticale gat tussen opeenvolgende zichtbare tekstblokken
+    const gat = await page.evaluate(() => {
+      const ys = [...document.querySelectorAll('h1, h2, h3, p, li, figure, svg, img')]
+        .map((el) => el.getBoundingClientRect())
+        .filter((r) => r.height > 0 && r.width > 0)
+        .map((r) => [r.top + scrollY, r.bottom + scrollY])
+        .sort((a, b) => a[0] - b[0]);
+      let eind = 0;
+      let grootste = 0;
+      for (const [top, bottom] of ys) {
+        grootste = Math.max(grootste, top - eind);
+        eind = Math.max(eind, bottom);
+      }
+      return Math.round(grootste);
+    });
+    expect(gat, `${pad}: grootste lege ruimte in px`).toBeLessThan(400);
+    await page.emulateMedia({ media: 'screen' });
+  }
+});

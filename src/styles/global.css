@@ -334,6 +334,25 @@ p {
 .no-js [data-zonder-js-tonen][hidden] {
   display: block !important;
 }
+/* Homepage zonder JavaScript: de keuze koelen/verwarmen werkt met keuzerondjes (home/Keuze.astro).
+   Staat "verwarmen" aan, dan wisselen alle onderdelen met data-m, net als het script dat doet. */
+.no-js .home:has(input[name='kant'][value='warm']:checked) {
+  --accent: var(--orange-text);
+  --accent-d: var(--orange-hot);
+}
+.no-js .home:has(input[name='kant'][value='warm']:checked) [data-m='koel'] {
+  display: none !important;
+}
+.no-js .home:has(input[name='kant'][value='warm']:checked) [data-m='warm'][hidden] {
+  display: revert !important;
+}
+.no-js .home:has(input[name='kant'][value='warm']:checked) a.btn[data-m='warm'][hidden] {
+  display: inline-flex !important;
+}
+/* De buitenthermometer kan zonder script niet naar −4° */
+.no-js .home:has(input[name='kant'][value='warm']:checked) .thermos {
+  display: none;
+}
 .no-js [data-reveal] {
   opacity: 1;
   transform: none;

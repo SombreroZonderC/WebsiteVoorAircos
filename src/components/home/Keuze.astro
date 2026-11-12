@@ -34,6 +34,18 @@ const k = home.keuze;
       ))
     }
   </div>
+  {/* Zonder JavaScript: dezelfde keuze met echte keuzerondjes; de wissel gaat dan via CSS (global.css) */}
+  <fieldset class="seg zonder-js-keuze">
+    <legend class="sr-only">{k.vraag}</legend>
+    {
+      kanten.map((m) => (
+        <label>
+          <input type="radio" name="kant" value={m} checked={m === 'koel'} />
+          <Icon name={m === 'koel' ? 'snow' : 'flame'} size={18} /> {k[m].label}
+        </label>
+      ))
+    }
+  </fieldset>
   <h2 class="hk" id="keuze-titel">
     {
       kanten.map((m) => (
@@ -130,5 +142,38 @@ const k = home.keuze;
   .keuze .lead {
     margin: 0 auto 26px;
     max-width: 46ch;
+  }
+  .zonder-js-keuze {
+    display: none;
+    min-inline-size: 0;
+  }
+  :global(.no-js) .zonder-js-keuze {
+    display: inline-grid;
+  }
+  .zonder-js-keuze label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--muted);
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .zonder-js-keuze input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .zonder-js-keuze label:has(:checked) {
+    background: var(--accent);
+    color: #fff;
+  }
+  .zonder-js-keuze label:has(:focus-visible) {
+    outline: 3px solid var(--orange);
+    outline-offset: 3px;
   }
 </style>

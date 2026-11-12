@@ -63,7 +63,7 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
     </div>
     <div class="field">
       <label for="email">E-mailadres <span class="req" aria-hidden="true">*</span></label>
-      <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" aria-describedby="email-fout" />
+      <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" pattern="[^@\s]+@[^@\s]+\.[^@\s]{2,}" aria-describedby="email-fout" />
       <p class="fout" id="email-fout"></p>
     </div>
   </div>
@@ -219,7 +219,14 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
     color: var(--muted);
     margin-top: -8px;
   }
+  .anders {
+    min-height: 32px;
+    cursor: pointer;
+  }
   .anders input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
     accent-color: var(--orange-btn);
   }
   /* Label, veld en foutmelding staan per rij op dezelfde hoogte, ook als een label afbreekt of er
@@ -294,6 +301,10 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
     font-size: 0.88rem;
     color: var(--muted);
     margin: 0;
+  }
+  .note a {
+    display: inline-block;
+    padding-block: 4px;
   }
   .verstuur {
     display: flex;

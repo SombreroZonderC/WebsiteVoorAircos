@@ -14,6 +14,10 @@ test('formulier: lege verzending toont meldingen per veld en zet de focus op het
 
 test('formulier: melding verdwijnt zodra het veld klopt; postcode en e-mail worden gecontroleerd', async ({ page }) => {
   await page.goto('/contact');
+  // Een adres zonder punt in het domein (a@b) laat de browser zelf door; het formulier niet
+  await page.locator('#email').fill('a@b');
+  await page.locator('#naam').focus();
+  await expect(page.locator('#email-fout')).toContainText('klopt niet');
   await page.locator('#email').fill('geen-adres');
   await page.locator('#postcode').fill('12');
   await page.locator('#plaats').focus();
@@ -103,7 +107,7 @@ test('formulier: elk pattern is een geldige expressie voor de browser en doet wa
       }
     }),
   );
-  expect(patronen.map((p) => p.naam).sort()).toEqual(['naam', 'postcode', 'telefoon']);
+  expect(patronen.map((p) => p.naam).sort()).toEqual(['email', 'naam', 'postcode', 'telefoon']);
   expect(patronen.filter((p) => p.fout)).toEqual([]);
 });
 

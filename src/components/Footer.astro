@@ -130,12 +130,25 @@ const year = new Date().getFullYear();
     color: var(--muted-on-dark);
   }
   .bottom a {
+    /* Tikvlak minimaal 24 px hoog */
+    display: inline-block;
+    padding-block: 6px;
     color: var(--muted-on-dark);
   }
   @media (max-width: 820px) {
     .top {
       grid-template-columns: 1fr;
       gap: 36px;
+    }
+  }
+  /* Op papier heeft een menu geen zin; de regel met bedrijfsnaam en KvK blijft staan */
+  @media print {
+    .top {
+      display: none;
+    }
+    .bottom {
+      border-top: 0;
+      margin-top: 0;
     }
   }
 </style>

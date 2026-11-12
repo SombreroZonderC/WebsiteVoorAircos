@@ -78,6 +78,8 @@ import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
     margin: 0 0 12px;
   }
   .gegevens a {
+    display: inline-block;
+    padding-block: 4px;
     color: var(--text-on-dark);
   }
   .hierna {
@@ -123,6 +125,20 @@ import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
     }
     .rechts {
       padding-top: clamp(40px, 8vw, 64px);
+    }
+  }
+  /* Op papier: alleen de contactgegevens, zonder leeg vlak waar het formulier stond */
+  @media print {
+    .split {
+      display: block;
+      min-height: 0;
+    }
+    .links-inhoud {
+      position: static;
+      padding-bottom: 0;
+    }
+    .rechts {
+      display: none;
     }
   }
 </style>

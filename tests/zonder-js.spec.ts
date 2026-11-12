@@ -38,3 +38,21 @@ test('zonder JavaScript: het formulier controleert zelf en verstuurt naar de bed
   expect(await page.locator('#naam').evaluate((el: HTMLInputElement) => el.validity.patternMismatch)).toBe(true);
   expect(await page.locator('#telefoon').evaluate((el: HTMLInputElement) => el.validity.patternMismatch)).toBe(true);
 });
+
+test('zonder JavaScript: de homepage wisselt tussen koelen en verwarmen met keuzerondjes', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('Binnen koel.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Binnen warm.', { exact: true })).toBeHidden();
+  // De knoppen die een script nodig hebben zijn weg; de keuzerondjes staan ervoor in de plaats
+  await expect(page.locator('[data-zet]').first()).toBeHidden();
+  await page.getByRole('radio', { name: 'Verwarmen' }).check({ force: true });
+  await expect(page.getByText('Binnen warm.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Binnen koel.', { exact: true })).toBeHidden();
+  // Alle onderdelen wisselen mee: kop, knop naar het formulier, punten, tekening
+  const zichtbaar = await page.locator('[data-m]').evaluateAll((els) =>
+    els.map((el) => ({ kant: (el as HTMLElement).dataset.m, aan: getComputedStyle(el).display !== 'none' })),
+  );
+  expect(zichtbaar.filter((z) => z.kant === 'warm').every((z) => z.aan)).toBe(true);
+  expect(zichtbaar.filter((z) => z.kant === 'koel').some((z) => z.aan)).toBe(false);
+  await expect(page.locator('a.btn[data-m="warm"]')).toHaveAttribute('href', /onderwerp=warmtepompen/);
+});
