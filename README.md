@@ -93,7 +93,8 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
 Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactformulier.ts`) gebruikt Netlify Forms. Lokaal wordt verzenden nagebootst (je gaat direct naar `/bedankt`).
 
 - Eigen foutmeldingen per veld (gekoppeld met `aria-describedby`), focus op het eerste foute veld, één keer versturen.
-- Een half ingevuld formulier blijft bewaard in het tabblad (`sessionStorage`) en wordt gewist bij versturen. Er gaat niets naar een server voordat de bezoeker verstuurt.
+- Een half ingevuld formulier (met onderwerp) blijft bewaard in het tabblad (`sessionStorage`) en wordt gewist bij versturen. Er gaat niets naar een server voordat de bezoeker verstuurt; de privacyverklaring noemt dit.
+- Foutmeldingen hebben een vaste plek: er verspringt niets als een melding verschijnt (anders gaat de klik op versturen verloren).
 - Voorinvullen vanaf de dienstpagina's (`?onderwerp=`, `?ruimtes=`, `?klacht=`, `?advies=`) werkt alleen met vaste waarden; vrije tekst uit een link wordt nooit overgenomen.
 - Spam: verborgen lokveld (Netlify honeypot), het spamfilter van Netlify Forms en maximale lengtes. Bewust geen captcha: die laadt scripts van een ander domein en hindert bezoekers. Komt er toch veel spam binnen, dan is een captcha van Netlify de volgende stap (de Content-Security-Policy moet dan worden verruimd).
 - Een naam of bericht van alleen spaties telt als leeg; telefoonnummer en postcode worden op vorm gecontroleerd. Zonder JavaScript controleert de browser zelf (`required`, `pattern`), behalve een bericht van alleen spaties.
@@ -101,12 +102,12 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
 
 ## Beveiliging
 
-- `integrations/beveiligingsheaders.mjs` schrijft bij elke build `dist/_headers`: Content-Security-Policy (scripts alleen van de eigen site of met een hash die bij de build hoort; geen `unsafe-inline` of `unsafe-eval` voor scripts), HSTS, `X-Frame-Options: DENY`, `Permissions-Policy`, `Referrer-Policy`, `Cross-Origin-Opener-Policy`.
+- `integrations/beveiligingsheaders.mjs` schrijft bij elke build `dist/_headers`: Content-Security-Policy (scripts alleen van de eigen site of met een hash die bij de build hoort; geen `unsafe-inline` of `unsafe-eval` voor scripts), HSTS (bewust zonder subdomeinen, zie de controlelijst), `X-Frame-Options: DENY`, `Permissions-Policy`, `Referrer-Policy`, `Cross-Origin-Opener-Policy`.
 - De testserver (`scripts/serve-dist.mjs`) stuurt dezelfde headers mee. Tests en Lighthouse draaien dus onder de policy van de live site; een script dat de policy blokkeert, laat de tests falen.
 - De site laadt niets van andere domeinen (lettertypen staan lokaal), heeft geen cookies en geen trackers. Een test bewaakt dat.
 - Structured data wordt zo geschreven dat tekst uit de inhoud het script-blok niet kan afsluiten (`jsonLd` in `src/lib/seo.ts`).
 - `/.well-known/security.txt` vertelt waar een beveiligingsprobleem gemeld kan worden; de einddatum schuift bij elke build op.
-- CI heeft alleen leesrechten en draait `npm audit`.
+- CI heeft alleen leesrechten, de acties staan vast op een commit, en `npm audit` draait als aparte taak die de rest niet blokkeert.
 - Netlify mag de bestanden niet nabewerken, anders veranderen de scripts en kloppen de hashes niet meer. `netlify.toml` zet nabewerking uit (`skip_processing`); zet daarnaast geen snippet-injectie aan. Op deploy-previews blokkeert de policy de Netlify-werkbalk; dat is onschuldig.
 
 ## Kwaliteitscontrole

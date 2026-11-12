@@ -45,6 +45,8 @@ Vastgesteld via een openbare DNS-opvraging (oktober 2026):
    - [ ] `…/contact/` (met slash aan het eind) komt uit op de contactpagina. Zo niet: zet *Pretty URLs* aan of voeg een redirect toe.
    - [ ] Geen fouten in de browserconsole over *Content Security Policy* op een paar pagina's. Zo wel: staat *Asset optimization* of *Snippet injection* aan? Beide moeten uit (`netlify.toml` zet nabewerking al uit).
    - [ ] `…/onbekend-adres` toont de 404-pagina.
+   - [ ] Netlify herkent het formulier ook nu nabewerking uit staat (`skip_processing`). Zo niet: alleen de formulierdetectie aanzetten, de rest uit laten.
+   - [ ] Na livegang: hebben álle subdomeinen (mail, webmail) geldig HTTPS? Pas dan mag `includeSubDomains` bij HSTS in `integrations/beveiligingsheaders.mjs`. Nu staat het bewust uit.
 5. **Formulier**: Netlify → *Forms* → formulier "offerte" verschijnt na de eerste inzending. Zet een e-mailmelding naar info@thecoolfactory.nl aan. Controleer de actuele limieten van het gratis plan.
 
 ### 4. Domein koppelen

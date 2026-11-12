@@ -8,7 +8,7 @@ import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
 <Base
   kopVast
   title="Contact en offerte aanvragen"
-  description="Vraag een vrijblijvende offerte aan voor een airco of warmtepomp, of neem contact op met Sjoerd van The CoolFactory in Heeten. Bel 06 211 276 12."
+  description={`Vraag een vrijblijvende offerte aan voor een airco of warmtepomp, of neem contact op met ${bedrijf.eigenaar.split(' ')[0]} van ${bedrijf.naam} in ${bedrijf.adres.plaats}. Bel ${bedrijf.telefoon.weergave}.`}
 >
   <div class="split">
     <section class="vlak donker links" aria-labelledby="contact-titel" data-geen-mobiele-cta>

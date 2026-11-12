@@ -34,6 +34,8 @@ Ik verkoop je gegevens nooit. Gegevens worden alleen gedeeld met partijen die no
 
 Deze website gebruikt geen tracking- of advertentiecookies.
 
+Het contactformulier onthoudt wat je hebt ingevuld zolang het tabblad open is, zodat je tekst niet weg is als je per ongeluk wegklikt. Dat blijft in je eigen browser en wordt gewist zodra je het formulier verstuurt of het tabblad sluit. Er gaat niets naar mij voordat je op versturen klikt.
+
 ## Jouw rechten
 
 Je hebt het recht om je gegevens in te zien, te laten corrigeren of te laten verwijderen. Stuur hiervoor een e-mail naar info@thecoolfactory.nl. Ben je niet tevreden over hoe ik met je gegevens omga, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens.

@@ -7,7 +7,7 @@ test('beveiligingsheaders staan op pagina’s en bestanden', async ({ request })
   for (const pad of ['/', '/contact', '/bestaat-niet', '/favicon.svg']) {
     const h = (await request.get(pad)).headers();
     expect(h['content-security-policy'], pad).toContain("default-src 'self'");
-    expect(h['strict-transport-security'], pad).toMatch(/max-age=\d{8}/);
+    expect(h['strict-transport-security'], pad).toMatch(/^max-age=\d{8}$/);
     expect(h['x-content-type-options'], pad).toBe('nosniff');
     expect(h['x-frame-options'], pad).toBe('DENY');
     expect(h['referrer-policy'], pad).toBe('strict-origin-when-cross-origin');
@@ -62,7 +62,7 @@ test('contactformulier neemt geen vrije tekst uit de link over', async ({ page }
   await expect(page.locator('input[name="onderwerp"]:checked')).toHaveCount(0);
 });
 
-test('externe links geven de bezoeker niet prijs en openen in hetzelfde tabblad', async ({ page }) => {
+test('externe links die een nieuw tabblad openen hebben rel=noopener', async ({ page }) => {
   for (const pad of paginas) {
     await page.goto(pad);
     const fout = await page.locator('a[href^="http"]').evaluateAll((as) =>

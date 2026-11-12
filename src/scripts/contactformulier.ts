@@ -1,11 +1,12 @@
 // Contactformulier: voorinvullen vanaf de dienstpagina's, eigen foutmeldingen per veld en één keer versturen.
 // Zonder JavaScript werkt het formulier gewoon, met de standaardcontrole van de browser.
 
-/** Meldingen per veld; de sleutel is het name-attribuut. */
+/** Meldingen per veld; de sleutel is het name-attribuut. Kort houden: een melding moet op één regel passen,
+ * ook op een smalle telefoon, want de plek ervoor heeft een vaste hoogte (zie ContactFormulier.astro). */
 const meldingen: Record<string, { leeg?: string; ongeldig?: string }> = {
   naam: { leeg: 'Vul je naam in.', ongeldig: 'Vul je naam in.' },
-  email: { leeg: 'Vul je e-mailadres in.', ongeldig: 'Dit e-mailadres klopt niet. Bijvoorbeeld: naam@voorbeeld.nl.' },
-  telefoon: { ongeldig: 'Dit telefoonnummer klopt niet. Bijvoorbeeld: 06 12345678.' },
+  email: { leeg: 'Vul je e-mailadres in.', ongeldig: 'Dit e-mailadres klopt niet.' },
+  telefoon: { ongeldig: 'Dit telefoonnummer klopt niet.' },
   postcode: { ongeldig: 'Een postcode ziet eruit als 1234 AB.' },
   bericht: { leeg: 'Vertel kort waarmee ik je kan helpen.' },
 };
@@ -65,11 +66,16 @@ export function startContactformulier(form: HTMLFormElement) {
   // Concept bewaren: wie per ongeluk wegklikt of ververst, is zijn tekst niet kwijt. Blijft in dit tabblad
   // (sessionStorage), gaat niet naar een server en wordt gewist bij versturen.
   const bewaard = leesConcept();
+  const onderwerpen = [...form.querySelectorAll<HTMLInputElement>('input[name="onderwerp"]')];
   velden.forEach((veld) => {
     if (typeof bewaard[veld.name] === 'string' && !veld.value) veld.value = bewaard[veld.name].slice(0, 4000);
   });
+  // Een onderwerp uit de link gaat voor op een bewaard onderwerp
+  if (!onderwerpen.some((r) => r.checked)) onderwerpen.forEach((r) => (r.checked = r.value === bewaard.onderwerp));
   form.addEventListener('input', () => {
     const concept = Object.fromEntries(velden.filter((v) => v.value).map((v) => [v.name, v.value]));
+    const gekozen = onderwerpen.find((r) => r.checked);
+    if (gekozen) concept.onderwerp = gekozen.value;
     try {
       sessionStorage.setItem(CONCEPT, JSON.stringify(concept));
     } catch {
@@ -83,10 +89,8 @@ export function startContactformulier(form: HTMLFormElement) {
     const fout = foutVan(veld);
     const plek = form.querySelector<HTMLElement>(`#${veld.id}-fout`);
     veld.setAttribute('aria-invalid', String(Boolean(fout)));
-    if (plek) {
-      plek.textContent = fout;
-      plek.hidden = !fout;
-    }
+    // De plek voor de melding is er altijd (vaste hoogte), zodat er niets verspringt
+    if (plek) plek.textContent = fout;
     return !fout;
   };
   velden.forEach((veld) => {

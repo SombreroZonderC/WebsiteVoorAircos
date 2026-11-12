@@ -59,19 +59,19 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
     <div class="field">
       <label for="naam">Naam <span class="req" aria-hidden="true">*</span></label>
       <input id="naam" name="naam" type="text" autocomplete="name" required maxlength="100" pattern=".*\S.*" aria-describedby="naam-fout" />
-      <p class="fout" id="naam-fout" hidden></p>
+      <p class="fout" id="naam-fout"></p>
     </div>
     <div class="field">
       <label for="email">E-mailadres <span class="req" aria-hidden="true">*</span></label>
       <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" aria-describedby="email-fout" />
-      <p class="fout" id="email-fout" hidden></p>
+      <p class="fout" id="email-fout"></p>
     </div>
   </div>
   <div class="row">
     <div class="field">
       <label for="telefoon">Telefoonnummer <span class="opt">optioneel</span></label>
       <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+\(\) \-]{8,20}" aria-describedby="telefoon-fout" />
-      <p class="fout" id="telefoon-fout" hidden></p>
+      <p class="fout" id="telefoon-fout"></p>
     </div>
     <div class="field duo">
       <div>
@@ -82,7 +82,7 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
         <label for="plaats">Plaats <span class="opt">optioneel</span></label>
         <input id="plaats" name="plaats" type="text" autocomplete="address-level2" maxlength="80" />
       </div>
-      <p class="fout" id="postcode-fout" hidden></p>
+      <p class="fout" id="postcode-fout"></p>
     </div>
   </div>
   <div class="row">
@@ -111,7 +111,7 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
   <div class="field">
     <label for="bericht">Bericht <span class="req" aria-hidden="true">*</span></label>
     <textarea id="bericht" name="bericht" rows="5" required maxlength="4000" aria-describedby="bericht-fout" placeholder="Vertel kort wat je zoekt, bijvoorbeeld welke ruimtes je wilt koelen of verwarmen."></textarea>
-    <p class="fout" id="bericht-fout" hidden></p>
+    <p class="fout" id="bericht-fout"></p>
   </div>
 
   <p class="note">
@@ -244,7 +244,7 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
     align-self: end;
   }
   .duo {
-    grid-template-columns: 0.8fr 1.2fr;
+    grid-template-columns: minmax(150px, 0.9fr) 1.1fr;
     column-gap: 10px;
   }
   .duo > div {
@@ -306,7 +306,11 @@ const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richti
     font-size: 0.92rem;
     color: var(--muted);
   }
+  /* Altijd één regel hoog, ook leeg: een melding die verschijnt mag niets verschuiven. Anders schuift de
+     verstuurknop weg onder de muis en gaat de klik verloren. */
   .fout {
+    min-height: 1.4em;
+    line-height: 1.4;
     margin: 0;
     font-size: 0.88rem;
     font-weight: 600;

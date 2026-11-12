@@ -261,4 +261,10 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+  /* Smalste telefoons: de tegels onder elkaar, anders past "Airconditioning" niet */
+  @media (max-width: 360px) {
+    .tegels {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
 </style>

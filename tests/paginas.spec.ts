@@ -58,3 +58,63 @@ test('kennisbank: artikelen met meer dan twee alinea’s hebben minimaal één i
     if (alineas > 2) await expect(page.locator('figure.illustratie svg'), pad).not.toHaveCount(0);
   }
 });
+
+test('smalste scherm (320 breed): geen horizontale overloop op welke pagina dan ook', async ({ browser, baseURL }) => {
+  const ctx = await browser.newContext({ baseURL, viewport: { width: 320, height: 640 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  for (const pad of paginas) {
+    await page.goto(pad);
+    const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(over, pad).toBeLessThanOrEqual(0);
+  }
+  await ctx.close();
+});
+
+// Toegankelijkheid in de toestanden die pas na een handeling bestaan. Hier telt ook 'moderate' mee.
+async function axe(page: import('@playwright/test').Page, wat: string) {
+  await page.waitForTimeout(150);
+  const uitslag = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  const fouten = uitslag.violations.filter((v) => v.impact !== 'minor').map((v) => `${v.id}: ${v.nodes[0]?.target}`);
+  expect(fouten, wat).toEqual([]);
+}
+
+// Met 'minder beweging': het gaat om de eindtoestand, niet om een kleur halverwege een overgang.
+test.describe('toegankelijkheid na interactie', () => {
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
+
+test('foutmeldingen, geopende vraag, zoekresultaat, andere keuzes', async ({ page }) => {
+  await page.goto('/contact');
+  await page.locator('#postcode').fill('12');
+  await page.getByRole('button', { name: 'Verstuur aanvraag' }).click();
+  await expect(page.locator('#naam-fout')).not.toBeEmpty();
+  await axe(page, 'formulier met foutmeldingen');
+
+  await page.goto('/veelgestelde-vragen');
+  await page.locator('details summary').first().click();
+  await axe(page, 'geopende vraag');
+  await page.locator('[data-zoekveld]').fill('subsidie');
+  await axe(page, 'zoekresultaat');
+
+  await page.goto('/');
+  await page.getByRole('radio', { name: /Verwarmen/ }).first().click();
+  await axe(page, 'homepage op verwarmen');
+
+  await page.goto('/onderhoud');
+  await page.getByRole('radio', { name: /druppelt water/ }).click();
+  await axe(page, 'storingswijzer met andere klacht');
+
+  await page.goto('/warmtepompen');
+  await page.locator('[data-sys="electric"]').click();
+  await page.locator('input[name="isolatie"][value="goed"]').check({ force: true });
+  await axe(page, 'warmtepompen met andere keuzes');
+});
+
+test('open mobiel menu', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'alleen mobiel');
+  await page.goto('/airconditioning');
+  await page.getByRole('button', { name: 'Menu openen' }).click();
+  await expect(page.locator('#hoofdmenu a').first()).toBeVisible();
+  await page.waitForTimeout(500);
+  await axe(page, 'open menu');
+});
+});

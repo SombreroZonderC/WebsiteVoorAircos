@@ -47,7 +47,9 @@ export const csp = (hashes) =>
 
 export const headers = (hashes) => ({
   'Content-Security-Policy': csp(hashes),
-  'Strict-Transport-Security': 'max-age=63072000; includeSubDomains',
+  // Zonder includeSubDomains: mail en webmail staan op subdomeinen bij een andere hoster, en of die
+  // allemaal HTTPS hebben is niet bekend. Een fout hier maakt ze voor bezoekers onbereikbaar.
+  'Strict-Transport-Security': 'max-age=31536000',
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
