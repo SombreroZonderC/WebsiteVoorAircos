@@ -7,3 +7,8 @@
 
 # Beveiligings- en cacheheaders staan in dist/_headers. Dat bestand wordt bij elke build gemaakt door
 # integrations/beveiligingsheaders.mjs, omdat de Content-Security-Policy hashes van de build bevat.
+
+# De HTML en scripts gaan ongewijzigd live. Nabewerking door Netlify (minify, bundelen, snippets) zou de
+# scripts veranderen, waarna de hashes in de Content-Security-Policy niet meer kloppen en de browser ze blokkeert.
+[build.processing]
+  skip_processing = true

@@ -39,7 +39,13 @@ Vastgesteld via een openbare DNS-opvraging (oktober 2026):
 1. Netlify → *Add new site* → *Import from Git* → kies de repository.
 2. De instellingen staan al in `netlify.toml` (build: `npm run build`, map: `dist`, Node 22).
 3. Na de eerste build draait de site op een tijdelijk adres (`…netlify.app`). **Hier alles testen**: pagina's, mobiel, formulier.
-4. **Formulier**: Netlify → *Forms* → formulier "offerte" verschijnt na de eerste inzending. Zet een e-mailmelding naar info@thecoolfactory.nl aan. Controleer de actuele limieten van het gratis plan.
+4. **Controleren op het tijdelijke adres** (dit kan lokaal niet getest worden; lokaal wordt verzenden nagebootst):
+   - [ ] Formulier invullen en versturen → je komt op `/bedankt` en de inzending staat in Netlify onder *Forms* → "offerte".
+   - [ ] Formulier met het verborgen lokveld ingevuld (via de ontwikkeltools) → de inzending komt in *Spam* terecht.
+   - [ ] `…/contact/` (met slash aan het eind) komt uit op de contactpagina. Zo niet: zet *Pretty URLs* aan of voeg een redirect toe.
+   - [ ] Geen fouten in de browserconsole over *Content Security Policy* op een paar pagina's. Zo wel: staat *Asset optimization* of *Snippet injection* aan? Beide moeten uit (`netlify.toml` zet nabewerking al uit).
+   - [ ] `…/onbekend-adres` toont de 404-pagina.
+5. **Formulier**: Netlify → *Forms* → formulier "offerte" verschijnt na de eerste inzending. Zet een e-mailmelding naar info@thecoolfactory.nl aan. Controleer de actuele limieten van het gratis plan.
 
 ### 4. Domein koppelen
 

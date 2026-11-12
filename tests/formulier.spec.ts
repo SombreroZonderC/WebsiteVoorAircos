@@ -60,3 +60,47 @@ test('formulier: een concept blijft bewaard na verversen en is weg na versturen'
   await page.goto('/contact');
   await expect(page.locator('#bericht')).toHaveValue('');
 });
+
+test('formulier: een ongeldig telefoonnummer wordt afgewezen, een gewoon nummer niet', async ({ page }) => {
+  await page.goto('/contact');
+  const telefoon = page.locator('#telefoon');
+  for (const fout of ['abc', '12', '<script>']) {
+    await telefoon.fill(fout);
+    await telefoon.blur();
+    await expect(page.locator('#telefoon-fout'), fout).toContainText('klopt niet');
+  }
+  for (const goed of ['06 12345678', '+31 6 12345678', '(0572) 12-34-56', '']) {
+    await telefoon.fill(goed);
+    await telefoon.blur();
+    await expect(page.locator('#telefoon-fout'), goed).toBeHidden();
+  }
+});
+
+test('formulier: alleen spaties telt als leeg', async ({ page }) => {
+  await page.goto('/contact');
+  await page.locator('#naam').fill('   ');
+  await page.locator('#email').fill('test@voorbeeld.nl');
+  await page.locator('#bericht').fill('  \n  ');
+  await page.getByRole('button', { name: 'Verstuur aanvraag' }).click();
+  await expect(page).toHaveURL(/\/contact$/);
+  await expect(page.locator('#naam-fout')).toHaveText('Vul je naam in.');
+  await expect(page.locator('#bericht-fout')).toBeVisible();
+});
+
+test('formulier: elk pattern is een geldige expressie voor de browser en doet wat het moet', async ({ page }) => {
+  // Browsers compileren pattern met de v-vlag; een ongeldig patroon wordt stil genegeerd en controleert dan niets.
+  await page.goto('/contact');
+  const patronen = await page.locator('[pattern]').evaluateAll((els) =>
+    els.map((el) => {
+      const bron = el.getAttribute('pattern')!;
+      try {
+        new RegExp(`^(?:${bron})$`, 'v');
+        return { naam: el.getAttribute('name'), fout: null };
+      } catch (e) {
+        return { naam: el.getAttribute('name'), fout: String(e) };
+      }
+    }),
+  );
+  expect(patronen.map((p) => p.naam).sort()).toEqual(['naam', 'postcode', 'telefoon']);
+  expect(patronen.filter((p) => p.fout)).toEqual([]);
+});

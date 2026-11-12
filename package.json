@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "playwright test",
+    "test:beelden": "playwright test tests/visueel.spec.ts --update-snapshots",
     "check": "astro check",
     "og": "node scripts/og.mjs",
     "iconen": "node scripts/iconen.mjs",

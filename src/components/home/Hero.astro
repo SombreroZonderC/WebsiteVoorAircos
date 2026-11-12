@@ -1,0 +1,122 @@
+---
+// Homepage-hero: de twee reuzenwoorden met rechts de belofte en de knoppen.
+import Icon from '../Icon.astro';
+import { bedrijf, home, telLink } from '../../lib/bedrijf';
+---
+
+<section class="hero" aria-labelledby="hero-titel">
+  <div class="glow" aria-hidden="true"></div>
+  <h1 class="woorden" id="hero-titel">
+    <span class="w koel">{home.hero.titelKoud}<span class="punt">.</span></span>
+    <span class="w warm">{home.hero.titelWarm}<span class="punt">.</span></span>
+    <span class="sr-only"> Airco en warmtepompen in {bedrijf.adres.plaats}</span>
+  </h1>
+  <div class="zij">
+    <p class="regels">
+      <span class="c">{home.hero.regelZomer}</span>
+      <span class="h">{home.hero.regelWinter}</span>
+    </p>
+    <p class="belofte">{home.hero.belofte}</p>
+    <div class="actions">
+      <a class="btn" href="/contact">Vrijblijvende offerte <Icon name="arrow" /></a>
+      <a class="btn ghost" href={telLink}><Icon name="phone" /> Bel {bedrijf.telefoon.weergave}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+    align-items: end;
+    gap: 32px;
+    padding: calc(var(--header-h) + clamp(24px, 5vw, 64px)) clamp(16px, 3vw, 36px) clamp(56px, 7vw, 96px);
+  }
+  .hero .glow {
+    background:
+      radial-gradient(45% 50% at 20% 30%, rgb(66 125 184 / 0.4), transparent 70%),
+      radial-gradient(45% 50% at 35% 85%, rgb(234 91 12 / 0.22), transparent 70%);
+  }
+  .woorden {
+    position: relative;
+    margin: 0;
+    display: grid;
+    font-family: var(--font-display);
+    font-stretch: 115%;
+    font-weight: 800;
+    font-size: clamp(4.6rem, 17vw, 17rem);
+    line-height: 0.82;
+    letter-spacing: -0.06em;
+  }
+  .w {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  .w.koel {
+    background-image: linear-gradient(100deg, #e9f3fc 10%, #8fc1f0 45%, #3a74b0 90%);
+  }
+  .w.warm {
+    background-image: linear-gradient(100deg, #fff4ec 10%, #ffbe96 50%, #ec8452 92%);
+  }
+  .punt {
+    -webkit-text-fill-color: currentColor;
+  }
+  .koel .punt {
+    color: #3a74b0;
+  }
+  .warm .punt {
+    color: #c2410c;
+  }
+  .zij {
+    position: relative;
+    padding-bottom: 12px;
+  }
+  .regels {
+    display: grid;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    margin: 0 0 24px;
+  }
+  .regels .c {
+    color: var(--blue-ice);
+  }
+  .regels .h {
+    color: var(--orange-hot);
+  }
+  .belofte {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+  .punten {
+    list-style: none;
+    counter-reset: punt;
+    padding: 0;
+    margin: 24px 0 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .punten li {
+    counter-increment: punt;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .punten li::before {
+    content: counter(punt, decimal-leading-zero);
+    font-family: var(--font-mono);
+    color: var(--accent-d);
+    margin-right: 14px;
+    font-size: 0.85rem;
+  }
+  @media (max-width: 860px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+// "Het resultaat": thermometers buiten/binnen met de uitkomst per kant.
+import Thermometer from '../Thermometer.astro';
+import { home } from '../../lib/bedrijf';
+import { kanten, verborgen } from './modus';
+---
+
+<div class="resultaat">
+  <div class="thermos" aria-hidden="true">
+    <Thermometer id="th-buiten" label="Buiten" temp={31} thema="licht" />
+    <Thermometer id="th-binnen" label="Binnen" temp={21} thema="licht" />
+  </div>
+  <div>
+    <p class="eyebrow">Het resultaat</p>
+    <h2 class="hk h2s" id="resultaat-titel">
+      {kanten.map((m) => <span data-m={m} hidden={verborgen(m)}>{home.resultaat[m].titel}</span>)}
+    </h2>
+    {kanten.map((m) => (
+      <p class="lead" data-m={m} hidden={verborgen(m)}>{home.resultaat[m].tekst}</p>
+    ))}
+  </div>
+</div>
+
+<style>
+  .resultaat {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(40px, 8vw, 110px);
+    align-items: center;
+    padding: clamp(64px, 8vw, 110px) 0 clamp(48px, 6vw, 80px);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: clamp(48px, 6vw, 72px);
+  }
+  .thermos {
+    display: flex;
+    gap: 34px;
+    padding-right: 30px;
+  }
+  .thermos :global(.thermo:last-child) {
+    --kwik-kleur: var(--accent);
+  }
+  @media (max-width: 860px) {
+    .resultaat {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .thermos {
+      justify-content: center;
+      padding-right: 0;
+      gap: 40px;
+    }
+    .thermos :global(.thermo),
+    .thermos :global(.thermo svg) {
+      width: 84px;
+    }
+  }
+</style>

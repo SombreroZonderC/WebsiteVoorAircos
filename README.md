@@ -39,7 +39,7 @@ Tests draaien met de vooraf geïnstalleerde Chromium: `PLAYWRIGHT_BROWSERS_PATH=
 | Gedrag in de browser (per onderdeel één module) | `src/scripts/` (`radiogroep`, `contactformulier`, `vragenzoeker`, `diepte`, `reveal`) |
 | Beveiligingsheaders (CSP, HSTS …) | `integrations/beveiligingsheaders.mjs` → `dist/_headers` |
 | Huisstijl (kleuren, letters, basisstijlen) | `src/styles/global.css` |
-| Componenten | `src/components/` |
+| Componenten | `src/components/` (secties van de homepage in `src/components/home/`, het formulier in `ContactFormulier.astro`) |
 | Pagina's / routes | `src/pages/` (elke dienst heeft een eigen pagina: `airconditioning.astro`, `warmtepompen.astro`, `onderhoud.astro`) |
 | Diepte-effect (sitebreed) | `src/scripts/diepte.ts` + klassen `.paar/.vlak/.plak/.paneel` in `global.css` |
 
@@ -95,7 +95,9 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
 - Eigen foutmeldingen per veld (gekoppeld met `aria-describedby`), focus op het eerste foute veld, één keer versturen.
 - Een half ingevuld formulier blijft bewaard in het tabblad (`sessionStorage`) en wordt gewist bij versturen. Er gaat niets naar een server voordat de bezoeker verstuurt.
 - Voorinvullen vanaf de dienstpagina's (`?onderwerp=`, `?ruimtes=`, `?klacht=`, `?advies=`) werkt alleen met vaste waarden; vrije tekst uit een link wordt nooit overgenomen.
-- Spam: verborgen lokveld (Netlify honeypot) en maximale lengtes. Zonder JavaScript controleert de browser zelf.
+- Spam: verborgen lokveld (Netlify honeypot), het spamfilter van Netlify Forms en maximale lengtes. Bewust geen captcha: die laadt scripts van een ander domein en hindert bezoekers. Komt er toch veel spam binnen, dan is een captcha van Netlify de volgende stap (de Content-Security-Policy moet dan worden verruimd).
+- Een naam of bericht van alleen spaties telt als leeg; telefoonnummer en postcode worden op vorm gecontroleerd. Zonder JavaScript controleert de browser zelf (`required`, `pattern`), behalve een bericht van alleen spaties.
+- De echte verzending via Netlify kan pas op een deploy getest worden: zie de controlelijst in [`docs/domein-en-hosting.md`](docs/domein-en-hosting.md).
 
 ## Beveiliging
 
@@ -105,7 +107,7 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
 - Structured data wordt zo geschreven dat tekst uit de inhoud het script-blok niet kan afsluiten (`jsonLd` in `src/lib/seo.ts`).
 - `/.well-known/security.txt` vertelt waar een beveiligingsprobleem gemeld kan worden; de einddatum schuift bij elke build op.
 - CI heeft alleen leesrechten en draait `npm audit`.
-- Let op bij Netlify: zet *Asset optimization* en snippet-injectie uit, anders veranderen de scripts en kloppen de hashes niet meer. Op deploy-previews blokkeert de policy de Netlify-werkbalk; dat is onschuldig.
+- Netlify mag de bestanden niet nabewerken, anders veranderen de scripts en kloppen de hashes niet meer. `netlify.toml` zet nabewerking uit (`skip_processing`); zet daarnaast geen snippet-injectie aan. Op deploy-previews blokkeert de policy de Netlify-werkbalk; dat is onschuldig.
 
 ## Kwaliteitscontrole
 
@@ -114,6 +116,7 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
   - `interacties.spec.ts`, `navigatie.spec.ts`, `formulier.spec.ts`, `kennisbank.spec.ts`: de interactieve onderdelen, menu's, het formulier, inhoudsopgave, feed en afdrukken
   - `zonder-js.spec.ts`: alle inhoud is bereikbaar zonder JavaScript
   - `beveiliging.spec.ts`: headers, CSP, geen externe verzoeken, geen vrije tekst uit links
+  - `visueel.spec.ts`: zeven pagina's als volledig beeld vergeleken met vastgelegde beelden (desktop en mobiel, maximaal 0,5% afwijking). Na een bewuste ontwerpwijziging: `npm run test:beelden`, de nieuwe beelden nakijken en committen. De beelden zijn gemaakt met de Chromium van Playwright 1.63 op Linux; een andere browserversie kan nieuwe beelden vragen.
   - `vindbaarheid.spec.ts`: unieke titels en omschrijvingen, canonical, deelafbeelding, alle interne links en ankers, `llms.txt`
 - `.github/workflows/ci.yml`: bij elke push `npm audit`, `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, mediaan van 3 metingen per pagina, `lighthouserc.json`).
 

@@ -32,4 +32,9 @@ test('zonder JavaScript: het formulier controleert zelf en verstuurt naar de bed
   await expect(form).toHaveAttribute('method', 'POST');
   await expect(form).not.toHaveAttribute('novalidate', /.*/);
   await expect(page.locator('#naam')).toHaveAttribute('required', '');
+  // De browser houdt zelf een naam van alleen spaties en een onzin-telefoonnummer tegen
+  await page.locator('#naam').fill('   ');
+  await page.locator('#telefoon').fill('abc');
+  expect(await page.locator('#naam').evaluate((el: HTMLInputElement) => el.validity.patternMismatch)).toBe(true);
+  expect(await page.locator('#telefoon').evaluate((el: HTMLInputElement) => el.validity.patternMismatch)).toBe(true);
 });

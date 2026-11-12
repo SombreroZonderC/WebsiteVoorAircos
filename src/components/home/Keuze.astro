@@ -1,0 +1,134 @@
+---
+// Vertrouwensbalk en de keuze koelen/verwarmen met kop, knop en ruimtekaarten per kant.
+import Icon from '../Icon.astro';
+import RuimteKaarten from '../RuimteKaarten.astro';
+import { bedrijf, home } from '../../lib/bedrijf';
+import { kanten, verborgen } from './modus';
+
+const k = home.keuze;
+---
+
+<div class="trust">
+  {
+    bedrijf.googleScore ? (
+      <a href={bedrijf.googleReviewsUrl ?? undefined} class="score" rel="noopener">
+        <Icon name="star" size={16} /> <b>{bedrijf.googleScore.score}</b> · {bedrijf.googleScore.aantal} Google-reviews
+      </a>
+    ) : (
+      <span class="todo">Google-score</span>
+    )
+  }
+  <span><b>{bedrijf.jarenErvaring}</b> jaar ervaring</span>
+  <span>Specialist <b>{bedrijf.merk}</b></span>
+  <span>Gevestigd in <b>{bedrijf.adres.plaats}</b></span>
+</div>
+
+<div class="wrap keuze">
+  <p class="eyebrow" id="keuze-vraag">{k.vraag}</p>
+  <div class="seg" role="radiogroup" aria-labelledby="keuze-vraag">
+    {
+      kanten.map((m) => (
+        <button role="radio" aria-checked={m === 'koel' ? 'true' : 'false'} tabindex={m === 'koel' ? 0 : -1} data-zet={m}>
+          <Icon name={m === 'koel' ? 'snow' : 'flame'} size={18} /> {k[m].label}
+        </button>
+      ))
+    }
+  </div>
+  <h2 class="hk" id="keuze-titel">
+    {
+      kanten.map((m) => (
+        <span data-m={m} hidden={verborgen(m)}>
+          {k[m].titel}
+          <br />
+          <em>{k[m].titelAccent}</em>
+        </span>
+      ))
+    }
+  </h2>
+  {kanten.map((m) => (
+    <p class="lead" data-m={m} hidden={verborgen(m)}>{k[m].lead}</p>
+  ))}
+  {kanten.map((m) => (
+    <a class="btn" href={`/contact?onderwerp=${k[m].dienst}`} data-m={m} hidden={verborgen(m)}>
+      {k[m].cta} <Icon name="arrow" />
+    </a>
+  ))}
+</div>
+
+<div class="wrap">
+  {
+    kanten.map((m) => (
+      <div data-m={m} hidden={verborgen(m)}>
+        <RuimteKaarten ruimtes={k[m].ruimtes} soort={m === 'koel' ? 'Airco' : 'Warmtepomp'} href={`/${k[m].dienst}`} />
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px 40px;
+    padding: 24px 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .trust b {
+    color: var(--text);
+  }
+  .score {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .score :global(svg) {
+    color: var(--orange-text);
+  }
+  .keuze {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    padding-top: clamp(64px, 8vw, 110px);
+    padding-bottom: 56px;
+  }
+  .seg {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 5px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    margin-bottom: 28px;
+  }
+  .seg button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background 0.25s,
+      color 0.25s;
+  }
+  .seg [aria-checked='true'] {
+    background: var(--accent);
+    color: #fff;
+  }
+  .keuze .lead {
+    margin: 0 auto 26px;
+    max-width: 46ch;
+  }
+</style>

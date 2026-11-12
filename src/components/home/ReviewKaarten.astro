@@ -1,0 +1,53 @@
+---
+// De drie nieuwste reviews als kaarten.
+import { getCollection } from 'astro:content';
+
+const reviews = (await getCollection('reviews')).sort((a, b) => b.data.datum.valueOf() - a.data.datum.valueOf()).slice(0, 3);
+---
+
+<div class="reviews">
+  {
+    reviews.map((r) => (
+      <figure>
+        <blockquote>“{r.data.tekst}”</blockquote>
+        <figcaption>
+          {r.data.naam} · {r.data.bron}
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .reviews {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 56px;
+  }
+  .reviews figure {
+    margin: 0;
+    padding: 26px;
+    border-radius: var(--radius-lg);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  blockquote {
+    margin: 0;
+    line-height: 1.6;
+  }
+  figcaption {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 860px) {
+    .reviews {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

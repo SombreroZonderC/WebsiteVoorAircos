@@ -27,7 +27,7 @@ const datum = new Intl.DateTimeFormat('nl-NL', { month: 'long', year: 'numeric' 
         )
       }
     </div>
-    <div class="grid grid-3">
+    <div class:list={['grid', reviews.length === 2 ? 'grid-2' : 'grid-3']}>
       {
         reviews.map((r) => (
           <figure class="card review" data-reveal>

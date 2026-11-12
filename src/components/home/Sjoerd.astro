@@ -1,0 +1,34 @@
+---
+// "Je krijgt Sjoerd": portret met korte tekst en link naar de over-pagina.
+import Icon from '../Icon.astro';
+import Visual from '../Visual.astro';
+import { home } from '../../lib/bedrijf';
+---
+
+<div class="sjoerd">
+  <Visual soort="portret" label="foto van Sjoerd" verhouding="4 / 5" />
+  <div>
+    <p class="eyebrow">Je krijgt Sjoerd</p>
+    <h2 class="hk h2s">{home.sjoerd.titel}</h2>
+    <p class="lead">{home.sjoerd.tekst}</p>
+    <a class="door licht-door" href="/over-sjoerd">Meer over Sjoerd <Icon name="arrow" size={18} /></a>
+  </div>
+</div>
+
+<style>
+  .sjoerd {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+    margin-top: clamp(80px, 10vw, 120px);
+  }
+  @media (max-width: 860px) {
+    .sjoerd {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .sjoerd :global(.visual) {
+      max-width: 260px;
+    }
+  }
+</style>

@@ -3,7 +3,7 @@
 
 /** Meldingen per veld; de sleutel is het name-attribuut. */
 const meldingen: Record<string, { leeg?: string; ongeldig?: string }> = {
-  naam: { leeg: 'Vul je naam in.' },
+  naam: { leeg: 'Vul je naam in.', ongeldig: 'Vul je naam in.' },
   email: { leeg: 'Vul je e-mailadres in.', ongeldig: 'Dit e-mailadres klopt niet. Bijvoorbeeld: naam@voorbeeld.nl.' },
   telefoon: { ongeldig: 'Dit telefoonnummer klopt niet. Bijvoorbeeld: 06 12345678.' },
   postcode: { ongeldig: 'Een postcode ziet eruit als 1234 AB.' },
@@ -39,6 +39,8 @@ function leesConcept(): Record<string, string> {
 
 function foutVan(veld: Veld) {
   const m = meldingen[veld.name] ?? {};
+  // Alleen spaties telt als leeg (een textarea kent geen pattern, dus dit moet hier)
+  if (veld.required && veld.value.trim() === '') return m.leeg ?? 'Dit veld is verplicht.';
   const v = veld.validity;
   if (v.valid) return '';
   if (v.valueMissing) return m.leeg ?? 'Dit veld is verplicht.';
@@ -88,7 +90,11 @@ export function startContactformulier(form: HTMLFormElement) {
     return !fout;
   };
   velden.forEach((veld) => {
-    veld.addEventListener('blur', () => toon(veld));
+    veld.addEventListener('blur', () => {
+      // Spaties voor en na weghalen, zodat er geen lege of scheve waarden worden verstuurd
+      if (!(veld instanceof HTMLSelectElement) && veld.value !== veld.value.trim()) veld.value = veld.value.trim();
+      toon(veld);
+    });
     // Tijdens het typen alleen een bestaande melding laten verdwijnen, niet midden in een woord gaan klagen
     veld.addEventListener('input', () => veld.getAttribute('aria-invalid') === 'true' && toon(veld));
   });

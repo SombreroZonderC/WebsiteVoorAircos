@@ -1,0 +1,85 @@
+---
+// "Zo werkt het": drie punten per kant met de technische tekening ernaast.
+import Icon from '../Icon.astro';
+import TechTekening from '../TechTekening.astro';
+import { home } from '../../lib/bedrijf';
+import { kanten, verborgen } from './modus';
+
+const k = home.keuze;
+---
+
+<div class="wrap zo-grid">
+  <div>
+    <p class="eyebrow cold">Zo werkt het</p>
+    <h2 class="hk h2s" id="zo-titel">
+      {kanten.map((m) => <span data-m={m} hidden={verborgen(m)}>{home.zoWerktHet[m].titel}</span>)}
+    </h2>
+    {
+      kanten.map((m) => (
+        <div data-m={m} hidden={verborgen(m)}>
+          <ol class="punten">
+            {home.zoWerktHet[m].punten.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ol>
+          <a class="door" href={`/${k[m].dienst}`}>
+            {home.zoWerktHet[m].link} <Icon name="arrow" size={18} />
+          </a>
+        </div>
+      ))
+    }
+  </div>
+  <div data-m="koel">
+    <TechTekening
+      soort="binnen"
+      kleur="#7fb4ea"
+      labels={[
+        { letter: 'A', tekst: 'Fluisterstil', x: 2, y: 2 },
+        { letter: 'B', tekst: 'Instelbare luchtstroom', x: 44, y: 84 },
+      ]}
+    />
+  </div>
+  <div data-m="warm" hidden>
+    <TechTekening
+      soort="buiten"
+      kleur="#ff7a2f"
+      labels={[
+        { letter: 'A', tekst: 'Warmte uit de buitenlucht', x: 0, y: 4 },
+        { letter: 'B', tekst: 'Strak en waterpas', x: 48, y: 88 },
+      ]}
+    />
+  </div>
+</div>
+
+<style>
+  .zo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 56px;
+    align-items: center;
+  }
+  .punten {
+    list-style: none;
+    counter-reset: punt;
+    padding: 0;
+    margin: 24px 0 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .punten li {
+    counter-increment: punt;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .punten li::before {
+    content: counter(punt, decimal-leading-zero);
+    font-family: var(--font-mono);
+    color: var(--accent-d);
+    margin-right: 14px;
+    font-size: 0.85rem;
+  }
+  @media (max-width: 860px) {
+    .zo-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

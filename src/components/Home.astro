@@ -1,207 +1,42 @@
 ---
-import { getCollection } from 'astro:content';
-import Icon from './Icon.astro';
-import Thermometer from './Thermometer.astro';
-import TechTekening from './TechTekening.astro';
-import Visual from './Visual.astro';
+// Homepage: de opbouw in vlakken (donker ligt achter, licht schuift eroverheen) en de keuze
+// koelen/verwarmen die alle secties aanstuurt. De secties zelf staan in components/home/.
 import CtaBand from './CtaBand.astro';
-import RuimteKaarten from './RuimteKaarten.astro';
-import { bedrijf, home, telLink } from '../lib/bedrijf';
-
-const reviews = (await getCollection('reviews')).sort((a, b) => b.data.datum.valueOf() - a.data.datum.valueOf()).slice(0, 3);
-const kanten = ['koel', 'warm'] as const;
-// Zonder JavaScript is "koelen" zichtbaar; de verwarmen-variant staat er wel in (voor zoekmachines), maar verborgen.
-const verborgen = (m: (typeof kanten)[number]) => m !== 'koel';
-const k = home.keuze;
+import Hero from './home/Hero.astro';
+import Keuze from './home/Keuze.astro';
+import ZoWerktHet from './home/ZoWerktHet.astro';
+import Resultaat from './home/Resultaat.astro';
+import Werkwijze from './home/Werkwijze.astro';
+import Sjoerd from './home/Sjoerd.astro';
+import ReviewKaarten from './home/ReviewKaarten.astro';
 ---
 
 <div class="home" data-modus="koel" data-home>
   <div class="paar">
     <div class="vlak donker plak" data-diepte-vlak data-geen-mobiele-cta>
       <div class="vlak-inhoud">
-        <section class="hero" aria-labelledby="hero-titel">
-          <div class="glow" aria-hidden="true"></div>
-          <h1 class="woorden" id="hero-titel">
-            <span class="w koel">{home.hero.titelKoud}<span class="punt">.</span></span>
-            <span class="w warm">{home.hero.titelWarm}<span class="punt">.</span></span>
-            <span class="sr-only"> Airco en warmtepompen in {bedrijf.adres.plaats}</span>
-          </h1>
-          <div class="zij">
-            <p class="regels">
-              <span class="c">{home.hero.regelZomer}</span>
-              <span class="h">{home.hero.regelWinter}</span>
-            </p>
-            <p class="belofte">{home.hero.belofte}</p>
-            <div class="actions">
-              <a class="btn" href="/contact">Vrijblijvende offerte <Icon name="arrow" /></a>
-              <a class="btn ghost" href={telLink}><Icon name="phone" /> Bel {bedrijf.telefoon.weergave}</a>
-            </div>
-          </div>
-        </section>
+        <Hero />
       </div>
     </div>
 
     <section class="vlak licht paneel" aria-labelledby="keuze-titel">
-      <div class="trust">
-        {
-          bedrijf.googleScore ? (
-            <a href={bedrijf.googleReviewsUrl ?? undefined} class="score" rel="noopener">
-              <Icon name="star" size={16} /> <b>{bedrijf.googleScore.score}</b> · {bedrijf.googleScore.aantal} Google-reviews
-            </a>
-          ) : (
-            <span class="todo">Google-score</span>
-          )
-        }
-        <span><b>{bedrijf.jarenErvaring}</b> jaar ervaring</span>
-        <span>Specialist <b>{bedrijf.merk}</b></span>
-        <span>Gevestigd in <b>{bedrijf.adres.plaats}</b></span>
-      </div>
-
-      <div class="wrap keuze">
-        <p class="eyebrow" id="keuze-vraag">{k.vraag}</p>
-        <div class="seg" role="radiogroup" aria-labelledby="keuze-vraag">
-          {
-            kanten.map((m) => (
-              <button role="radio" aria-checked={m === 'koel' ? 'true' : 'false'} tabindex={m === 'koel' ? 0 : -1} data-zet={m}>
-                <Icon name={m === 'koel' ? 'snow' : 'flame'} size={18} /> {k[m].label}
-              </button>
-            ))
-          }
-        </div>
-        <h2 id="keuze-titel">
-          {
-            kanten.map((m) => (
-              <span data-m={m} hidden={verborgen(m)}>
-                {k[m].titel}
-                <br />
-                <em>{k[m].titelAccent}</em>
-              </span>
-            ))
-          }
-        </h2>
-        {kanten.map((m) => (
-          <p class="lead" data-m={m} hidden={verborgen(m)}>{k[m].lead}</p>
-        ))}
-        {kanten.map((m) => (
-          <a class="btn" href={`/contact?onderwerp=${k[m].dienst}`} data-m={m} hidden={verborgen(m)}>
-            {k[m].cta} <Icon name="arrow" />
-          </a>
-        ))}
-      </div>
-
-      <div class="wrap">
-        {
-          kanten.map((m) => (
-            <div data-m={m} hidden={verborgen(m)}>
-              <RuimteKaarten ruimtes={k[m].ruimtes} soort={m === 'koel' ? 'Airco' : 'Warmtepomp'} href={`/${k[m].dienst}`} />
-            </div>
-          ))
-        }
-      </div>
+      <Keuze />
     </section>
   </div>
 
   <div class="paar">
     <section class="vlak donker plak zo" data-diepte-vlak aria-labelledby="zo-titel">
       <div class="vlak-inhoud">
-        <div class="wrap zo-grid">
-          <div>
-            <p class="eyebrow cold">Zo werkt het</p>
-            <h2 class="h2s" id="zo-titel">
-              {kanten.map((m) => <span data-m={m} hidden={verborgen(m)}>{home.zoWerktHet[m].titel}</span>)}
-            </h2>
-            {
-              kanten.map((m) => (
-                <div data-m={m} hidden={verborgen(m)}>
-                  <ol class="punten">
-                    {home.zoWerktHet[m].punten.map((p) => (
-                      <li>{p}</li>
-                    ))}
-                  </ol>
-                  <a class="door" href={`/${k[m].dienst}`}>
-                    {home.zoWerktHet[m].link} <Icon name="arrow" size={18} />
-                  </a>
-                </div>
-              ))
-            }
-          </div>
-          <div data-m="koel">
-            <TechTekening
-              soort="binnen"
-              kleur="#7fb4ea"
-              labels={[
-                { letter: 'A', tekst: 'Fluisterstil', x: 2, y: 2 },
-                { letter: 'B', tekst: 'Instelbare luchtstroom', x: 44, y: 84 },
-              ]}
-            />
-          </div>
-          <div data-m="warm" hidden>
-            <TechTekening
-              soort="buiten"
-              kleur="#ff7a2f"
-              labels={[
-                { letter: 'A', tekst: 'Warmte uit de buitenlucht', x: 0, y: 4 },
-                { letter: 'B', tekst: 'Strak en waterpas', x: 48, y: 88 },
-              ]}
-            />
-          </div>
-        </div>
+        <ZoWerktHet />
       </div>
     </section>
 
     <section class="vlak licht paneel tweede" aria-labelledby="resultaat-titel">
       <div class="wrap">
-        <div class="resultaat">
-          <div class="thermos" aria-hidden="true">
-            <Thermometer id="th-buiten" label="Buiten" temp={31} thema="licht" />
-            <Thermometer id="th-binnen" label="Binnen" temp={21} thema="licht" />
-          </div>
-          <div>
-            <p class="eyebrow">Het resultaat</p>
-            <h2 class="h2s" id="resultaat-titel">
-              {kanten.map((m) => <span data-m={m} hidden={verborgen(m)}>{home.resultaat[m].titel}</span>)}
-            </h2>
-            {kanten.map((m) => (
-              <p class="lead" data-m={m} hidden={verborgen(m)}>{home.resultaat[m].tekst}</p>
-            ))}
-          </div>
-        </div>
-
-        <h2 class="eyebrow werkwijze-kop">Zo werk ik</h2>
-        <ol class="stappen">
-          {
-            home.werkwijze.map((s, i) => (
-              <li>
-                <span class="nr">{String(i + 1).padStart(2, '0')}</span>
-                <h3>{s.titel}</h3>
-                <p>{s.tekst}</p>
-              </li>
-            ))
-          }
-        </ol>
-
-        <div class="sjoerd">
-          <Visual soort="portret" label="foto van Sjoerd" verhouding="4 / 5" />
-          <div>
-            <p class="eyebrow">Je krijgt Sjoerd</p>
-            <h2 class="h2s">{home.sjoerd.titel}</h2>
-            <p class="lead">{home.sjoerd.tekst}</p>
-            <a class="door licht-door" href="/over-sjoerd">Meer over Sjoerd <Icon name="arrow" size={18} /></a>
-          </div>
-        </div>
-
-        <div class="reviews">
-          {
-            reviews.map((r) => (
-              <figure>
-                <blockquote>“{r.data.tekst}”</blockquote>
-                <figcaption>
-                  {r.data.naam} · {r.data.bron}
-                </figcaption>
-              </figure>
-            ))
-          }
-        </div>
+        <Resultaat />
+        <Werkwijze />
+        <Sjoerd />
+        <ReviewKaarten />
       </div>
     </section>
   </div>
@@ -232,6 +67,8 @@ const k = home.keuze;
 </script>
 
 <style>
+  /* Kleur van de gekozen kant; de secties in components/home/ gebruiken --accent en --accent-d.
+     Koppen (.hk) en doorklik-links (.door) delen de secties, daarom staan die hier. */
   .home {
     --accent: var(--blue-text);
     --accent-d: var(--blue-ice);
@@ -241,197 +78,30 @@ const k = home.keuze;
     --accent: var(--orange-text);
     --accent-d: var(--orange-hot);
   }
-
   .paneel {
     padding-bottom: clamp(80px, 10vw, 130px);
   }
-
-  /* ---------- hero ---------- */
-  .hero {
-    position: relative;
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
-    align-items: end;
-    gap: 32px;
-    padding: calc(var(--header-h) + clamp(24px, 5vw, 64px)) clamp(16px, 3vw, 36px) clamp(56px, 7vw, 96px);
-  }
-  .hero .glow {
-    background:
-      radial-gradient(45% 50% at 20% 30%, rgb(66 125 184 / 0.4), transparent 70%),
-      radial-gradient(45% 50% at 35% 85%, rgb(234 91 12 / 0.22), transparent 70%);
-  }
-  .woorden {
-    position: relative;
-    margin: 0;
-    display: grid;
-    font-family: var(--font-display);
-    font-stretch: 115%;
-    font-weight: 800;
-    font-size: clamp(4.6rem, 17vw, 17rem);
-    line-height: 0.82;
-    letter-spacing: -0.06em;
-  }
-  .w {
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-  .w.koel {
-    background-image: linear-gradient(100deg, #e9f3fc 10%, #8fc1f0 45%, #3a74b0 90%);
-  }
-  .w.warm {
-    background-image: linear-gradient(100deg, #fff4ec 10%, #ffbe96 50%, #ec8452 92%);
-  }
-  .punt {
-    -webkit-text-fill-color: currentColor;
-  }
-  .koel .punt {
-    color: #3a74b0;
-  }
-  .warm .punt {
-    color: #c2410c;
-  }
-  .zij {
-    position: relative;
-    padding-bottom: 12px;
-  }
-  .regels {
-    display: grid;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.92rem;
-    margin: 0 0 24px;
-  }
-  .regels .c {
-    color: var(--blue-ice);
-  }
-  .regels .h {
-    color: var(--orange-hot);
-  }
-  .belofte {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1.15rem, 1.6vw, 1.45rem);
-    line-height: 1.35;
-    letter-spacing: -0.01em;
-    margin: 0 0 28px;
-  }
-
-  /* ---------- trust + keuze ---------- */
-  .trust {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 10px 40px;
-    padding: 24px 16px;
-    border-bottom: 1px solid var(--line);
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-  .trust b {
-    color: var(--text);
-  }
-  .score {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-  }
-  .score :global(svg) {
-    color: var(--orange-text);
-  }
-  .keuze {
-    display: grid;
-    justify-items: center;
-    text-align: center;
-    padding-top: clamp(64px, 8vw, 110px);
-    padding-bottom: 56px;
-  }
-  .seg {
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px;
-    padding: 5px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: var(--paper-2);
-    margin-bottom: 28px;
-  }
-  .seg button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border: 0;
-    background: none;
-    color: var(--muted);
-    font: inherit;
-    font-weight: 700;
-    padding: 12px 22px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition:
-      background 0.25s,
-      color 0.25s;
-  }
-  .seg [aria-checked='true'] {
-    background: var(--accent);
-    color: #fff;
-  }
-  .home h2 {
+  .home :global(.hk) {
     font-size: clamp(2.4rem, 5vw, 4.4rem);
     line-height: 0.98;
     letter-spacing: -0.045em;
     margin: 0 0 20px;
   }
-  .home h2 em {
+  .home :global(.hk em) {
     font-style: normal;
     color: var(--accent);
   }
-  .home .h2s {
+  .home :global(.hk.h2s) {
     font-size: clamp(1.9rem, 3.6vw, 2.8rem);
     line-height: 1.05;
   }
-  .keuze .lead {
-    margin: 0 auto 26px;
-    max-width: 46ch;
-  }
-
-  /* ---------- zo werkt het ---------- */
   .zo .vlak-inhoud {
     padding: clamp(88px, 10vw, 140px) 0 clamp(100px, 11vw, 160px);
     background:
       radial-gradient(50% 60% at 80% 50%, rgb(255 255 255 / 0.04), transparent 70%),
       var(--ink);
   }
-  .zo-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: 56px;
-    align-items: center;
-  }
-  .punten {
-    list-style: none;
-    counter-reset: punt;
-    padding: 0;
-    margin: 24px 0 0;
-    border-top: 1px solid var(--line-dark);
-  }
-  .punten li {
-    counter-increment: punt;
-    padding: 15px 0;
-    border-bottom: 1px solid var(--line-dark);
-  }
-  .punten li::before {
-    content: counter(punt, decimal-leading-zero);
-    font-family: var(--font-mono);
-    color: var(--accent-d);
-    margin-right: 14px;
-    font-size: 0.85rem;
-  }
-  .door {
+  .home :global(.door) {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -440,129 +110,16 @@ const k = home.keuze;
     color: var(--accent-d);
     text-decoration: none;
   }
-  .licht-door {
+  .home :global(.licht-door) {
     color: var(--accent);
     margin-top: 4px;
   }
-  .door:hover {
+  .home :global(.door:hover) {
     text-decoration: underline;
   }
-
-  /* ---------- resultaat, werkwijze, sjoerd, reviews ---------- */
-  .resultaat {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: clamp(40px, 8vw, 110px);
-    align-items: center;
-    padding: clamp(64px, 8vw, 110px) 0 clamp(48px, 6vw, 80px);
-    border-bottom: 1px solid var(--line);
-    margin-bottom: clamp(48px, 6vw, 72px);
-  }
-  .thermos {
-    display: flex;
-    gap: 34px;
-    padding-right: 30px;
-  }
-  .thermos :global(.thermo:last-child) {
-    --kwik-kleur: var(--accent);
-  }
-  .home .werkwijze-kop {
+  .home :global(.hk.werkwijze-kop) {
     font-size: 0.8rem;
     letter-spacing: 0.12em;
     margin: 0 0 14px;
-  }
-  .stappen {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    border-top: 1px solid var(--line);
-  }
-  .stappen li {
-    position: relative;
-    padding: 26px 24px 0 0;
-  }
-  .stappen li::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background: var(--ink);
-  }
-  .nr {
-    font-family: var(--font-mono);
-    color: var(--ink);
-    font-size: 0.85rem;
-  }
-  .stappen h3 {
-    margin: 12px 0 6px;
-  }
-  .stappen p {
-    margin: 0;
-    color: var(--muted);
-  }
-  .sjoerd {
-    display: grid;
-    grid-template-columns: 300px minmax(0, 1fr);
-    gap: 56px;
-    align-items: center;
-    margin-top: clamp(80px, 10vw, 120px);
-  }
-  .reviews {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    margin-top: 56px;
-  }
-  .reviews figure {
-    margin: 0;
-    padding: 26px;
-    border-radius: var(--radius-lg);
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 18px;
-  }
-  blockquote {
-    margin: 0;
-    line-height: 1.6;
-  }
-  figcaption {
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-
-  @media (max-width: 860px) {
-    .hero,
-    .resultaat,
-    .zo-grid,
-    .sjoerd {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .thermos {
-      justify-content: center;
-      padding-right: 0;
-      gap: 40px;
-    }
-    .thermos :global(.thermo),
-    .thermos :global(.thermo svg) {
-      width: 84px;
-    }
-    .reviews {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .stappen {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      row-gap: 24px;
-    }
-    .sjoerd :global(.visual) {
-      max-width: 260px;
-    }
   }
 </style>
