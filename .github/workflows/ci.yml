@@ -37,6 +37,8 @@ jobs:
         run: npm test
       - name: Lighthouse (drempel 95 op alle categorieën)
         run: npx @lhci/cli@0.15.1 autorun
+      - name: Demo-build (geanonimiseerde kopie) werkt nog
+        run: npm run demo
       - name: Testrapport bewaren bij een fout
         if: failure()
         uses: actions/upload-artifact@v4
