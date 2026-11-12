@@ -5,6 +5,8 @@ import { readFileSync } from 'node:fs';
 const sitemap = readFileSync('dist/sitemap-0.xml', 'utf8');
 export const vindbaar = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => new URL(url).pathname.replace(/\/$/, '') || '/');
 export const nietVindbaar = ['/bedankt'];
+/** Elk onbekend adres toont de 404-pagina (met status 404) */
+export const onbekend = '/bestaat-niet';
 export const paginas = [...vindbaar, ...nietVindbaar];
 
 if (vindbaar.length < 10) throw new Error('Sitemap onvolledig: draai eerst `npm run build`.');

@@ -4,31 +4,33 @@ import Thermometer from './Thermometer.astro';
 ---
 
 <div class="kl">
-  <svg viewBox="0 0 420 300" role="img" aria-label="Kringloop van een warmtepomp in vier stappen">
-    <rect class="baan" x="50" y="50" width="320" height="200" rx="80" />
-    <path class="stroom" d="M130 50 H290" />
-    <path class="stroom koud" d="M290 250 H130" />
-    <g class="stap stap-0">
-      <circle cx="50" cy="150" r="22" />
-      <path d="M38 150 h24 M50 138 v24 M42 142 l16 16 M58 142 l-16 16" class="dun" />
-      <text x="10" y="196">1 buitenlucht</text>
-    </g>
-    <g class="stap stap-1">
-      <circle cx="210" cy="50" r="22" />
-      <path d="M200 56 l10 -14 l10 14" class="dun" />
-      <text x="168" y="98">2 compressor</text>
-    </g>
-    <g class="stap stap-2">
-      <circle cx="370" cy="150" r="22" />
-      <path d="M362 158 q8 -24 16 0" class="dun" />
-      <text x="414" y="196" text-anchor="end">3 warmte naar huis</text>
-    </g>
-    <g class="stap stap-3">
-      <circle cx="210" cy="250" r="22" />
-      <path d="M200 250 h20" class="dun" />
-      <text x="170" y="292">4 opnieuw</text>
-    </g>
-  </svg>
+  <div class="tekening-schuif">
+    <svg viewBox="0 0 420 300" role="img" aria-label="Kringloop van een warmtepomp in vier stappen">
+      <rect class="baan" x="50" y="50" width="320" height="200" rx="80" />
+      <path class="stroom" d="M130 50 H290" />
+      <path class="stroom koud" d="M290 250 H130" />
+      <g class="stap stap-0">
+        <circle cx="50" cy="150" r="22" />
+        <path d="M38 150 h24 M50 138 v24 M42 142 l16 16 M58 142 l-16 16" class="dun" />
+        <text x="10" y="196">1 buitenlucht</text>
+      </g>
+      <g class="stap stap-1">
+        <circle cx="210" cy="50" r="22" />
+        <path d="M200 56 l10 -14 l10 14" class="dun" />
+        <text x="168" y="98">2 compressor</text>
+      </g>
+      <g class="stap stap-2">
+        <circle cx="370" cy="150" r="22" />
+        <path d="M362 158 q8 -24 16 0" class="dun" />
+        <text x="414" y="196" text-anchor="end">3 warmte naar huis</text>
+      </g>
+      <g class="stap stap-3">
+        <circle cx="210" cy="250" r="22" />
+        <path d="M200 250 h20" class="dun" />
+        <text x="170" y="292">4 opnieuw</text>
+      </g>
+    </svg>
+  </div>
   <div class="th"><Thermometer id="kl-binnen" label="Binnen" temp={21} /></div>
 </div>
 
@@ -112,6 +114,12 @@ import Thermometer from './Thermometer.astro';
     }
     .th {
       display: none;
+    }
+  }
+  /* Smal scherm: grotere letters in de tekening, zodat labels leesbaar blijven (zie .tekening-schuif) */
+  @media (max-width: 520px) {
+    text {
+      font-size: 14px;
     }
   }
 </style>

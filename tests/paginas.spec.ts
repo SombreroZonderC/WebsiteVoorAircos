@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { paginas } from './paginas';
+import { onbekend, paginas } from './paginas';
 
 for (const pad of paginas) {
   test(`${pad}: laadt zonder fouten, één h1, geen ernstige toegankelijkheidsproblemen`, async ({ page }) => {
@@ -68,6 +68,37 @@ test('smalste scherm (320 breed): geen horizontale overloop op welke pagina dan 
     expect(over, pad).toBeLessThanOrEqual(0);
   }
   await ctx.close();
+});
+
+test('labels in tekeningen zijn op een telefoon minimaal 11 px groot', async ({ browser, baseURL }) => {
+  for (const breedte of [390, 320]) {
+    const ctx = await browser.newContext({ baseURL, viewport: { width: breedte, height: 800 }, isMobile: true, hasTouch: true });
+    const page = await ctx.newPage();
+    for (const pad of paginas) {
+      await page.goto(pad);
+      const teKlein = await page.evaluate(() =>
+        [...document.querySelectorAll<SVGTextElement>('svg text')]
+          .map((t) => {
+            const svg = t.ownerSVGElement!;
+            const vak = svg.getBoundingClientRect();
+            if (!vak.width || !svg.viewBox.baseVal.width) return null;
+            const px = parseFloat(getComputedStyle(t).fontSize) * (vak.width / svg.viewBox.baseVal.width);
+            return px < 11 ? `${t.textContent?.trim()} (${px.toFixed(1)} px)` : null;
+          })
+          .filter(Boolean),
+      );
+      expect(teKlein, `${pad} op ${breedte} px`).toEqual([]);
+    }
+    await ctx.close();
+  }
+});
+
+test('de 404-pagina: één h1 en geen toegankelijkheidsproblemen', async ({ page }) => {
+  const res = await page.goto(onbekend);
+  expect(res?.status()).toBe(404);
+  await expect(page.locator('h1')).toHaveCount(1);
+  const uitslag = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(uitslag.violations.filter((v) => v.impact !== 'minor').map((v) => `${v.id}: ${v.nodes[0]?.target}`)).toEqual([]);
 });
 
 // Toegankelijkheid in de toestanden die pas na een handeling bestaan. Hier telt ook 'moderate' mee.

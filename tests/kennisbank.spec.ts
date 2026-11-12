@@ -95,3 +95,23 @@ test('afdrukken van de homepage en een dienstpagina: geen pagina-hoge lege vlakk
     await page.emulateMedia({ media: 'screen' });
   }
 });
+
+test('afdrukken: tekst houdt zijn breedte en is leesbaar op de achtergrond, op elke soort pagina', async ({ page }) => {
+  await page.setViewportSize({ width: 794, height: 1123 });
+  for (const pad of ['/', '/airconditioning', '/warmtepompen', '/onderhoud', '/veelgestelde-vragen', '/kennisbank/r32-of-r290']) {
+    await page.goto(pad);
+    await page.emulateMedia({ media: 'print' });
+    // Geen kolommen van één woord per regel: een alinea van enige lengte is minstens 200 px breed
+    const smal = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('main p, main li')]
+        .filter((el) => el.innerText.trim().length > 60 && el.getBoundingClientRect().height > 0 && el.getBoundingClientRect().width < 200)
+        .map((el) => el.innerText.trim().slice(0, 40)),
+    );
+    expect(smal, `${pad}: te smalle tekstblokken`).toEqual([]);
+    // Dezelfde contrastcontrole als op het scherm
+    const { default: AxeBuilder } = await import('@axe-core/playwright');
+    const uitslag = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
+    expect(uitslag.violations.flatMap((v) => v.nodes.map((n) => String(n.target))), `${pad}: contrast op papier`).toEqual([]);
+    await page.emulateMedia({ media: 'screen' });
+  }
+});

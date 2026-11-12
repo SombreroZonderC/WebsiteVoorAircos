@@ -70,9 +70,10 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
   - contact: gesplitst scherm met keuzetegels (voorgevuld vanaf de dienstpagina's)
 - Navigatie: één header; op mobiel een hamburgermenu met icoon per item, Home bovenaan, actieve pagina oranje gemarkeerd, offerteknop altijd onderin beeld en een lichte gloed bij Airconditioning en Warmtepompen. Subpagina's hebben een zichtbaar kruimelpad (`Kruimelpad.astro`), uit dezelfde bron als de structured data.
 - Kleurdiscipline (focal points): één oranje knop per scherm, neutrale labels, één gloed per scherm, decoratie in inkt. Zie `docs/plan.md` → Kleurdiscipline.
-- Alle interactieve elementen werken zonder JavaScript. Op de dienstpagina's verdwijnen de keuzeknoppen en staan alle uitkomsten onder elkaar (`data-zonder-js-tonen`). Op de homepage wisselt de keuze koelen/verwarmen dan met gewone keuzerondjes en CSS (`home/Keuze.astro`, regels in `global.css`). Het enige wat zonder script ontbreekt is de bewegende thermometer bij verwarmen.
+- Alle interactieve elementen werken zonder JavaScript. Op de dienstpagina's verdwijnen de keuzeknoppen en staan alle uitkomsten onder elkaar (`data-zonder-js-tonen`). Op de homepage wisselt de keuze koelen/verwarmen dan met gewone keuzerondjes en CSS (`home/Keuze.astro`, regels in `global.css`). Het enige wat zonder script ontbreekt is de bewegende thermometer bij verwarmen. Het uitklapmenu op smalle schermen heeft een script nodig; zonder script is de menuknop een link naar het menu onderaan de pagina.
 - Keuzeknoppen delen één toegankelijk patroon (`src/scripts/radiogroep.ts`: pijltjes, Home/End, één knop in de tabvolgorde).
-- Afdrukken: eigen printstijl (zwart op wit, antwoorden uitgeklapt, bronlinks voluit, geen menu's; de contactpagina past op één vel).
+- Afdrukken: de pagina houdt haar eigen kleuren en indeling; alleen menu's, knoppen, formulieren en beweging verdwijnen, en alles wat ingeklapt of gekozen moet worden staat uitgeklapt. Bronlinks staan voluit. De contactpagina past op één vel. (Een eerdere zwart-op-wit-versie brak onderdelen met een eigen donkere achtergrond.)
+- Tekeningen op een telefoon: labels krijgen grotere letters (minimaal ongeveer 11 px); past een tekening dan niet, dan kun je hem opzij schuiven in plaats van dat hij verder krimpt (`.tekening-schuif` in `global.css`).
 - Kennisbankartikelen met drie of meer tussenkoppen krijgen automatisch een inhoudsopgave.
 - Achtergrond en beslissingen: [`docs/plan.md`](docs/plan.md). Ontwerprondes: `docs/prototype-ronde-*/` (screenshots).
 
@@ -98,7 +99,7 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
 - Voorinvullen vanaf de dienstpagina's (`?onderwerp=`, `?ruimtes=`, `?klacht=`, `?advies=`) werkt alleen met vaste waarden; vrije tekst uit een link wordt nooit overgenomen.
 - E-mailadressen moeten een punt in het domein hebben (`a@b` laat een browser zelf door).
 - Spam: verborgen lokveld (Netlify honeypot), het spamfilter van Netlify Forms en maximale lengtes. Bewust geen captcha: die laadt scripts van een ander domein en hindert bezoekers. Komt er toch veel spam binnen, dan is een captcha van Netlify de volgende stap (de Content-Security-Policy moet dan worden verruimd).
-- Een naam of bericht van alleen spaties telt als leeg; telefoonnummer en postcode worden op vorm gecontroleerd. Zonder JavaScript controleert de browser zelf (`required`, `pattern`), behalve een bericht van alleen spaties.
+- Een naam of bericht van alleen spaties telt als leeg; een telefoonnummer heeft minstens zes cijfers, een postcode de vorm 1234 AB. Zonder JavaScript controleert de browser zelf (`required`, `pattern`), behalve een bericht van alleen spaties.
 - De echte verzending via Netlify kan pas op een deploy getest worden: zie de controlelijst in [`docs/domein-en-hosting.md`](docs/domein-en-hosting.md).
 
 ## Beveiliging
@@ -116,9 +117,9 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
 - `tests/`: de lijst met pagina's komt uit de sitemap van de build, dus een nieuwe pagina of een nieuw artikel wordt vanzelf meegetest. Desktop en mobiel.
   - `paginas.spec.ts`: elke pagina laadt zonder (console)fouten, heeft één h1, geen ernstige toegankelijkheidsfouten (axe), geen horizontale scroll, geldige JSON-LD, labels binnen de tekeningen
   - `interacties.spec.ts`, `navigatie.spec.ts`, `formulier.spec.ts`, `kennisbank.spec.ts`: de interactieve onderdelen, menu's, het formulier, inhoudsopgave, feed en afdrukken
-  - `zonder-js.spec.ts`: alle inhoud is bereikbaar zonder JavaScript
+  - `zonder-js.spec.ts`: alle inhoud is bereikbaar zonder JavaScript, ook de verwarmen-kant van de homepage en het menu op een smal scherm
   - `beveiliging.spec.ts`: headers, CSP, geen externe verzoeken, geen vrije tekst uit links
-  - `visueel.spec.ts`: elke vindbare pagina als volledig beeld vergeleken met een vastgelegd beeld (desktop en mobiel, maximaal 0,5% afwijking), plus drie scrollstanden van de homepage mét het diepte-effect. Na een bewuste ontwerpwijziging: `npm run test:beelden`, de nieuwe beelden nakijken en committen. De beelden (37 stuks, ruim 20 MB) zijn gemaakt met de Chromium van Playwright 1.63 op Linux; een andere browserversie kan nieuwe beelden vragen.
+  - `visueel.spec.ts`: elke vindbare pagina als volledig beeld vergeleken met een vastgelegd beeld (desktop en mobiel, vrijwel exact: maximaal 400 afwijkende beeldpunten), plus drie scrollstanden van de homepage mét het diepte-effect. Na een bewuste ontwerpwijziging: `npm run test:beelden`, de nieuwe beelden nakijken en committen. Afweging: de beelden (37 stuks, ruim 20 MB) staan in de repo zodat een wijziging en haar beeld in dezelfde commit zitten; ze zijn gemaakt met de Chromium van Playwright 1.63 op Linux, dus een andere browserversie vraagt nieuwe beelden.
   - `vindbaarheid.spec.ts`: unieke titels en omschrijvingen, canonical, deelafbeelding, alle interne links en ankers, `llms.txt`
 - `.github/workflows/ci.yml`: bij elke push `npm audit`, `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, mediaan van 3 metingen per pagina, `lighthouserc.json`).
 

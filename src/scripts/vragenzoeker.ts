@@ -64,7 +64,12 @@ export function startVragenzoeker(veld: HTMLInputElement) {
 
   // Link naar één vraag: openklappen. Een geopende vraag zet zijn anker in de adresbalk.
   const openAnker = () => {
-    const doel = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    let doel: HTMLElement | null = null;
+    try {
+      doel = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    } catch {
+      // Verminkte link (ongeldige %-codering): dan gewoon niets openklappen
+    }
     if (doel instanceof HTMLDetailsElement && !doel.hidden) {
       doel.open = true;
       doel.scrollIntoView({ block: 'start' });

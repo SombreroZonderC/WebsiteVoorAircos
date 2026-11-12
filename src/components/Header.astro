@@ -40,6 +40,10 @@ const pad = paginaPad(Astro.url.pathname);
         <span>{bedrijf.telefoon.weergave}</span>
       </a>
       <a class="btn small" href="/contact">Offerte</a>
+      {/* Zonder JavaScript kan het menu niet openklappen: dan springt deze link naar het menu onderaan de pagina */}
+      <a class="toggle zonder-js" href="#menu" aria-label="Naar het menu onderaan de pagina">
+        <Icon name="menu" />
+      </a>
       <button class="toggle" aria-expanded="false" aria-controls="hoofdmenu" aria-label="Menu openen" data-toggle>
         <Icon name="menu" class="i-open" />
         <Icon name="close" class="i-close" />
@@ -408,6 +412,16 @@ const pad = paginaPad(Astro.url.pathname);
       min-width: 44px;
       min-height: 44px;
       justify-content: center;
+    }
+  }
+  /* De link naar het menu onderaan is er alleen zonder JavaScript, de menuknop alleen mét */
+  .toggle.zonder-js,
+  :global(.no-js) button.toggle {
+    display: none;
+  }
+  @media (max-width: 1180px) {
+    :global(.no-js) .toggle.zonder-js {
+      display: inline-flex;
     }
   }
 </style>

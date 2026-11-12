@@ -56,3 +56,16 @@ test('zonder JavaScript: de homepage wisselt tussen koelen en verwarmen met keuz
   expect(zichtbaar.filter((z) => z.kant === 'koel').some((z) => z.aan)).toBe(false);
   await expect(page.locator('a.btn[data-m="warm"]')).toHaveAttribute('href', /onderwerp=warmtepompen/);
 });
+
+test('zonder JavaScript op een smal scherm: de menuknop is een link naar het menu onderaan', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'alleen op een smal scherm');
+  await page.goto('/airconditioning');
+  await expect(page.locator('button[data-toggle]')).toBeHidden();
+  await page.getByRole('link', { name: 'Naar het menu onderaan de pagina' }).click();
+  await expect(page).toHaveURL(/#menu$/);
+  const menu = page.getByRole('navigation', { name: 'Menu' });
+  await expect(menu).toBeInViewport();
+  // force: zonder JavaScript kan Playwright niet meten of de link stilstaat (de pagina scrolt er rustig heen)
+  await menu.getByRole('link', { name: 'Warmtepompen' }).click({ force: true });
+  await expect(page).toHaveURL(/\/warmtepompen$/);
+});

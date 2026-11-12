@@ -15,6 +15,9 @@ test('formulier: lege verzending toont meldingen per veld en zet de focus op het
 test('formulier: melding verdwijnt zodra het veld klopt; postcode en e-mail worden gecontroleerd', async ({ page }) => {
   await page.goto('/contact');
   // Een adres zonder punt in het domein (a@b) laat de browser zelf door; het formulier niet
+  await page.locator('#email').fill('a@b.12');
+  await page.locator('#naam').focus();
+  await expect(page.locator('#email-fout')).toContainText('klopt niet');
   await page.locator('#email').fill('a@b');
   await page.locator('#naam').focus();
   await expect(page.locator('#email-fout')).toContainText('klopt niet');
@@ -70,7 +73,7 @@ test('formulier: een concept blijft bewaard na verversen en is weg na versturen'
 test('formulier: een ongeldig telefoonnummer wordt afgewezen, een gewoon nummer niet', async ({ page }) => {
   await page.goto('/contact');
   const telefoon = page.locator('#telefoon');
-  for (const fout of ['abc', '12', '<script>']) {
+  for (const fout of ['abc', '12', '<script>', '()()()()()', '--------', '+31 (0)']) {
     await telefoon.fill(fout);
     await telefoon.blur();
     await expect(page.locator('#telefoon-fout'), fout).toContainText('klopt niet');

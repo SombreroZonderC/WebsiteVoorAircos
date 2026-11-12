@@ -16,8 +16,8 @@ const year = new Date().getFullYear();
         </p>
       </div>
 
-      <div>
-        <h2 class="h">Menu</h2>
+      <nav id="menu" aria-labelledby="menu-kop" tabindex="-1">
+        <h2 class="h" id="menu-kop">Menu</h2>
         <ul>
           {
             volledigMenu.map((item) => (
@@ -27,7 +27,7 @@ const year = new Date().getFullYear();
             ))
           }
         </ul>
-      </div>
+      </nav>
 
       <div>
         <h2 class="h">Contact</h2>

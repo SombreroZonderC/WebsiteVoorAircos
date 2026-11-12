@@ -29,23 +29,25 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
             </div>
           </div>
           <figure class="kaart-fig">
-          <svg class="kaart" viewBox="0 0 420 380" role="img" aria-label={`Kaart ter oriëntatie met ${a.plaats} in het midden en plaatsen in de buurt`}>
-            <circle class="ring r2" cx="210" cy="190" r="170" />
-            <circle class="ring r1" cx="210" cy="190" r="85" />
-            <text class="km" x="214" y="100">10 km</text>
-            <text class="km" x="214" y="16">20 km</text>
-            <g class="plaats"><circle cx="214" cy="135" r="3.5" /><text x="221" y="139">Raalte</text></g>
-            <g class="plaats"><circle cx="150" cy="261" r="3.5" /><text x="157" y="265">Deventer</text></g>
-            <g class="plaats"><circle cx="296" cy="234" r="3.5" /><text x="303" y="238">Holten</text></g>
-            <g class="plaats"><circle cx="248" cy="83" r="3.5" /><text x="255" y="87">Lemelerveld</text></g>
-            <g class="plaats"><circle cx="132" cy="137" r="3.5" /><text x="139" y="141">Wijhe</text></g>
-            <g class="plaats"><circle cx="118" cy="182" r="3.5" /><text x="125" y="186">Olst</text></g>
-            <g class="plaats"><circle cx="221" cy="265" r="3.5" /><text x="228" y="269">Bathmen</text></g>
-            <g class="plaats"><circle cx="322" cy="159" r="3.5" /><text x="329" y="163">Nijverdal</text></g>
-            <circle class="puls" cx="210" cy="190" r="14" />
-            <circle class="pin" cx="210" cy="190" r="7" />
-            <text class="hoofd" x="222" y="196">{a.plaats}</text>
-          </svg>
+          <div class="tekening-schuif">
+            <svg class="kaart" viewBox="0 0 420 380" role="img" aria-label={`Kaart ter oriëntatie met ${a.plaats} in het midden en plaatsen in de buurt`}>
+              <circle class="ring r2" cx="210" cy="190" r="170" />
+              <circle class="ring r1" cx="210" cy="190" r="85" />
+              <text class="km" x="214" y="100">10 km</text>
+              <text class="km" x="214" y="16">20 km</text>
+              <g class="plaats"><circle cx="214" cy="135" r="3.5" /><text x="221" y="139">Raalte</text></g>
+              <g class="plaats"><circle cx="150" cy="261" r="3.5" /><text x="143" y="265" text-anchor="end">Deventer</text></g>
+              <g class="plaats"><circle cx="296" cy="234" r="3.5" /><text x="303" y="238">Holten</text></g>
+              <g class="plaats"><circle cx="248" cy="83" r="3.5" /><text x="255" y="87">Lemelerveld</text></g>
+              <g class="plaats"><circle cx="132" cy="137" r="3.5" /><text x="139" y="141">Wijhe</text></g>
+              <g class="plaats"><circle cx="118" cy="182" r="3.5" /><text x="125" y="186">Olst</text></g>
+              <g class="plaats"><circle cx="221" cy="265" r="3.5" /><text x="228" y="269">Bathmen</text></g>
+              <g class="plaats"><circle cx="322" cy="159" r="3.5" /><text x="329" y="163">Nijverdal</text></g>
+              <circle class="puls" cx="210" cy="190" r="14" />
+              <circle class="pin" cx="210" cy="190" r="7" />
+              <text class="hoofd" x="222" y="196">{a.plaats}</text>
+            </svg>
+          </div>
           <figcaption>Plaatsen ter oriëntatie, ringen op 10 en 20 km. Geen toezegging over het werkgebied.</figcaption>
           </figure>
         </section>
@@ -258,6 +260,15 @@ const kaartQuery = encodeURIComponent(`${a.straat}, ${a.postcode} ${a.plaats}`);
     }
     .kaart-fig {
       max-width: 380px;
+    }
+  }
+  /* Smal scherm: grotere letters in de tekening, zodat labels leesbaar blijven (zie .tekening-schuif) */
+  @media (max-width: 520px) {
+    .plaats text {
+      font-size: 14px;
+    }
+    .km {
+      font-size: 13px;
     }
   }
 </style>

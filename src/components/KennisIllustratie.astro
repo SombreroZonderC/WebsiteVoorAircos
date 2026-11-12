@@ -19,163 +19,165 @@ const labels: Record<Props['soort'], string> = {
 ---
 
 <figure class="illustratie">
-  <svg viewBox="0 0 480 260" role="img" aria-label={labels[soort]}>
-    {
-      soort === 'hybride-vs-electric' && (
-        <>
-          <path class="grond" d="M10 220 H470" />
-          <text class="titel" x="40" y="40">hybride</text>
-          <path d="M28 118 L100 60 L172 118 M40 110 V220 H160 V110" />
-          <rect x="56" y="180" width="30" height="30" rx="3" />
-          <path class="dun" d="M64 184 v22 M71 184 v22 M78 184 v22" />
-          <rect class="warm" x="120" y="132" width="26" height="40" rx="3" />
-          <path class="warm dun" d="M127 160 q6 -14 12 0 q-6 6 -12 0" />
-          <path class="dun" d="M133 172 V220" />
-          <text x="112" y="124">gas</text>
-          <rect x="178" y="188" width="34" height="32" rx="3" />
-          <circle cx="195" cy="204" r="9" />
-          <path class="stroom warm" d="M178 200 H90" />
-          <text x="40" y="248">warmtepomp + cv-ketel</text>
-
-          <text class="titel" x="270" y="40">all-electric</text>
-          <path d="M258 118 L330 60 L402 118 M270 110 V220 H390 V110" />
-          <rect x="286" y="180" width="30" height="30" rx="3" />
-          <path class="dun" d="M294 184 v22 M301 184 v22 M308 184 v22" />
-          <rect class="koud" x="364" y="128" width="20" height="52" rx="10" />
-          <text x="284" y="146">geen gas</text>
-          <rect x="408" y="188" width="34" height="32" rx="3" />
-          <circle cx="425" cy="204" r="9" />
-          <path class="stroom warm" d="M408 200 H320" />
-          <text x="270" y="248">alleen warmtepomp</text>
-        </>
-      )
-    }
-    {
-      soort === 'airco-verwarmen' && (
-        <>
-          <path class="grond" d="M10 230 H470" />
-          <path class="muur" d="M196 24 V230 M204 24 V230" />
-          <text class="titel" x="20" y="40">buiten</text>
-          <text class="titel" x="220" y="40">binnen</text>
-          <path class="stroom koud" d="M16 184 q8 -6 16 0 t16 0 M16 200 q8 -6 16 0 t16 0 M16 216 q8 -6 16 0 t16 0" />
-          <text x="16" y="160">buitenlucht</text>
-          <rect x="60" y="170" width="80" height="56" rx="4" />
-          <circle cx="100" cy="198" r="18" />
-          <path class="dun" d="M100 180 v36 M82 198 h36" />
-          <path class="dun" d="M140 190 H176 Q184 190 184 182 V84 Q184 76 192 76 H300" />
-          <text x="212" y="122">koudemiddel</text>
-          <rect x="300" y="56" width="150" height="44" rx="10" />
-          <path class="dun" d="M312 70 H438 M312 80 H438" />
-          <path class="stroom warm" d="M330 116 c8 14 -8 26 0 40 M375 116 c8 14 -8 26 0 40 M420 116 c8 14 -8 26 0 40" />
-          <text x="318" y="180">warme lucht</text>
-          <text x="220" y="214">alleen deze ruimte</text>
-        </>
-      )
-    }
-    {
-      soort === 'geluid-perceel' && (
-        <>
-          <path class="grens" d="M300 16 V244" />
-          <text x="308" y="34">perceelgrens</text>
-          <rect x="30" y="60" width="150" height="130" rx="3" />
-          <text x="62" y="130">jouw huis</text>
-          <rect x="340" y="60" width="120" height="130" rx="3" />
-          <text x="376" y="130">buren</text>
-          <rect x="200" y="150" width="40" height="30" rx="3" />
-          <circle cx="220" cy="165" r="8" />
-          <path class="stroom koud" d="M252 149 a22 22 0 0 1 0 32 M264 139 a36 36 0 0 1 0 52 M276 129 a50 50 0 0 1 0 72" />
-          <text x="176" y="206">buitenunit</text>
-          <circle class="punt" cx="300" cy="165" r="5" />
-          <text class="warm-tekst" x="308" y="222">max. 40 dB</text>
-        </>
-      )
-    }
-    {
-      soort === 'onderhoud-taken' && (
-        <>
-          <rect x="30" y="40" width="200" height="56" rx="10" />
-          <path class="dun" d="M44 56 H216 M44 66 H216" />
-          <path class="dun" d="M110 100 V114 M104 108 l6 6 l6 -6" />
-          <rect class="koud" x="50" y="120" width="120" height="40" rx="3" />
-          <path class="koud dun" d="M70 120 v40 M90 120 v40 M110 120 v40 M130 120 v40 M150 120 v40 M50 140 h120" />
-          <text x="30" y="190">filter: zelf schoonmaken</text>
-          <path class="dun" d="M230 74 H260 Q270 74 270 84 V160 H300" />
-          <path class="warm" d="M262 122 l8 -8 a6 6 0 1 1 4 4 l-8 8 z" />
-          <text x="282" y="100">koudemiddel: vakman</text>
-          <rect x="300" y="130" width="120" height="80" rx="4" />
-          <circle cx="360" cy="170" r="24" />
-          <path class="dun" d="M360 146 v48 M336 170 h48" />
-          <path class="koud dun" d="M286 222 c4 -14 20 -18 28 -12 c-4 12 -18 18 -28 12 z M290 220 l18 -8 M428 214 c4 -14 20 -18 28 -12 c-4 12 -18 18 -28 12 z M432 212 l18 -8" />
-          <text x="470" y="248" text-anchor="end">buitenunit vrijhouden</text>
-        </>
-      )
-    }
-    {
-      soort === 'warmtelast-ruimte' && (
-        <>
-          <path class="grond" d="M20 230 H460" />
-          <path d="M40 90 L240 30 L440 90 M60 84 V230 H420 V84" />
-          <path class="dun" d="M76 92 L240 44 L404 92" />
-          <path class="warm" d="M200 60 v22 m-5 -6 l5 6 l5 -6 M260 60 v22 m-5 -6 l5 6 l5 -6 M310 66 v18 m-5 -6 l5 6 l5 -6" />
-          <text x="196" y="108">warm dak</text>
-          <rect class="koud" x="404" y="122" width="16" height="56" rx="2" />
-          <circle class="warm" cx="452" cy="58" r="12" />
-          <path class="warm dun" d="M452 38 v-8 M472 58 h-6 M438 44 l-5 -5 M466 44 l5 -5" />
-          <path class="stroom warm" d="M444 76 L398 136 M450 82 L404 160" />
-          <text x="420" y="24">zon</text>
-          <rect x="72" y="104" width="96" height="24" rx="6" />
-          <path class="dun" d="M80 114 H160" />
-          <text x="72" y="148">airco</text>
-          <circle cx="230" cy="168" r="9" />
-          <path d="M230 177 V206 M230 186 L218 198 M230 186 L242 198 M230 206 L221 228 M230 206 L239 228" />
-          <text x="204" y="252">mensen</text>
-          <path d="M300 200 H356 M306 200 V228 M350 200 V228" />
-          <rect x="314" y="178" width="26" height="18" rx="2" />
-          <text x="290" y="252">apparaten</text>
-        </>
-      )
-    }
-    {
-      soort === 'werkbereik-vorst' && (
-        <>
-          <text x="440" y="44" text-anchor="end">Basis-lijn (HR)</text>
-          <rect class="balk" x="280" y="52" width="160" height="24" />
-          <text class="in-balk" x="288" y="69">tot −10 °C</text>
-          <text x="440" y="100" text-anchor="end">Diamond-lijn (LN)</text>
-          <rect class="balk" x="240" y="108" width="200" height="24" />
-          <text class="in-balk" x="248" y="125">tot −15 °C</text>
-          <text x="440" y="156" text-anchor="end">RZ met Hyper Heating</text>
-          <rect class="balk warm-balk" x="120" y="164" width="320" height="24" />
-          <text class="in-balk" x="128" y="181">tot −30 °C</text>
-          <path class="dun" d="M120 204 H440 M120 204 v6 M200 204 v6 M280 204 v6 M360 204 v6 M440 204 v6" />
-          <text x="120" y="228" text-anchor="middle">−30°</text>
-          <text x="200" y="228" text-anchor="middle">−20°</text>
-          <text x="280" y="228" text-anchor="middle">−10°</text>
-          <text x="360" y="228" text-anchor="middle">0°</text>
-          <text x="440" y="228" text-anchor="middle">+10°</text>
-          <text x="20" y="252">buitentemperatuur</text>
-        </>
-      )
-    }
-    {
-      soort === 'koudemiddel-gwp' && (
-        <>
-          <text class="titel" x="24" y="44">Broeikaswaarde per kilo</text>
-          <text x="24" y="92">R32</text>
-          <rect class="balk" x="100" y="74" width="340" height="28" />
-          <text class="in-balk" x="112" y="93">675</text>
-          <text x="24" y="152">R290</text>
-          <rect class="balk warm-balk" x="100" y="134" width="3" height="28" />
-          <text x="114" y="153">≈ 3</text>
-          <path class="dun" d="M100 186 H440 M100 186 v6 M270 186 v6 M440 186 v6" />
-          <text x="100" y="210" text-anchor="middle">0</text>
-          <text x="270" y="210" text-anchor="middle">350</text>
-          <text x="440" y="210" text-anchor="middle">700</text>
-          <text x="24" y="246">1 kg R32 ≈ 675 kg CO₂ · 1 kg R290 ≈ 3 kg CO₂</text>
-        </>
-      )
-    }
-  </svg>
+  <div class="tekening-schuif">
+    <svg viewBox="0 0 480 260" role="img" aria-label={labels[soort]}>
+      {
+        soort === 'hybride-vs-electric' && (
+          <>
+            <path class="grond" d="M10 220 H470" />
+            <text class="titel" x="40" y="40">hybride</text>
+            <path d="M28 118 L100 60 L172 118 M40 110 V220 H160 V110" />
+            <rect x="56" y="180" width="30" height="30" rx="3" />
+            <path class="dun" d="M64 184 v22 M71 184 v22 M78 184 v22" />
+            <rect class="warm" x="120" y="132" width="26" height="40" rx="3" />
+            <path class="warm dun" d="M127 160 q6 -14 12 0 q-6 6 -12 0" />
+            <path class="dun" d="M133 172 V220" />
+            <text x="112" y="124">gas</text>
+            <rect x="178" y="188" width="34" height="32" rx="3" />
+            <circle cx="195" cy="204" r="9" />
+            <path class="stroom warm" d="M178 200 H90" />
+            <text x="40" y="248">warmtepomp + cv-ketel</text>
+  
+            <text class="titel" x="270" y="40">all-electric</text>
+            <path d="M258 118 L330 60 L402 118 M270 110 V220 H390 V110" />
+            <rect x="286" y="180" width="30" height="30" rx="3" />
+            <path class="dun" d="M294 184 v22 M301 184 v22 M308 184 v22" />
+            <rect class="koud" x="364" y="128" width="20" height="52" rx="10" />
+            <text x="284" y="146">geen gas</text>
+            <rect x="408" y="188" width="34" height="32" rx="3" />
+            <circle cx="425" cy="204" r="9" />
+            <path class="stroom warm" d="M408 200 H320" />
+            <text x="270" y="248">alleen warmtepomp</text>
+          </>
+        )
+      }
+      {
+        soort === 'airco-verwarmen' && (
+          <>
+            <path class="grond" d="M10 230 H470" />
+            <path class="muur" d="M196 24 V230 M204 24 V230" />
+            <text class="titel" x="20" y="40">buiten</text>
+            <text class="titel" x="220" y="40">binnen</text>
+            <path class="stroom koud" d="M16 184 q8 -6 16 0 t16 0 M16 200 q8 -6 16 0 t16 0 M16 216 q8 -6 16 0 t16 0" />
+            <text x="16" y="160">buitenlucht</text>
+            <rect x="60" y="170" width="80" height="56" rx="4" />
+            <circle cx="100" cy="198" r="18" />
+            <path class="dun" d="M100 180 v36 M82 198 h36" />
+            <path class="dun" d="M140 190 H176 Q184 190 184 182 V84 Q184 76 192 76 H300" />
+            <text x="212" y="122">koudemiddel</text>
+            <rect x="300" y="56" width="150" height="44" rx="10" />
+            <path class="dun" d="M312 70 H438 M312 80 H438" />
+            <path class="stroom warm" d="M330 116 c8 14 -8 26 0 40 M375 116 c8 14 -8 26 0 40 M420 116 c8 14 -8 26 0 40" />
+            <text x="318" y="180">warme lucht</text>
+            <text x="220" y="214">alleen deze ruimte</text>
+          </>
+        )
+      }
+      {
+        soort === 'geluid-perceel' && (
+          <>
+            <path class="grens" d="M300 16 V244" />
+            <text x="308" y="34">perceelgrens</text>
+            <rect x="30" y="60" width="150" height="130" rx="3" />
+            <text x="62" y="130">jouw huis</text>
+            <rect x="340" y="60" width="120" height="130" rx="3" />
+            <text x="376" y="130">buren</text>
+            <rect x="200" y="150" width="40" height="30" rx="3" />
+            <circle cx="220" cy="165" r="8" />
+            <path class="stroom koud" d="M252 149 a22 22 0 0 1 0 32 M264 139 a36 36 0 0 1 0 52 M276 129 a50 50 0 0 1 0 72" />
+            <text x="176" y="206">buitenunit</text>
+            <circle class="punt" cx="300" cy="165" r="5" />
+            <text class="warm-tekst" x="308" y="222">max. 40 dB</text>
+          </>
+        )
+      }
+      {
+        soort === 'onderhoud-taken' && (
+          <>
+            <rect x="30" y="40" width="200" height="56" rx="10" />
+            <path class="dun" d="M44 56 H216 M44 66 H216" />
+            <path class="dun" d="M110 100 V114 M104 108 l6 6 l6 -6" />
+            <rect class="koud" x="50" y="120" width="120" height="40" rx="3" />
+            <path class="koud dun" d="M70 120 v40 M90 120 v40 M110 120 v40 M130 120 v40 M150 120 v40 M50 140 h120" />
+            <text x="30" y="190">filter: zelf schoonmaken</text>
+            <path class="dun" d="M230 74 H260 Q270 74 270 84 V160 H300" />
+            <path class="warm" d="M262 122 l8 -8 a6 6 0 1 1 4 4 l-8 8 z" />
+            <text x="282" y="100">koudemiddel: vakman</text>
+            <rect x="300" y="130" width="120" height="80" rx="4" />
+            <circle cx="360" cy="170" r="24" />
+            <path class="dun" d="M360 146 v48 M336 170 h48" />
+            <path class="koud dun" d="M286 222 c4 -14 20 -18 28 -12 c-4 12 -18 18 -28 12 z M290 220 l18 -8 M428 214 c4 -14 20 -18 28 -12 c-4 12 -18 18 -28 12 z M432 212 l18 -8" />
+            <text x="470" y="248" text-anchor="end">buitenunit vrijhouden</text>
+          </>
+        )
+      }
+      {
+        soort === 'warmtelast-ruimte' && (
+          <>
+            <path class="grond" d="M20 230 H460" />
+            <path d="M40 90 L240 30 L440 90 M60 84 V230 H420 V84" />
+            <path class="dun" d="M76 92 L240 44 L404 92" />
+            <path class="warm" d="M200 60 v22 m-5 -6 l5 6 l5 -6 M260 60 v22 m-5 -6 l5 6 l5 -6 M310 66 v18 m-5 -6 l5 6 l5 -6" />
+            <text x="196" y="108">warm dak</text>
+            <rect class="koud" x="404" y="122" width="16" height="56" rx="2" />
+            <circle class="warm" cx="452" cy="58" r="12" />
+            <path class="warm dun" d="M452 38 v-8 M472 58 h-6 M438 44 l-5 -5 M466 44 l5 -5" />
+            <path class="stroom warm" d="M444 76 L398 136 M450 82 L404 160" />
+            <text x="420" y="24">zon</text>
+            <rect x="72" y="104" width="96" height="24" rx="6" />
+            <path class="dun" d="M80 114 H160" />
+            <text x="72" y="148">airco</text>
+            <circle cx="230" cy="168" r="9" />
+            <path d="M230 177 V206 M230 186 L218 198 M230 186 L242 198 M230 206 L221 228 M230 206 L239 228" />
+            <text x="204" y="252">mensen</text>
+            <path d="M300 200 H356 M306 200 V228 M350 200 V228" />
+            <rect x="314" y="178" width="26" height="18" rx="2" />
+            <text x="290" y="252">apparaten</text>
+          </>
+        )
+      }
+      {
+        soort === 'werkbereik-vorst' && (
+          <>
+            <text x="440" y="44" text-anchor="end">Basis-lijn (HR)</text>
+            <rect class="balk" x="280" y="52" width="160" height="24" />
+            <text class="in-balk" x="288" y="69">tot −10 °C</text>
+            <text x="440" y="100" text-anchor="end">Diamond-lijn (LN)</text>
+            <rect class="balk" x="240" y="108" width="200" height="24" />
+            <text class="in-balk" x="248" y="125">tot −15 °C</text>
+            <text x="440" y="156" text-anchor="end">RZ met Hyper Heating</text>
+            <rect class="balk warm-balk" x="120" y="164" width="320" height="24" />
+            <text class="in-balk" x="128" y="181">tot −30 °C</text>
+            <path class="dun" d="M120 204 H440 M120 204 v6 M200 204 v6 M280 204 v6 M360 204 v6 M440 204 v6" />
+            <text x="120" y="228" text-anchor="middle">−30°</text>
+            <text x="200" y="228" text-anchor="middle">−20°</text>
+            <text x="280" y="228" text-anchor="middle">−10°</text>
+            <text x="360" y="228" text-anchor="middle">0°</text>
+            <text x="440" y="228" text-anchor="middle">+10°</text>
+            <text x="20" y="252">buitentemperatuur</text>
+          </>
+        )
+      }
+      {
+        soort === 'koudemiddel-gwp' && (
+          <>
+            <text class="titel" x="24" y="44">Broeikaswaarde per kilo</text>
+            <text x="24" y="92">R32</text>
+            <rect class="balk" x="100" y="74" width="340" height="28" />
+            <text class="in-balk" x="112" y="93">675</text>
+            <text x="24" y="152">R290</text>
+            <rect class="balk warm-balk" x="100" y="134" width="3" height="28" />
+            <text x="114" y="153">≈ 3</text>
+            <path class="dun" d="M100 186 H440 M100 186 v6 M270 186 v6 M440 186 v6" />
+            <text x="100" y="210" text-anchor="middle">0</text>
+            <text x="270" y="210" text-anchor="middle">350</text>
+            <text x="440" y="210" text-anchor="middle">700</text>
+            <text x="24" y="246">1 kg R32 ≈ 675 kg CO₂ · 1 kg R290 ≈ 3 kg CO₂</text>
+          </>
+        )
+      }
+    </svg>
+  </div>
   <figcaption>{bijschrift}</figcaption>
 </figure>
 
@@ -255,5 +257,17 @@ const labels: Record<Props['soort'], string> = {
     margin-top: 14px;
     font-size: 0.95rem;
     color: var(--muted-on-dark);
+  }
+  /* Smal scherm: grotere letters in de tekening, zodat labels leesbaar blijven (zie .tekening-schuif) */
+  @media (max-width: 520px) {
+    .illustratie {
+      padding: 12px;
+    }
+    text {
+      font-size: 16px;
+    }
+    .titel {
+      font-size: 18px;
+    }
   }
 </style>

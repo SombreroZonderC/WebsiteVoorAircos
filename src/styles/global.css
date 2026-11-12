@@ -515,6 +515,22 @@ html.menu-open .mobile-cta {
   }
 }
 
+/* Tekeningen met labels (component zet er <div class="tekening-schuif"> omheen). Op een smal scherm
+   krijgen de labels grotere letters; past de tekening dan nog niet, dan wordt hij niet verder verkleind
+   maar kun je hem opzij schuiven. Zo blijven labels minimaal ongeveer 11 px. */
+@media (max-width: 520px) {
+  .tekening-schuif {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  .tekening-schuif > svg {
+    min-width: 330px;
+  }
+  .tekening-schuif > svg.kaart {
+    min-width: 356px;
+  }
+}
+
 /* Rustige overgang tussen pagina's (browsers die het ondersteunen), alleen als beweging mag */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
@@ -526,44 +542,38 @@ html.menu-open .mobile-cta {
   }
 }
 
-/* Afdrukken (artikel, antwoorden, contactgegevens): zwart op wit, zonder menu, knoppen en decoratie */
+/* Afdrukken. De pagina houdt haar eigen kleuren en indeling (die zijn getest); er verdwijnt alleen wat op
+   papier niets doet: menu's, knoppen, formulieren, beweging. Alles wat ingeklapt of gekozen moet worden,
+   staat uitgeklapt. Een eerdere versie zette alles om naar zwart op wit; dat brak onderdelen met een eigen
+   donkere achtergrond. */
 @media print {
   :root {
-    --text-on-dark: #000;
-    --muted-on-dark: #333;
-    --text: #000;
-    --muted: #333;
-    --line-dark: #bbb;
     /* Geen vaste header op papier, dus ook geen ruimte ervoor */
     --kop-h: 0px;
     --kruimel-h: 0px;
   }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
   body {
-    background: #fff;
     font-size: 11pt;
   }
   .header,
   .mobile-cta,
   .skip-link,
   .kruimelpad,
-  .glow,
   .btn,
   form,
   [role='radiogroup'],
-  [aria-hidden='true']:not(svg) {
+  aside {
     display: none !important;
   }
-  .vlak,
-  .footer,
-  .donker,
-  .dark {
-    background: #fff !important;
-    color: #000 !important;
-  }
+  /* Niets blijft plakken, wachten op scrollen of half doorzichtig staan */
   .plak,
-  .vlak-inhoud {
+  .vlak-inhoud,
+  [style*='sticky'] {
     position: static !important;
-    min-height: 0 !important;
     transform: none !important;
     opacity: 1 !important;
     filter: none !important;
@@ -571,6 +581,12 @@ html.menu-open .mobile-cta {
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
   /* Alles uitgeklapt: antwoorden en keuzepanelen */
   details > :not(summary),
@@ -585,36 +601,17 @@ html.menu-open .mobile-cta {
   h2,
   h3 {
     break-after: avoid;
-    color: #000 !important;
-    -webkit-text-fill-color: #000 !important;
-    background: none !important;
   }
   figure,
   li,
-  details {
+  details,
+  article {
     break-inside: avoid;
-  }
-  /* Tekeningen houden hun eigen kleuren (donkere achtergrond met lichte tekst) */
-  figure {
-    --text-on-dark: #eef3f5;
-    --muted-on-dark: #93a6ae;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  * {
-    box-shadow: none !important;
   }
   /* Zonder zijkolom mag de tekst de volle breedte gebruiken */
   .layout,
   .body {
     display: block !important;
-  }
-  /* Zijkolommen met alleen een knop of verwijzingen */
-  aside {
-    display: none !important;
-  }
-  a {
-    color: #000;
   }
   /* Externe bronnen leesbaar op papier */
   .prose a[href^='http']::after,

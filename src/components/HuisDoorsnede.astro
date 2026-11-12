@@ -23,33 +23,35 @@ const sleutels = ['hybride', 'electric'] as const;
   </div>
 
   <div class="raster">
-    <svg viewBox="0 0 420 300" role="img" aria-label="Doorsnede van een huis met warmtepomp">
-      <path d="M40 130 L210 30 L380 130" />
-      <path d="M64 116 V270 H356 V116" />
-      <path class="dun" d="M64 196 H356" />
-      <rect x="92" y="222" width="40" height="44" rx="4" />
-      <path class="dun" d="M100 232 h24 M100 242 h24 M100 252 h24" />
-      <rect x="92" y="142" width="40" height="44" rx="4" />
-      <path class="dun" d="M100 152 h24 M100 162 h24 M100 172 h24" />
-      <text x="140" y="204">radiator</text>
-      <g class="ketel">
-        <rect x="262" y="212" width="36" height="52" rx="4" />
-        <path class="vlam" d="M272 248 q8 -18 16 0 q-8 -6 -16 0" />
-        <text x="302" y="204">cv-ketel</text>
-        <path class="gas" d="M280 264 V292" />
-        <text x="288" y="290">gas</text>
-      </g>
-      <g class="geenGas">
-        <path class="dun" d="M280 270 V292" />
-        <path class="kruis" d="M270 274 l20 16 M290 274 l-20 16" />
-        <rect x="262" y="212" width="36" height="52" rx="4" class="boiler" />
-        <text x="302" y="204">boiler</text>
-      </g>
-      <rect x="378" y="232" width="36" height="34" rx="4" />
-      <circle cx="396" cy="249" r="11" />
-      <text x="414" y="290" text-anchor="end">warmtepomp</text>
-      <path class="stroom" d="M378 249 H300 M262 249 H132 M112 222 V186 M112 142 V126 H280 V212" />
-    </svg>
+    <div class="tekening-schuif">
+      <svg viewBox="0 0 420 300" role="img" aria-label="Doorsnede van een huis met warmtepomp">
+        <path d="M40 130 L210 30 L380 130" />
+        <path d="M64 116 V270 H356 V116" />
+        <path class="dun" d="M64 196 H356" />
+        <rect x="92" y="222" width="40" height="44" rx="4" />
+        <path class="dun" d="M100 232 h24 M100 242 h24 M100 252 h24" />
+        <rect x="92" y="142" width="40" height="44" rx="4" />
+        <path class="dun" d="M100 152 h24 M100 162 h24 M100 172 h24" />
+        <text x="140" y="204">radiator</text>
+        <g class="ketel">
+          <rect x="262" y="212" width="36" height="52" rx="4" />
+          <path class="vlam" d="M272 248 q8 -18 16 0 q-8 -6 -16 0" />
+          <text x="302" y="204">cv-ketel</text>
+          <path class="gas" d="M280 264 V292" />
+          <text x="288" y="290">gas</text>
+        </g>
+        <g class="geenGas">
+          <path class="dun" d="M280 270 V292" />
+          <path class="kruis" d="M270 274 l20 16 M290 274 l-20 16" />
+          <rect x="262" y="212" width="36" height="52" rx="4" class="boiler" />
+          <text x="302" y="204">boiler</text>
+        </g>
+        <rect x="378" y="232" width="36" height="34" rx="4" />
+        <circle cx="396" cy="249" r="11" />
+        <text x="414" y="290" text-anchor="end">warmtepomp</text>
+        <path class="stroom" d="M378 249 H300 M262 249 H132 M112 222 V186 M112 142 V126 H280 V212" />
+      </svg>
+    </div>
 
     {
       sleutels.map((k) => (
@@ -182,6 +184,15 @@ const sleutels = ['hybride', 'electric'] as const;
   @media (max-width: 860px) {
     .raster {
       grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  /* Smal scherm: grotere letters in de tekening, zodat labels leesbaar blijven (zie .tekening-schuif) */
+  @media (max-width: 520px) {
+    .raster {
+      padding: 12px;
+    }
+    text {
+      font-size: 14px;
     }
   }
 </style>

@@ -9,8 +9,9 @@ const opties = {
   animations: 'disabled',
   // Eén beeldpunt per CSS-pixel: kleinere bestanden, zelfde zeggingskracht
   scale: 'css',
-  // Ruimte voor kleine verschillen in letterweergave; een verschoven blok valt er ruim buiten
-  maxDiffPixelRatio: 0.005,
+  // Vrijwel exact: hooguit een paar honderd beeldpunten (randjes van letters). Een verdwenen knop of
+  // verschoven regel is duizenden beeldpunten en valt er ruim buiten.
+  maxDiffPixels: 400,
 } as const;
 
 test.describe('volledige pagina', () => {
@@ -29,6 +30,12 @@ test.describe('volledige pagina', () => {
         for (let y = 0; y < document.documentElement.scrollHeight; y += 400) {
           scrollTo(0, y);
           await new Promise((klaar) => requestAnimationFrame(klaar));
+        }
+        // Scroll-uitleg (stappen naast een tekening): eindigen op de eerste stap, anders hangt de
+        // gemarkeerde stap af van het toeval waarmee de browser de tussenstanden meldt
+        for (const stap of document.querySelectorAll('[data-scroll-uitleg] [data-stap="0"]')) {
+          stap.scrollIntoView({ block: 'center' });
+          await new Promise((klaar) => setTimeout(klaar, 200));
         }
         scrollTo(0, 0);
       });

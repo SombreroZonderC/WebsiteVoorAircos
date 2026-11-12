@@ -3,7 +3,7 @@ import Icon from './Icon.astro';
 import { bedrijf, telLink, whatsappLink } from '../lib/bedrijf';
 ---
 
-<div class="mobile-cta">
+<nav class="mobile-cta" aria-label="Snel contact">
   <a href={telLink} class="call">
     <Icon name="phone" size={18} /> Bellen
   </a>
@@ -18,7 +18,7 @@ import { bedrijf, telLink, whatsappLink } from '../lib/bedrijf';
       </a>
     )
   }
-</div>
+</nav>
 
 <script>
   // Verbergen zolang er al een grote belknop in beeld is (hero, "Bel Sjoerd"-afsluiter).

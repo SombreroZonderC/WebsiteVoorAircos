@@ -96,3 +96,12 @@ test('vragen: een link met zoekvraag of anker opent meteen het juiste antwoord',
   await page.locator('#vraag-werkgebied summary').click();
   await expect(page).toHaveURL(/#vraag-werkgebied$/);
 });
+
+test('vragen: een verminkte link geeft geen scriptfout en de pagina blijft werken', async ({ page }) => {
+  const fouten: string[] = [];
+  page.on('pageerror', (e) => fouten.push(e.message));
+  await page.goto('/veelgestelde-vragen#vraag-%E0%A4%A');
+  await page.locator('[data-zoekveld]').fill('subsidie');
+  await expect(page.locator('#vraag-warmtepomp-subsidie')).toHaveAttribute('open', '');
+  expect(fouten).toEqual([]);
+});

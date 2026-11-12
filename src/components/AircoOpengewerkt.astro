@@ -2,29 +2,31 @@
 // Opengewerkte binnenunit voor het scroll-verhaal. Onderdeel n licht op als een ouder data-actief="n" heeft.
 ---
 
-<svg class="ao" viewBox="0 0 420 300" role="img" aria-label="Opengewerkte binnenunit met onderdelen">
-  <path class="muur" d="M20 30 H400" />
-  <g class="deel deel-0">
-    <path d="M40 56 Q40 42 54 42 H366 Q380 42 380 56 V128 Q380 152 354 154 H66 Q40 152 40 128 Z" />
-    <path class="dun" d="M56 66 H364 M56 78 H364 M56 90 H364" />
-    <text x="40" y="24">stille ventilator</text>
-  </g>
-  <g class="deel deel-1">
-    <circle cx="336" cy="108" r="12" />
-    <path d="M330 108 h12 M336 102 v12" class="dun" />
-    <text x="384" y="182" text-anchor="end">koelen · verwarmen</text>
-  </g>
-  <g class="deel deel-2">
-    <path d="M60 140 Q210 170 360 140" />
-    <path class="stroom" d="M110 196 c10 18 -10 32 0 50 M180 200 c10 18 -10 32 0 50 M250 200 c10 18 -10 32 0 50 M320 196 c10 18 -10 32 0 50" />
-    <text x="40" y="282">instelbare luchtstroom</text>
-  </g>
-  <g class="deel deel-3">
-    <path d="M380 110 H396 Q404 110 404 120 V296" />
-    <path class="dun" d="M386 122 H392 Q396 122 396 128 V296" />
-    <text x="388" y="282" text-anchor="end">strak leidingwerk</text>
-  </g>
-</svg>
+<div class="tekening-schuif">
+  <svg class="ao" viewBox="0 0 420 300" role="img" aria-label="Opengewerkte binnenunit met onderdelen">
+    <path class="muur" d="M20 30 H400" />
+    <g class="deel deel-0">
+      <path d="M40 56 Q40 42 54 42 H366 Q380 42 380 56 V128 Q380 152 354 154 H66 Q40 152 40 128 Z" />
+      <path class="dun" d="M56 66 H364 M56 78 H364 M56 90 H364" />
+      <text x="40" y="24">stille ventilator</text>
+    </g>
+    <g class="deel deel-1">
+      <circle cx="336" cy="108" r="12" />
+      <path d="M330 108 h12 M336 102 v12" class="dun" />
+      <text x="384" y="182" text-anchor="end">koelen · verwarmen</text>
+    </g>
+    <g class="deel deel-2">
+      <path d="M60 140 Q210 170 360 140" />
+      <path class="stroom" d="M110 196 c10 18 -10 32 0 50 M180 200 c10 18 -10 32 0 50 M250 200 c10 18 -10 32 0 50 M320 196 c10 18 -10 32 0 50" />
+      <text x="40" y="282">instelbare luchtstroom</text>
+    </g>
+    <g class="deel deel-3">
+      <path d="M380 110 H396 Q404 110 404 120 V296" />
+      <path class="dun" d="M386 122 H392 Q396 122 396 128 V296" />
+      <text x="388" y="262" text-anchor="end">strak leidingwerk</text>
+    </g>
+  </svg>
+</div>
 
 <style>
   .ao {
@@ -75,6 +77,12 @@
   @keyframes stroom {
     to {
       stroke-dashoffset: -56;
+    }
+  }
+  /* Smal scherm: grotere letters in de tekening, zodat labels leesbaar blijven (zie .tekening-schuif) */
+  @media (max-width: 520px) {
+    text {
+      font-size: 14px;
     }
   }
 </style>
