@@ -29,6 +29,8 @@
   --line: rgb(12 29 35 / 0.1);
   --text: #0c1d23;
   --muted: #4d6168;
+  /* Foutmeldingen in formulieren (contrast ≥4.5:1 op licht) */
+  --fout: #b3261e;
 
   /* Hoekig ontwerp: alleen knoppen zijn rond */
   --radius: 4px;
@@ -323,6 +325,14 @@ p {
 [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+}
+/* Zonder JavaScript: keuzeknoppen doen niets, dus weg ermee; alle uitkomsten staan onder elkaar.
+   (!important omdat [hidden] hierboven ook !important is.) */
+.no-js [role='radiogroup'] {
+  display: none;
+}
+.no-js [data-zonder-js-tonen][hidden] {
+  display: block !important;
 }
 .no-js [data-reveal] {
   opacity: 1;

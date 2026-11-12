@@ -1,8 +1,7 @@
 import { z } from 'astro/zod';
 import bedrijfJson from '../content/instellingen/bedrijf.json';
 import homeJson from '../content/instellingen/home.json';
-
-const kaart = z.object({ titel: z.string(), tekst: z.string() });
+import { kaart, seoOmschrijving, seoTitel } from './schemas';
 
 const bedrijfSchema = z.object({
   naam: z.string(),
@@ -45,8 +44,8 @@ const keuzeKant = z.object({
 const zoKant = z.object({ titel: z.string(), punten: z.array(z.string()), link: z.string() });
 
 const homeSchema = z.object({
-  seoTitel: z.string(),
-  seoOmschrijving: z.string().max(170),
+  seoTitel,
+  seoOmschrijving,
   hero: z.object({
     titelKoud: z.string(),
     titelWarm: z.string(),
@@ -69,15 +68,5 @@ export const home = homeSchema.parse(homeJson);
 export const telLink = `tel:${bedrijf.telefoon.internationaal}`;
 export const mailLink = `mailto:${bedrijf.email}`;
 export const whatsappLink = `https://wa.me/${bedrijf.telefoon.internationaal.replace('+', '')}`;
-
-export const nav = [
-  { href: '/airconditioning', label: 'Airconditioning' },
-  { href: '/warmtepompen', label: 'Warmtepompen' },
-  { href: '/onderhoud', label: 'Onderhoud' },
-  { href: '/over-sjoerd', label: 'Over Sjoerd' },
-  { href: '/werkgebied', label: 'Werkgebied' },
-  { href: '/veelgestelde-vragen', label: 'Vragen' },
-  { href: '/contact', label: 'Contact' },
-];
 
 export const bedrijfId = `${bedrijf.url}/#bedrijf`;

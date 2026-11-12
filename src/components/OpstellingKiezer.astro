@@ -45,7 +45,7 @@ const y = [36, 92, 148, 204];
 
     {
       opties.map((o) => (
-        <div class="uitkomst" data-optie={o.n} hidden={o.n !== 1}>
+        <div class="uitkomst" data-optie={o.n} data-zonder-js-tonen hidden={o.n !== 1}>
           <p class="type">{o.type}</p>
           <p class="regel">{o.regel}</p>
           <p class="muted">{o.tekst}</p>
@@ -68,28 +68,19 @@ const y = [36, 92, 148, 204];
 </div>
 
 <script>
+  import { radiogroep } from '../scripts/radiogroep';
+
   document.querySelectorAll<HTMLElement>('[data-kiezer]').forEach((root) => {
-    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-kies]')];
-    const zet = (n: number, focus = false) => {
-      root.dataset.n = String(n);
-      knoppen.forEach((b) => {
-        const aan = Number(b.dataset.kies) === n;
-        b.setAttribute('aria-checked', String(aan));
-        b.tabIndex = aan ? 0 : -1;
-        if (aan && focus) b.focus();
-      });
-      root.querySelectorAll<HTMLElement>('[data-optie]').forEach((u) => (u.hidden = Number(u.dataset.optie) !== n));
-      root.querySelectorAll<SVGGElement>('.unit').forEach((g) => g.classList.toggle('aan', Number(g.dataset.vanaf) <= n));
-    };
-    knoppen.forEach((b) => {
-      b.addEventListener('click', () => zet(Number(b.dataset.kies)));
-      b.addEventListener('keydown', (e) => {
-        const nu = Number(root.dataset.n);
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') (e.preventDefault(), zet(nu === 4 ? 1 : nu + 1, true));
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') (e.preventDefault(), zet(nu === 1 ? 4 : nu - 1, true));
-      });
+    const opties = [...root.querySelectorAll<HTMLElement>('[data-optie]')];
+    const units = [...root.querySelectorAll<SVGGElement>('.unit')];
+    radiogroep([...root.querySelectorAll<HTMLButtonElement>('[data-kies]')], {
+      bijKeuze: (knop) => {
+        const n = Number(knop.dataset.kies);
+        root.dataset.n = String(n);
+        opties.forEach((o) => (o.hidden = Number(o.dataset.optie) !== n));
+        units.forEach((g) => g.classList.toggle('aan', Number(g.dataset.vanaf) <= n));
+      },
     });
-    zet(1);
   });
 </script>
 

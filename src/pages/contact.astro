@@ -2,6 +2,7 @@
 import { onderhoud, warmtepomp } from '../lib/inhoud';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Vervolgstappen from '../components/Vervolgstappen.astro';
 import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
 
 const tegels = [
@@ -9,6 +10,11 @@ const tegels = [
   { waarde: 'warmtepompen', label: 'Verwarmen', sub: 'Warmtepomp', icoon: 'flame', accent: 'warm' },
   { waarde: 'onderhoud', label: 'Onderhoud', sub: 'of storing', icoon: 'wrench', accent: 'koud' },
 ] as const;
+
+// Voorinvullen vanaf de dienstpagina's (?klacht=… en ?advies=…): alleen deze vaste teksten zijn mogelijk.
+const klachtLabels = Object.fromEntries(onderhoud.wijzer.klachten.map((k) => [k.id, k.label]));
+const u = warmtepomp.check.uitkomsten;
+const adviesTeksten = { hybride: u.hybride.richting, electric: u.electric.richting, beide: u.beide.richting };
 ---
 
 <Base
@@ -32,19 +38,24 @@ const tegels = [
         </p>
         <div class="hierna">
           <p class="eyebrow">Wat gebeurt er hierna?</p>
-          <ol>
-            <li><b>1</b> Ik bel of mail je terug.</li>
-            <li><b>2</b> We plannen een afspraak voor advies aan huis.</li>
-            <li><b>3</b> Je krijgt een heldere, vrijblijvende offerte.</li>
-          </ol>
+          <Vervolgstappen />
         </div>
       </div>
     </section>
 
     <section class="vlak licht rechts" aria-labelledby="form-titel" data-geen-mobiele-cta>
       <!-- Netlify Forms: werkt automatisch zodra de site op Netlify staat. Lokaal wordt verzenden nagebootst. -->
-      <form class="form" name="offerte" method="POST" action="/bedankt" data-netlify="true" netlify-honeypot="bot-field" data-form data-klachten={JSON.stringify(Object.fromEntries(onderhoud.wijzer.klachten.map((k) => [k.id, k.label])))}
-        data-adviezen={JSON.stringify({ hybride: warmtepomp.check.uitkomsten.hybride.richting, electric: warmtepomp.check.uitkomsten.electric.richting, beide: warmtepomp.check.uitkomsten.beide.richting })}>
+      <form
+        class="form"
+        name="offerte"
+        method="POST"
+        action="/bedankt"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        data-form
+        data-klachten={JSON.stringify(klachtLabels)}
+        data-adviezen={JSON.stringify(adviesTeksten)}
+      >
         <input type="hidden" name="form-name" value="offerte" />
         <p class="sr-only">
           <label>Niet invullen: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
@@ -75,27 +86,31 @@ const tegels = [
         <div class="row">
           <div class="field">
             <label for="naam">Naam <span class="req" aria-hidden="true">*</span></label>
-            <input id="naam" name="naam" type="text" autocomplete="name" required />
+            <input id="naam" name="naam" type="text" autocomplete="name" required maxlength="100" aria-describedby="naam-fout" />
+            <p class="fout" id="naam-fout" hidden></p>
           </div>
           <div class="field">
             <label for="email">E-mailadres <span class="req" aria-hidden="true">*</span></label>
-            <input id="email" name="email" type="email" autocomplete="email" required />
+            <input id="email" name="email" type="email" autocomplete="email" required maxlength="254" aria-describedby="email-fout" />
+            <p class="fout" id="email-fout" hidden></p>
           </div>
         </div>
         <div class="row">
           <div class="field">
             <label for="telefoon">Telefoonnummer <span class="opt">optioneel</span></label>
-            <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" />
+            <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+() \-]{8,20}" aria-describedby="telefoon-fout" />
+            <p class="fout" id="telefoon-fout" hidden></p>
           </div>
           <div class="field duo">
             <div>
               <label for="postcode">Postcode <span class="opt">optioneel</span></label>
-              <input id="postcode" name="postcode" type="text" autocomplete="postal-code" placeholder="1234 AB" />
+              <input id="postcode" name="postcode" type="text" autocomplete="postal-code" placeholder="1234 AB" maxlength="7" pattern="[1-9][0-9]{3} ?[A-Za-z]{2}" aria-describedby="postcode-fout" />
             </div>
             <div>
               <label for="plaats">Plaats <span class="opt">optioneel</span></label>
-              <input id="plaats" name="plaats" type="text" autocomplete="address-level2" />
+              <input id="plaats" name="plaats" type="text" autocomplete="address-level2" maxlength="80" />
             </div>
+            <p class="fout" id="postcode-fout" hidden></p>
           </div>
         </div>
         <div class="row">
@@ -123,56 +138,28 @@ const tegels = [
         </div>
         <div class="field">
           <label for="bericht">Bericht <span class="req" aria-hidden="true">*</span></label>
-          <textarea id="bericht" name="bericht" rows="5" required placeholder="Vertel kort wat je zoekt, bijvoorbeeld welke ruimtes je wilt koelen of verwarmen."></textarea>
+          <textarea id="bericht" name="bericht" rows="5" required maxlength="4000" aria-describedby="bericht-fout" placeholder="Vertel kort wat je zoekt, bijvoorbeeld welke ruimtes je wilt koelen of verwarmen."></textarea>
+          <p class="fout" id="bericht-fout" hidden></p>
         </div>
 
         <p class="note">
           <span aria-hidden="true">*</span> verplicht. Je gegevens gebruik ik alleen om contact met je op te nemen. Zie de{' '}
           <a href="/privacy">privacyverklaring</a>.
         </p>
-        <button class="btn" type="submit">Verstuur aanvraag <Icon name="arrow" /></button>
+        <div class="verstuur">
+          <button class="btn" type="submit">Verstuur aanvraag <Icon name="arrow" /></button>
+          <p class="status" role="status" data-status></p>
+        </div>
       </form>
     </section>
   </div>
 </Base>
 
 <script>
-  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
-  const params = new URLSearchParams(location.search);
+  import { startContactformulier } from '../scripts/contactformulier';
 
-  // Onderwerp en (bij airco) het aantal ruimtes voorinvullen vanaf een dienstpagina
-  const onderwerp = params.get('onderwerp');
-  if (onderwerp) {
-    const radio = form.querySelector<HTMLInputElement>(`input[name="onderwerp"][value="${CSS.escape(onderwerp)}"]`);
-    if (radio) radio.checked = true;
-  }
-  const ruimtes = params.get('ruimtes');
-  const bericht = form.querySelector<HTMLTextAreaElement>('#bericht')!;
-  if (ruimtes && /^[1-4]\+?$/.test(ruimtes) && !bericht.value) {
-    bericht.value = `Ik wil graag advies over een airco voor ${ruimtes} ${ruimtes === '1' ? 'ruimte' : 'ruimtes'}.`;
-  }
-
-  // Klacht uit de storingswijzer (onderhoudspagina) voorinvullen
-  const klacht = params.get('klacht');
-  const klachten = JSON.parse(form.dataset.klachten ?? '{}') as Record<string, string>;
-  if (klacht && klachten[klacht] && !bericht.value) {
-    bericht.value = `Storing: ${klachten[klacht].toLowerCase()}. `;
-  }
-
-  // Uitkomst van de geschiktheidscheck (warmtepompen) voorinvullen
-  const advies = params.get('advies');
-  const adviezen = JSON.parse(form.dataset.adviezen ?? '{}') as Record<string, string>;
-  if (advies && adviezen[advies] && !bericht.value) {
-    bericht.value = `Uit de geschiktheidscheck: ${adviezen[advies]} Ik hoor graag of dat klopt voor mijn huis.`;
-  }
-
-  // Lokaal is er geen formulierverwerking: verzending nabootsen.
-  const isLokaal = ['localhost', '127.0.0.1'].includes(location.hostname);
-  form.addEventListener('submit', (e) => {
-    if (!isLokaal) return;
-    e.preventDefault();
-    if (form.reportValidity()) location.href = '/bedankt';
-  });
+  const form = document.querySelector<HTMLFormElement>('[data-form]');
+  if (form) startContactformulier(form);
 </script>
 
 <style>
@@ -225,14 +212,19 @@ const tegels = [
     border: 1px solid var(--line-dark);
     background: rgb(255 255 255 / 0.04);
   }
-  .hierna ol {
+  .hierna :global(ol) {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     gap: 10px;
   }
-  .hierna b {
+  .hierna :global(li) {
+    display: flex;
+    align-items: flex-start;
+  }
+  .hierna :global(b) {
+    flex: none;
     display: inline-grid;
     place-items: center;
     width: 24px;
@@ -335,32 +327,39 @@ const tegels = [
   .anders input {
     accent-color: var(--orange-btn);
   }
+  /* Label, veld en foutmelding staan per rij op dezelfde hoogte, ook als een label afbreekt of er
+     maar bij één veld een melding staat (subgrid). */
   .row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    column-gap: 18px;
   }
   .field {
     display: grid;
-    gap: 8px;
+    row-gap: 8px;
     min-width: 0;
+  }
+  .row > .field {
+    grid-row: span 3;
+    grid-template-rows: subgrid;
   }
   .field label {
     font-weight: 600;
     font-size: 0.95rem;
+    align-self: end;
   }
   .duo {
     grid-template-columns: 0.8fr 1.2fr;
-    gap: 10px;
-    align-items: end;
-  }
-  .row {
-    align-items: end;
+    column-gap: 10px;
   }
   .duo > div {
     display: grid;
-    gap: 8px;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
     min-width: 0;
+  }
+  .duo > .fout {
+    grid-column: 1 / -1;
   }
   .req {
     color: var(--orange-text);
@@ -401,8 +400,29 @@ const tegels = [
     color: var(--muted);
     margin: 0;
   }
-  .form .btn {
-    justify-self: start;
+  .verstuur {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+  }
+  .status {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .fout {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--fout);
+  }
+  [aria-invalid='true'] {
+    border-color: var(--fout) !important;
+  }
+  button[disabled] {
+    opacity: 0.6;
+    cursor: progress;
   }
   @media (max-width: 960px) {
     .split {
@@ -429,6 +449,10 @@ const tegels = [
     }
     .row {
       grid-template-columns: minmax(0, 1fr);
+      row-gap: 0;
+    }
+    .row > .field + .field {
+      margin-top: 12px;
     }
     .form .btn {
       width: 100%;

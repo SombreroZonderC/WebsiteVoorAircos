@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
-import { bedrijf, mailLink, nav, telLink } from '../lib/bedrijf';
+import { bedrijf, mailLink, telLink } from '../lib/bedrijf';
+import { volledigMenu } from '../lib/navigatie';
 
 const year = new Date().getFullYear();
 ---
@@ -18,15 +19,13 @@ const year = new Date().getFullYear();
       <div>
         <h2 class="h">Menu</h2>
         <ul>
-          <li><a href="/">Home</a></li>
           {
-            nav.map((item) => (
+            volledigMenu.map((item) => (
               <li>
                 <a href={item.href}>{item.label}</a>
               </li>
             ))
           }
-          <li><a href="/kennisbank">Kennisbank</a></li>
         </ul>
       </div>
 

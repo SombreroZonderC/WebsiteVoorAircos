@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ReuzenHero from '../components/ReuzenHero.astro';
 import Icon from '../components/Icon.astro';
-import { nav } from '../lib/bedrijf';
+import { nav } from '../lib/navigatie';
 ---
 
 <Base title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer)." noindex>
@@ -22,7 +22,7 @@ import { nav } from '../lib/bedrijf';
         <p class="eyebrow">Populaire pagina's</p>
         <ul class="links">
           {
-            [...nav, { href: '/kennisbank', label: 'Kennisbank' }].map((n) => (
+            nav.map((n) => (
               <li>
                 <a href={n.href}>
                   {n.label} <Icon name="arrow" size={18} />

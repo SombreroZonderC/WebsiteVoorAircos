@@ -5,14 +5,5 @@
 [build.environment]
   NODE_VERSION = "22"
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    X-Frame-Options = "SAMEORIGIN"
-
-[[headers]]
-  for = "/_astro/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+# Beveiligings- en cacheheaders staan in dist/_headers. Dat bestand wordt bij elke build gemaakt door
+# integrations/beveiligingsheaders.mjs, omdat de Content-Security-Policy hashes van de build bevat.

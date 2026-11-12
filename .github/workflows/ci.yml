@@ -4,23 +4,45 @@ on:
   push:
   pull_request:
 
+# De workflow leest alleen de code; geen schrijfrechten of geheimen nodig.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   bouwen-en-testen:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Bekende kwetsbaarheden in pakketten
+        run: npm audit --audit-level=high
       - name: Type- en schemacontrole
-        run: npx astro check
+        run: npm run check
       - name: Bouwen
         run: npm run build
       - name: Browser voor tests installeren
         run: npx playwright install --with-deps chromium
-      - name: Tests (interacties, toegankelijkheid, structured data)
+      - name: Tests (interacties, toegankelijkheid, beveiliging, vindbaarheid)
         run: npm test
       - name: Lighthouse (drempel 95 op alle categorieën)
         run: npx @lhci/cli@0.15.1 autorun
+      - name: Testrapport bewaren bij een fout
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testresultaten
+          path: |
+            test-results/
+            .lighthouseci-rapport/
+          retention-days: 7

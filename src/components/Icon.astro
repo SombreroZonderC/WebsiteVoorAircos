@@ -1,6 +1,7 @@
 ---
+export type IcoonNaam = keyof typeof paths;
 interface Props {
-  name: keyof typeof paths;
+  name: IcoonNaam;
   size?: number;
   class?: string;
 }

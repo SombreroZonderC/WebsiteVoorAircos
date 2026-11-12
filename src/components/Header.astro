@@ -1,26 +1,14 @@
 ---
 import Icon from './Icon.astro';
-import { bedrijf, nav, telLink } from '../lib/bedrijf';
+import { bedrijf, telLink } from '../lib/bedrijf';
+import { isActief, paginaPad, volledigMenu } from '../lib/navigatie';
 
 interface Props {
   /** Header meteen donker en compact (voor pagina's met licht direct onder de header) */
   vast?: boolean;
 }
 const { vast = false } = Astro.props;
-// Elk menu-item een icoon (mobiel menu); de twee diensten krijgen daarnaast een eigen gloed
-type IcoonNaam = 'home' | 'snow' | 'flame' | 'wrench' | 'user' | 'pin' | 'vraag' | 'chat' | 'boek';
-const iconen: Record<string, IcoonNaam> = {
-  '/': 'home',
-  '/airconditioning': 'snow',
-  '/warmtepompen': 'flame',
-  '/onderhoud': 'wrench',
-  '/over-sjoerd': 'user',
-  '/werkgebied': 'pin',
-  '/veelgestelde-vragen': 'vraag',
-  '/contact': 'chat',
-};
-const accent: Record<string, 'koud' | 'warm'> = { '/airconditioning': 'koud', '/warmtepompen': 'warm' };
-const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const pad = paginaPad(Astro.url.pathname);
 ---
 
 <header class:list={['header', { scrolled: vast }]} data-header data-vast={vast ? '' : undefined}>
@@ -31,32 +19,17 @@ const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/'
 
     <nav class="nav" id="hoofdmenu" aria-label="Hoofdmenu">
       <ul>
-        <li class="alleen-mobiel" style="--i: 0">
-          <a href="/" aria-current={path === '/' ? 'page' : undefined}>
-            <Icon name="home" size={22} class="menu-ico" />
-            <span>Home</span>
-          </a>
-        </li>
         {
-          nav.map((item, i) => (
-            <li style={`--i: ${i + 1}`}>
-              <a
-                href={item.href}
-                class:list={[accent[item.href]]}
-                aria-current={path === item.href || path.startsWith(`${item.href}/`) ? 'page' : undefined}
-              >
-                {iconen[item.href] && <Icon name={iconen[item.href]} size={22} class="menu-ico" />}
+          // Elk item heeft een icoon (alleen zichtbaar in het mobiele menu); de twee diensten een eigen gloed
+          volledigMenu.map((item, i) => (
+            <li class:list={{ 'alleen-mobiel': item.alleenUitgebreid }} style={`--i: ${i}`}>
+              <a href={item.href} class:list={[item.accent]} aria-current={isActief(item, pad) ? 'page' : undefined}>
+                <Icon name={item.icoon} size={22} class="menu-ico" />
                 <span>{item.label}</span>
               </a>
             </li>
           ))
         }
-        <li class="alleen-mobiel" style={`--i: ${nav.length + 1}`}>
-          <a href="/kennisbank" aria-current={path === '/kennisbank' || path.startsWith('/kennisbank/') ? 'page' : undefined}>
-            <Icon name="boek" size={22} class="menu-ico" />
-            <span>Kennisbank</span>
-          </a>
-        </li>
       </ul>
       <a class="btn menu-cta" href="/contact">Offerte aanvragen</a>
     </nav>

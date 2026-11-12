@@ -1,6 +1,6 @@
 ---
 titel: Kun je verwarmen met een airco?
-seoTitel: Verwarmen met een airco – zo werkt een lucht-lucht warmtepomp
+seoTitel: "Verwarmen met een airco: de lucht-lucht warmtepomp"
 seoOmschrijving: Een airco met buitenunit is een lucht-lucht warmtepomp. Wanneer is verwarmen met een airco slim, wat zijn de beperkingen en waar let je op bij aanschaf?
 eyebrow: Kennisbank · Airconditioning
 intro: Ja. Een moderne split-airco kan zijn werking omdraaien en haalt dan warmte uit de buitenlucht. Daarmee is hij eigenlijk een lucht-lucht warmtepomp. Wel met een paar kanttekeningen.

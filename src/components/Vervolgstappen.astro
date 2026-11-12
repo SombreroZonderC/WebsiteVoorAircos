@@ -1,0 +1,22 @@
+---
+// Wat er na een aanvraag gebeurt. Eén bron voor de contactpagina en de bedankpagina.
+export const vervolgstappen = [
+  'Ik bel of mail je terug.',
+  'We plannen een afspraak voor advies aan huis.',
+  'Je krijgt een heldere, vrijblijvende offerte.',
+];
+interface Props {
+  class?: string;
+}
+---
+
+<ol class={Astro.props.class}>
+  {
+    vervolgstappen.map((stap, i) => (
+      <li>
+        <b>{i + 1}</b>
+        <span>{stap}</span>
+      </li>
+    ))
+  }
+</ol>

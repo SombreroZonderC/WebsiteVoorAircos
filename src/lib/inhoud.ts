@@ -3,11 +3,11 @@ import aircoJson from '../content/instellingen/airconditioning.json';
 import warmtepompJson from '../content/instellingen/warmtepompen.json';
 import onderhoudJson from '../content/instellingen/onderhoud.json';
 import overJson from '../content/instellingen/over.json';
+import { kaart } from './schemas';
 
 // Teksten van de signatuur-elementen per pagina. Staan in JSON (singletons) zodat een CMS
 // (Keystatic) ze later kan bewerken; de schema's bewaken dat er niets ontbreekt.
 
-const kaart = z.object({ titel: z.string(), tekst: z.string() });
 const blok = z.object({ eyebrow: z.string(), titel: z.string() });
 const stappenBlok = blok.extend({ stappen: z.array(kaart).min(1) });
 const systeem = z.object({ label: z.string(), titel: z.string(), tekst: z.string(), punten: z.array(z.string()) });

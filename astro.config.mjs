@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import beveiligingsheaders from './integrations/beveiligingsheaders.mjs';
 
 export default defineConfig({
   site: 'https://thecoolfactory.nl',
@@ -9,5 +10,6 @@ export default defineConfig({
     sitemap({
       filter: (page) => !['/bedankt', '/404'].some((pad) => page.includes(pad)),
     }),
+    beveiligingsheaders(),
   ],
 });

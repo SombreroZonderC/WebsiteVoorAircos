@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ReuzenHero from '../components/ReuzenHero.astro';
 import Icon from '../components/Icon.astro';
+import Vervolgstappen from '../components/Vervolgstappen.astro';
 import { bedrijf, telLink } from '../lib/bedrijf';
 ---
 
@@ -21,11 +22,7 @@ import { bedrijf, telLink } from '../lib/bedrijf';
     <section class="vlak licht paneel sectie">
       <div class="wrap">
         <p class="eyebrow">Wat gebeurt er nu?</p>
-        <ol class="stappen">
-          <li><b>1</b><span>Ik bel of mail je terug.</span></li>
-          <li><b>2</b><span>We plannen een afspraak voor advies aan huis.</span></li>
-          <li><b>3</b><span>Je krijgt een heldere, vrijblijvende offerte.</span></li>
-        </ol>
+        <Vervolgstappen class="stappen" />
         <p class="muted">Intussen alvast lezen? Bekijk de <a href="/veelgestelde-vragen">veelgestelde vragen</a>.</p>
       </div>
     </section>
@@ -36,7 +33,7 @@ import { bedrijf, telLink } from '../lib/bedrijf';
   .sectie {
     padding-block: clamp(56px, 7vw, 96px);
   }
-  .stappen {
+  .wrap :global(.stappen) {
     list-style: none;
     margin: 0 0 28px;
     padding: 0;
@@ -44,7 +41,7 @@ import { bedrijf, telLink } from '../lib/bedrijf';
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
   }
-  .stappen li {
+  .wrap :global(.stappen li) {
     display: flex;
     gap: 14px;
     align-items: flex-start;
@@ -54,7 +51,7 @@ import { bedrijf, telLink } from '../lib/bedrijf';
     border: 1px solid var(--line);
     font-weight: 600;
   }
-  .stappen b {
+  .wrap :global(.stappen b) {
     flex: none;
     display: grid;
     place-items: center;
@@ -66,7 +63,7 @@ import { bedrijf, telLink } from '../lib/bedrijf';
     font-size: 0.85rem;
   }
   @media (max-width: 760px) {
-    .stappen {
+    .wrap :global(.stappen) {
       grid-template-columns: minmax(0, 1fr);
     }
   }

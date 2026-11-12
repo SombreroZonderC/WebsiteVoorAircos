@@ -1,6 +1,6 @@
 ---
 titel: Tot welke buitentemperatuur verwarmt een airco?
-seoTitel: Verwarmen met een airco bij vorst – tot hoeveel graden werkt hij?
+seoTitel: Verwarmen met een airco bij vorst – tot hoeveel graden?
 seoOmschrijving: Werkt een airco als verwarming ook als het vriest? Het verschil tussen werkbereik en vermogen, en tot welke buitentemperatuur verschillende uitvoeringen verwarmen.
 eyebrow: Kennisbank · Verwarmen
 woord: "−15°?"

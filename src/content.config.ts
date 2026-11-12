@@ -1,20 +1,19 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { kaart, seoOmschrijving, seoTitel } from './lib/schemas';
 
 // De mappen en velden hieronder zijn één-op-één over te nemen in een
 // Keystatic-config (collections met format 'md' / 'yaml'), zodat er later
 // een CMS bovenop kan zonder de inhoud te verplaatsen.
-
-const kaart = z.object({ titel: z.string(), tekst: z.string() });
 
 const diensten = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/diensten' }),
   schema: z.object({
     titel: z.string(),
     menuLabel: z.string(),
-    seoTitel: z.string(),
-    seoOmschrijving: z.string().max(170),
+    seoTitel,
+    seoOmschrijving,
     eyebrow: z.string(),
     intro: z.string(),
     volgorde: z.number(),
@@ -49,8 +48,8 @@ const paginas = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/paginas' }),
   schema: z.object({
     titel: z.string(),
-    seoTitel: z.string(),
-    seoOmschrijving: z.string().max(170),
+    seoTitel,
+    seoOmschrijving,
     eyebrow: z.string(),
     intro: z.string(),
   }),
@@ -65,8 +64,8 @@ const kennis = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/kennis' }),
   schema: z.object({
     titel: z.string(),
-    seoTitel: z.string(),
-    seoOmschrijving: z.string().max(170),
+    seoTitel,
+    seoOmschrijving,
     eyebrow: z.string(),
     intro: z.string(),
     /** Kort reuzenwoord voor de hero */

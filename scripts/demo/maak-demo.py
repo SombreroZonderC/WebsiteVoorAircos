@@ -135,9 +135,9 @@ def anonimiseer(d):
     vervang_vast(f'{d}/src/layouts/Base.astro', '<a class="skip-link" href="#main">Naar de inhoud</a>',
                  '<a class="skip-link" href="#main">Naar de inhoud</a>\n    <p class="demo-label">Demo-ontwerp · fictief bedrijf</p>')
     schrijf(f'{d}/src/styles/global.css', lees(f'{d}/src/styles/global.css') + LABEL_CSS)
-    vervang_vast(f'{d}/src/pages/contact.astro',
-                 "    if (!isLokaal) return;\n    e.preventDefault();\n    if (form.reportValidity()) location.href = '/bedankt';",
-                 "    // Demo: er wordt niets verstuurd.\n    e.preventDefault();\n    if (form.reportValidity()) location.href = 'bedankt.html';")
+    vervang_vast(f'{d}/src/scripts/contactformulier.ts',
+                 "const nabootsen = ['localhost', '127.0.0.1'].includes(location.hostname);",
+                 "const nabootsen = true; // Demo: er wordt niets verstuurd.")
     # Projectfoto is echt werk van het echte bedrijf: in de demo een neutrale plek
     p = f'{d}/src/pages/airconditioning.astro'
     s = lees(p)
@@ -151,7 +151,7 @@ def anonimiseer(d):
     schrijf(p, s)
     os.remove(f'{d}/src/assets/project-dakopstelling.jpg')
 
-    # te lange SEO-omschrijvingen na vervanging inkorten
+    # te lange SEO-omschrijvingen en -titels na vervanging inkorten
     for dp, _, fs in os.walk(f'{d}/src/content'):
         for f in fs:
             if f.endswith('.md'):
@@ -166,7 +166,15 @@ def anonimiseer(d):
                             break
                         kort = (kort + ' ' + z).strip()
                     kort = kort or m.group(1)[:166].rsplit(' ', 1)[0] + '.'
-                    schrijf(p, s.replace(m.group(0), f'seoOmschrijving: {kort}'))
+                    s = s.replace(m.group(0), f'seoOmschrijving: {kort}')
+                # idem voor titels (maximaal 60 tekens): het deel na het streepje laten vallen
+                t = re.search(r'^seoTitel: (.*)$', s, re.M)
+                if t and len(t.group(1).strip('"')) > 60:
+                    titel = t.group(1).strip('"').split(' – ')[0]
+                    if len(titel) > 60:
+                        titel = titel[:60].rsplit(' ', 1)[0]
+                    s = s.replace(t.group(0), f'seoTitel: "{titel}"')
+                schrijf(p, s)
 
 
 def bouw(d):
@@ -180,7 +188,8 @@ def maak_pub(d):
     if os.path.exists(pub):
         shutil.rmtree(pub)
     shutil.copytree(f'{d}/dist', pub)
-    for f in ('sitemap-0.xml', 'sitemap-index.xml', 'robots.txt', 'llms.txt'):
+    # _headers: de demo draait vanaf schijf of een willekeurige host, met Google Fonts; de CSP van de echte site past daar niet
+    for f in ('sitemap-0.xml', 'sitemap-index.xml', 'robots.txt', 'llms.txt', '_headers'):
         p = os.path.join(pub, f)
         if os.path.exists(p):
             os.remove(p)
@@ -222,8 +231,7 @@ def maak_pub(d):
                 s = s.replace('/_astro/', '/assets/')
                 s = re.sub(r'(href|src)="/(assets|images)/', lambda m: f'{m.group(1)}="{pre}{m.group(2)}/', s)
                 s = s.replace('href="/favicon.svg"', f'href="{pre}favicon.svg"')
-                s = re.sub(r'(href)="/([a-z0-9/-]*)([?#][^"]*)?"', pagina, s)
-                s = s.replace("location.href = 'bedankt.html'", f"location.href = '{pre}bedankt.html'")
+                s = re.sub(r'(href|action)="/([a-z0-9/-]*)([?#][^"]*)?"', pagina, s)
                 s = s.replace('</head>', FONTS + '</head>', 1)
                 schrijf(p, s)
 
@@ -235,7 +243,7 @@ def maak_pub(d):
             if not f.endswith(('.html', '.css', '.js', '.svg', '.txt', '.xml')):
                 continue
             s = lees(p)
-            fouten += [f'{f}: {m}' for m in re.findall(r'(?:href|src)="/[^"]*"|url\(/[^)]*\)', s)]
+            fouten += [f'{f}: {m}' for m in re.findall(r'(?:href|src|action)="/[^"]*"|url\(/[^)]*\)', s)]
             fouten += [f'{f}: echte gegevens "{m}"' for m in set(VERBODEN.findall(s))]
     if fouten:
         sys.exit('Demo-script: controle mislukt\n' + '\n'.join(fouten[:30]))

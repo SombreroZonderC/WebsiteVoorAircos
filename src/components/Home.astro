@@ -210,37 +210,24 @@ const k = home.keuze;
 </div>
 
 <script>
+  import { radiogroep } from '../scripts/radiogroep';
+
   const root = document.querySelector<HTMLElement>('[data-home]');
   if (root) {
-    // --- Koelen / verwarmen ---------------------------------------------------
-    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-zet]')];
+    // Koelen / verwarmen: stuurt teksten, kaarten, tekening en de buitenthermometer aan
     const kantDelen = [...root.querySelectorAll<HTMLElement>('[data-m]')];
     const buiten = root.querySelector<HTMLElement>('#th-buiten')!;
     const graden = (t: number) => `${t < 0 ? '−' : ''}${Math.abs(t)}°`;
-
-    const zet = (modus: string, focus = false) => {
-      root.dataset.modus = modus;
-      kantDelen.forEach((el) => (el.hidden = el.dataset.m !== modus));
-      knoppen.forEach((b) => {
-        const aan = b.dataset.zet === modus;
-        b.setAttribute('aria-checked', String(aan));
-        b.tabIndex = aan ? 0 : -1;
-        if (aan && focus) b.focus();
-      });
-      const t = modus === 'koel' ? 31 : -4;
-      buiten.style.setProperty('--temp', String(t));
-      buiten.querySelector('[data-waarde]')!.textContent = graden(t);
-    };
-    knoppen.forEach((b) => {
-      b.addEventListener('click', () => zet(b.dataset.zet!));
-      b.addEventListener('keydown', (e) => {
-        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-          e.preventDefault();
-          zet(root.dataset.modus === 'koel' ? 'warm' : 'koel', true);
-        }
-      });
+    radiogroep([...root.querySelectorAll<HTMLButtonElement>('[data-zet]')], {
+      bijKeuze: (knop) => {
+        const modus = knop.dataset.zet!;
+        root.dataset.modus = modus;
+        kantDelen.forEach((el) => (el.hidden = el.dataset.m !== modus));
+        const t = modus === 'koel' ? 31 : -4;
+        buiten.style.setProperty('--temp', String(t));
+        buiten.querySelector('[data-waarde]')!.textContent = graden(t);
+      },
     });
-
   }
 </script>
 

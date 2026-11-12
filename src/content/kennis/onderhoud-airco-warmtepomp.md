@@ -1,6 +1,6 @@
 ---
 titel: Onderhoud aan je airco of warmtepomp
-seoTitel: Airco en warmtepomp onderhoud – wat kun je zelf en wat is verplicht?
+seoTitel: "Airco en warmtepomp onderhoud: zelf doen of verplicht?"
 seoOmschrijving: Wat kun je zelf doen aan onderhoud van je airco of warmtepomp, wat moet een vakman doen, en wanneer is een lekcontrole wettelijk verplicht?
 eyebrow: Kennisbank · Onderhoud
 woord: "Schoon."

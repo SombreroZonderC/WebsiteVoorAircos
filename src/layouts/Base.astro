@@ -4,8 +4,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileCta from '../components/MobileCta.astro';
 import Kruimelpad from '../components/Kruimelpad.astro';
-import { existsSync } from 'node:fs';
-import { bedrijf, bedrijfId, nav } from '../lib/bedrijf';
+import { bedrijf } from '../lib/bedrijf';
+import { paginaPad } from '../lib/navigatie';
+import { absoluut, bedrijfSchema, jsonLd, kruimelNiveaus, kruimelSchema, ogAfbeelding, volledigeTitel } from '../lib/seo';
 
 interface Props {
   title: string;
@@ -22,61 +23,13 @@ interface Props {
 }
 
 const { title, description, noindex = false, schema = [], kopVast = false, ogType = 'website', kruimelNaam } = Astro.props;
-// Merknaam alleen achter korte titels, zodat Google niets afkapt (richtlijn ~60 tekens)
-const fullTitle = title.includes(bedrijf.naam) || title.length > 42 ? title : `${title} | ${bedrijf.naam}`;
-const pad = Astro.url.pathname.replace(/\.html$/, '').replace(/\/(index)?$/, '');
-const canonical = new URL(pad || '/', bedrijf.url).href;
+const fullTitle = volledigeTitel(title);
+const pad = paginaPad(Astro.url.pathname);
+const canonical = absoluut(pad);
 
-// Deelafbeelding per pagina (gegenereerd met scripts/og.mjs), anders de algemene.
-const slug = pad.replace(/^\//, '') || 'home';
-const ogPad = existsSync(`public/images/og/${slug}.jpg`) ? `/images/og/${slug}.jpg` : '/images/og.jpg';
-const ogImage = new URL(ogPad, bedrijf.url).href;
-
-// Kruimelpad voor zoekmachines (Home → [tussenniveau] → pagina)
-const tussen: Record<string, string> = { kennisbank: 'Kennisbank' };
-const delen = pad.split('/').filter(Boolean);
-const paginaNaam = kruimelNaam ?? nav.find((n) => n.href === pad)?.label ?? (delen.length === 1 ? tussen[delen[0]] : undefined) ?? title;
-const niveaus = [
-  { name: 'Home', item: `${bedrijf.url}/` },
-  ...(delen.length > 1 && tussen[delen[0]] ? [{ name: tussen[delen[0]], item: `${bedrijf.url}/${delen[0]}` }] : []),
-  { name: paginaNaam, item: canonical },
-];
-const kruimel =
-  pad && !noindex
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: niveaus.map((n, i) => ({ '@type': 'ListItem', position: i + 1, ...n })),
-      }
-    : null;
-
-const localBusiness = {
-  '@context': 'https://schema.org',
-  '@type': 'HVACBusiness',
-  '@id': bedrijfId,
-  name: bedrijf.naam,
-  description: `${bedrijf.tagline} in ${bedrijf.adres.plaats} en omgeving. Specialist in ${bedrijf.merk}.`,
-  url: bedrijf.url,
-  telephone: bedrijf.telefoon.internationaal,
-  email: bedrijf.email,
-  image: `${bedrijf.url}/images/og.jpg`,
-  logo: `${bedrijf.url}/images/logo-origineel.svg`,
-  founder: { '@type': 'Person', name: bedrijf.eigenaar },
-  brand: { '@type': 'Brand', name: bedrijf.merk },
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: bedrijf.adres.straat,
-    postalCode: bedrijf.adres.postcode,
-    addressLocality: bedrijf.adres.plaats,
-    addressRegion: bedrijf.adres.provincie,
-    addressCountry: bedrijf.adres.land,
-  },
-  areaServed:
-    bedrijf.werkgebied.length > 0
-      ? bedrijf.werkgebied.map((name) => ({ '@type': 'City', name }))
-      : { '@type': 'City', name: bedrijf.adres.plaats },
-  ...(bedrijf.googleReviewsUrl && { sameAs: [bedrijf.googleReviewsUrl] }),
-};
+// Kruimelpad op alle vindbare subpagina's: zichtbaar (Kruimelpad.astro) en als structured data.
+const niveaus = pad && !noindex ? kruimelNiveaus(pad, kruimelNaam ?? title) : null;
+const schemas = [bedrijfSchema(), ...schema, ...(niveaus ? [kruimelSchema(niveaus)] : [])];
 ---
 
 <!doctype html>
@@ -97,12 +50,10 @@ const localBusiness = {
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogAfbeelding(pad)} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
-    {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
-    {kruimel && <script type="application/ld+json" set:html={JSON.stringify(kruimel)} />}
+    {schemas.map((s) => <script type="application/ld+json" set:html={jsonLd(s)} />)}
     <script is:inline>
       document.documentElement.classList.remove('no-js');
     </script>
@@ -111,7 +62,7 @@ const localBusiness = {
     <a class="skip-link" href="#main">Naar de inhoud</a>
     <Header vast={kopVast} />
     <main id="main">
-      {kruimel && <Kruimelpad niveaus={niveaus} />}
+      {niveaus && <Kruimelpad niveaus={niveaus} />}
       <slot />
     </main>
     <Footer />
@@ -119,25 +70,10 @@ const localBusiness = {
 
     <script>
       import { startDiepte } from '../scripts/diepte';
-      startDiepte();
+      import { startReveal } from '../scripts/reveal';
 
-      const els = document.querySelectorAll('[data-reveal]');
-      if (!('IntersectionObserver' in window)) {
-        els.forEach((el) => el.classList.add('is-visible'));
-      } else {
-        const io = new IntersectionObserver(
-          (entries) => {
-            for (const e of entries) {
-              if (e.isIntersecting) {
-                e.target.classList.add('is-visible');
-                io.unobserve(e.target);
-              }
-            }
-          },
-          { rootMargin: '0px 0px -8% 0px' },
-        );
-        els.forEach((el) => io.observe(el));
-      }
+      startDiepte();
+      startReveal();
     </script>
   </body>
 </html>

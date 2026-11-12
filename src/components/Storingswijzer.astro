@@ -38,7 +38,7 @@ const eerste = w.klachten[0].id;
     <div class="panelen" aria-live="polite">
       {
         w.klachten.map((k) => (
-          <article class="antwoord" id={`klacht-${k.id}`} data-paneel={k.id} hidden={k.id !== eerste}>
+          <article class="antwoord" id={`klacht-${k.id}`} data-paneel={k.id} data-zonder-js-tonen hidden={k.id !== eerste}>
             <h3>{k.label}</h3>
             <p class="label">Eerst zelf checken</p>
             <ol class="zelf">
@@ -71,30 +71,18 @@ const eerste = w.klachten[0].id;
 </div>
 
 <script>
+  import { radiogroep } from '../scripts/radiogroep';
+
   document.querySelectorAll<HTMLElement>('[data-wijzer]').forEach((root) => {
-    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-klacht]')];
     const panelen = [...root.querySelectorAll<HTMLElement>('[data-paneel]')];
-    const kies = (i: number, focus = false) => {
-      knoppen.forEach((k, j) => {
-        k.setAttribute('aria-checked', String(i === j));
-        k.tabIndex = i === j ? 0 : -1;
-      });
-      panelen.forEach((p) => (p.hidden = p.dataset.paneel !== knoppen[i].dataset.klacht));
-      if (focus) knoppen[i].focus();
-    };
-    knoppen.forEach((k, i) => {
-      k.addEventListener('click', () => {
-        kies(i);
-        // Op smalle schermen staat het antwoord onder de knoppen: even meescrollen.
+    radiogroep([...root.querySelectorAll<HTMLButtonElement>('[data-klacht]')], {
+      bijKeuze: (knop) => panelen.forEach((p) => (p.hidden = p.dataset.paneel !== knop.dataset.klacht)),
+      // Op smalle schermen staat het antwoord onder de knoppen: even meescrollen.
+      bijKlik: () => {
         if (matchMedia('(max-width: 860px)').matches) {
           root.querySelector('.panelen')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-      });
-      k.addEventListener('keydown', (e) => {
-        const n = knoppen.length;
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') (e.preventDefault(), kies((i + 1) % n, true));
-        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') (e.preventDefault(), kies((i - 1 + n) % n, true));
-      });
+      },
     });
   });
 </script>
@@ -229,14 +217,10 @@ const eerste = w.klachten[0].id;
     color: var(--orange-text);
   }
   /* Zonder JavaScript: alle klachten onder elkaar */
-  :global(.no-js) .knoppen {
-    display: none;
-  }
   :global(.no-js) .raster {
     grid-template-columns: minmax(0, 1fr);
   }
-  :global(.no-js) .antwoord[hidden] {
-    display: block;
+  :global(.no-js) .antwoord + .antwoord {
     margin-top: 16px;
   }
   @media (max-width: 860px) {

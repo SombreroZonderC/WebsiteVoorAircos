@@ -53,7 +53,7 @@ const sleutels = ['hybride', 'electric'] as const;
 
     {
       sleutels.map((k) => (
-        <div class="uitleg" data-uitleg={k} hidden={k !== 'hybride'}>
+        <div class="uitleg" data-uitleg={k} data-zonder-js-tonen hidden={k !== 'hybride'}>
           <h3>{systemen[k].titel}</h3>
           <p class="muted">{systemen[k].tekst}</p>
           <ul class="checklist">
@@ -68,26 +68,15 @@ const sleutels = ['hybride', 'electric'] as const;
 </div>
 
 <script>
+  import { radiogroep } from '../scripts/radiogroep';
+
   document.querySelectorAll<HTMLElement>('[data-huis]').forEach((root) => {
-    const knoppen = [...root.querySelectorAll<HTMLButtonElement>('[data-sys]')];
-    const zet = (s: string, focus = false) => {
-      root.dataset.systeem = s;
-      knoppen.forEach((b) => {
-        const aan = b.dataset.sys === s;
-        b.setAttribute('aria-checked', String(aan));
-        b.tabIndex = aan ? 0 : -1;
-        if (aan && focus) b.focus();
-      });
-      root.querySelectorAll<HTMLElement>('[data-uitleg]').forEach((u) => (u.hidden = u.dataset.uitleg !== s));
-    };
-    knoppen.forEach((b) => {
-      b.addEventListener('click', () => zet(b.dataset.sys!));
-      b.addEventListener('keydown', (e) => {
-        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-          e.preventDefault();
-          zet(root.dataset.systeem === 'hybride' ? 'electric' : 'hybride', true);
-        }
-      });
+    const uitleg = [...root.querySelectorAll<HTMLElement>('[data-uitleg]')];
+    radiogroep([...root.querySelectorAll<HTMLButtonElement>('[data-sys]')], {
+      bijKeuze: (knop) => {
+        root.dataset.systeem = knop.dataset.sys;
+        uitleg.forEach((u) => (u.hidden = u.dataset.uitleg !== knop.dataset.sys));
+      },
     });
   });
 </script>

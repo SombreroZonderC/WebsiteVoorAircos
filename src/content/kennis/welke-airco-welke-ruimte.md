@@ -1,6 +1,6 @@
 ---
 titel: Welke airco past bij welke ruimte?
-seoTitel: Welke airco past bij welke ruimte? Vermogen, geluid en koudemiddel
+seoTitel: Welke airco past bij welke ruimte? Vermogen en geluid
 seoOmschrijving: Hoeveel vermogen heeft een airco nodig voor je slaapkamer, woonkamer of zolder? Waar het van afhangt, waarom te groot niet beter is en wanneer multi-split past.
 eyebrow: Kennisbank · Airconditioning
 woord: "Op maat."
