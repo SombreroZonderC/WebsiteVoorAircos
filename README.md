@@ -73,7 +73,9 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
 - Alle interactieve elementen werken zonder JavaScript. Op de dienstpagina's verdwijnen de keuzeknoppen en staan alle uitkomsten onder elkaar (`data-zonder-js-tonen`). Op de homepage wisselt de keuze koelen/verwarmen dan met gewone keuzerondjes en CSS (`home/Keuze.astro`, regels in `global.css`). Het enige wat zonder script ontbreekt is de bewegende thermometer bij verwarmen. Het uitklapmenu op smalle schermen heeft een script nodig; zonder script is de menuknop een link naar het menu onderaan de pagina.
 - Keuzeknoppen delen één toegankelijk patroon (`src/scripts/radiogroep.ts`: pijltjes, Home/End, één knop in de tabvolgorde).
 - Afdrukken: de pagina houdt haar eigen kleuren en indeling; alleen menu's, knoppen, formulieren en beweging verdwijnen, en alles wat ingeklapt of gekozen moet worden staat uitgeklapt. Bronlinks staan voluit. De contactpagina past op één vel. (Een eerdere zwart-op-wit-versie brak onderdelen met een eigen donkere achtergrond.)
-- Tekeningen op een telefoon: labels krijgen grotere letters (minimaal ongeveer 11 px); past een tekening dan niet, dan kun je hem opzij schuiven in plaats van dat hij verder krimpt (`.tekening-schuif` in `global.css`).
+- Tekeningen op een telefoon: labels krijgen grotere letters (minimaal ongeveer 11 px). Vanaf 360 px breed past elke tekening; op nog smallere schermen krimpt hij niet verder maar schuif je hem opzij, met een aanwijzing erbij en bedienbaar met het toetsenbord (`.tekening-schuif` in `global.css`, `src/scripts/tekeningen.ts`).
+- Hoog contrast (Windows): een gekozen optie krijgt een rand, omdat kleurvlakken daar wegvallen.
+- De vaste belbalk op een telefoon bedekt nooit het element dat focus heeft (`scroll-padding-bottom`, extra ruimte onder de footer).
 - Kennisbankartikelen met drie of meer tussenkoppen krijgen automatisch een inhoudsopgave.
 - Achtergrond en beslissingen: [`docs/plan.md`](docs/plan.md). Ontwerprondes: `docs/prototype-ronde-*/` (screenshots).
 
@@ -115,8 +117,8 @@ Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactf
 ## Kwaliteitscontrole
 
 - `tests/`: de lijst met pagina's komt uit de sitemap van de build, dus een nieuwe pagina of een nieuw artikel wordt vanzelf meegetest. Desktop en mobiel.
-  - `paginas.spec.ts`: elke pagina laadt zonder (console)fouten, heeft één h1, geen ernstige toegankelijkheidsfouten (axe), geen horizontale scroll, geldige JSON-LD, labels binnen de tekeningen
-  - `interacties.spec.ts`, `navigatie.spec.ts`, `formulier.spec.ts`, `kennisbank.spec.ts`: de interactieve onderdelen, menu's, het formulier, inhoudsopgave, feed en afdrukken
+  - `paginas.spec.ts`: elke pagina laadt zonder (console)fouten, heeft één h1, geen ernstige toegankelijkheidsfouten (axe, WCAG 2.2 AA), geen horizontale scroll (ook op 320 px), geldige JSON-LD; tekeningen passen op 360/375/390 px met labels van minimaal 11 px; toegankelijkheid na interactie; focus niet achter de belbalk; hoog contrast
+  - `interacties.spec.ts`, `navigatie.spec.ts`, `formulier.spec.ts`, `kennisbank.spec.ts`: de interactieve onderdelen, menu's, het formulier (ook de echte verzendroute: via `127.0.0.2` verstuurt de browser het formulier zelf, één POST, ook bij dubbelklikken), inhoudsopgave, feed en afdrukken
   - `zonder-js.spec.ts`: alle inhoud is bereikbaar zonder JavaScript, ook de verwarmen-kant van de homepage en het menu op een smal scherm
   - `beveiliging.spec.ts`: headers, CSP, geen externe verzoeken, geen vrije tekst uit links
   - `visueel.spec.ts`: elke vindbare pagina als volledig beeld vergeleken met een vastgelegd beeld (desktop en mobiel, vrijwel exact: maximaal 400 afwijkende beeldpunten), plus drie scrollstanden van de homepage mét het diepte-effect. Na een bewuste ontwerpwijziging: `npm run test:beelden`, de nieuwe beelden nakijken en committen. Afweging: de beelden (37 stuks, ruim 20 MB) staan in de repo zodat een wijziging en haar beeld in dezelfde commit zitten; ze zijn gemaakt met de Chromium van Playwright 1.63 op Linux, dus een andere browserversie vraagt nieuwe beelden.

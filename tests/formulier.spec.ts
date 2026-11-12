@@ -146,3 +146,39 @@ test('formulier: meldingen verschuiven de velden eronder niet', async ({ page })
   await expect(page.locator('#postcode-fout')).not.toBeEmpty();
   expect(await plek()).toEqual(voor);
 });
+
+// Op localhost bootst het formulier verzenden na. Via een ander lokaal adres (127.0.0.2, zelfde testserver)
+// loopt de echte route: de browser verstuurt het formulier zelf, zoals straks naar Netlify.
+test.describe('echte verzendroute', () => {
+  const echt = (baseURL: string | undefined, pad: string) => new URL(pad, baseURL!.replace('localhost', '127.0.0.2')).href;
+
+  test('één POST naar /bedankt met alle velden, ook bij dubbelklikken', async ({ page, baseURL }) => {
+    const posts: string[] = [];
+    page.on('request', (r) => r.method() === 'POST' && posts.push(`${new URL(r.url()).pathname}?${r.postData() ?? ''}`));
+    await page.goto(echt(baseURL, '/contact?onderwerp=onderhoud'));
+    await page.locator('#naam').fill('Test Persoon');
+    await page.locator('#email').fill('test@voorbeeld.nl');
+    await page.locator('#bericht').fill('Dit is een testbericht.');
+    await page.getByRole('button', { name: 'Verstuur aanvraag' }).dblclick();
+    await expect(page).toHaveURL(/\/bedankt$/);
+    expect(posts).toHaveLength(1);
+    const velden = new URLSearchParams(posts[0].split('?')[1]);
+    expect(posts[0].startsWith('/bedankt?')).toBe(true);
+    expect(velden.get('form-name')).toBe('offerte');
+    expect(velden.get('naam')).toBe('Test Persoon');
+    expect(velden.get('email')).toBe('test@voorbeeld.nl');
+    expect(velden.get('onderwerp')).toBe('onderhoud');
+    expect(velden.get('bericht')).toBe('Dit is een testbericht.');
+    expect(velden.get('bot-field')).toBe('');
+  });
+
+  test('een ongeldig formulier verstuurt niets', async ({ page, baseURL }) => {
+    let posts = 0;
+    page.on('request', (r) => r.method() === 'POST' && posts++);
+    await page.goto(echt(baseURL, '/contact'));
+    await page.locator('#naam').fill('Test Persoon');
+    await page.getByRole('button', { name: 'Verstuur aanvraag' }).click();
+    await expect(page.getByRole('status')).toContainText('niet goed ingevuld');
+    expect(posts).toBe(0);
+  });
+});

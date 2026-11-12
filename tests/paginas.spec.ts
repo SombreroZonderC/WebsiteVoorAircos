@@ -11,7 +11,7 @@ for (const pad of paginas) {
     const res = await page.goto(pad);
     expect(res?.status()).toBe(200);
     await expect(page.locator('h1')).toHaveCount(1);
-    const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+    const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
     const ernstig = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
     expect(ernstig.map((v) => `${v.id}: ${v.nodes[0]?.target}`)).toEqual([]);
     const breedte = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -71,7 +71,7 @@ test('smalste scherm (320 breed): geen horizontale overloop op welke pagina dan 
 });
 
 test('labels in tekeningen zijn op een telefoon minimaal 11 px groot', async ({ browser, baseURL }) => {
-  for (const breedte of [390, 320]) {
+  for (const breedte of [390, 375, 360, 320]) {
     const ctx = await browser.newContext({ baseURL, viewport: { width: breedte, height: 800 }, isMobile: true, hasTouch: true });
     const page = await ctx.newPage();
     for (const pad of paginas) {
@@ -97,14 +97,81 @@ test('de 404-pagina: één h1 en geen toegankelijkheidsproblemen', async ({ page
   const res = await page.goto(onbekend);
   expect(res?.status()).toBe(404);
   await expect(page.locator('h1')).toHaveCount(1);
-  const uitslag = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  const uitslag = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   expect(uitslag.violations.filter((v) => v.impact !== 'minor').map((v) => `${v.id}: ${v.nodes[0]?.target}`)).toEqual([]);
+});
+
+test('tekeningen passen op gangbare telefoons; op het smalste scherm is schuiven aangegeven en bedienbaar', async ({ browser, baseURL }) => {
+  for (const breedte of [390, 375, 360, 320]) {
+    const ctx = await browser.newContext({ baseURL, viewport: { width: breedte, height: 800 }, isMobile: true, hasTouch: true });
+    const page = await ctx.newPage();
+    for (const pad of paginas) {
+      await page.goto(pad);
+      const vakken = await page.locator('.tekening-schuif').evaluateAll((els) =>
+        els.map((el) => ({
+          over: el.scrollWidth - el.clientWidth,
+          aangegeven: el.classList.contains('schuifbaar') && el.tabIndex === 0 && Boolean(el.getAttribute('aria-label')),
+          tabstop: el.hasAttribute('tabindex'),
+        })),
+      );
+      for (const vak of vakken) {
+        if (breedte >= 360) {
+          expect(vak.over, `${pad} op ${breedte} px: tekening past`).toBeLessThanOrEqual(1);
+          expect(vak.tabstop, `${pad} op ${breedte} px: geen extra tabstop als er niets te schuiven is`).toBe(false);
+        } else if (vak.over > 1) {
+          expect(vak.aangegeven, `${pad} op ${breedte} px: schuiven aangegeven en met toetsen te bedienen`).toBe(true);
+        }
+      }
+    }
+    await ctx.close();
+  }
+});
+
+test('toetsenbordfocus verdwijnt op een telefoon niet achter de vaste belbalk', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'de belbalk bestaat alleen op een smal scherm');
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 390, height: 700 });
+  for (const pad of ['/veelgestelde-vragen', '/kennisbank/hybride-of-all-electric', '/onderhoud']) {
+    await page.goto(pad);
+    const bedekt: string[] = [];
+    for (let i = 0; i < 60; i++) {
+      await page.keyboard.press('Tab');
+      await page.waitForTimeout(350); // rustig scrollen laten uitlopen
+      const fout = await page.evaluate(() => {
+        const el = document.activeElement as HTMLElement | null;
+        const balk = document.querySelector<HTMLElement>('.mobile-cta');
+        if (!el || el === document.body || !balk || balk.contains(el)) return null;
+        const b = balk.getBoundingClientRect();
+        const zichtbaar = getComputedStyle(balk).display !== 'none' && !balk.classList.contains('weg') && b.height > 0;
+        const r = el.getBoundingClientRect();
+        // Volledig of grotendeels achter de balk: de onderkant van het element ligt onder de bovenkant van de balk
+        return zichtbaar && r.bottom > b.top + 2 && r.top < b.bottom ? (el.textContent ?? '').trim().slice(0, 40) : null;
+      });
+      if (fout) bedekt.push(fout);
+    }
+    expect(bedekt, pad).toEqual([]);
+  }
+});
+
+test('hoog contrast (Windows): de gekozen optie is herkenbaar aan een rand', async ({ browser, baseURL }) => {
+  const ctx = await browser.newContext({ baseURL, forcedColors: 'active', viewport: { width: 1280, height: 900 } });
+  const page = await ctx.newPage();
+  const rand = (sel: string) => page.locator(sel).evaluate((el) => getComputedStyle(el).outlineStyle);
+  await page.goto('/contact?onderwerp=warmtepompen');
+  expect(await rand('input[name="onderwerp"][value="warmtepompen"] + .vak')).toBe('solid');
+  expect(await rand('input[name="onderwerp"][value="onderhoud"] + .vak')).toBe('none');
+  await page.goto('/');
+  expect(await rand('[data-zet="koel"]')).toBe('solid');
+  expect(await rand('[data-zet="warm"]')).toBe('none');
+  await page.goto('/onderhoud');
+  expect(await rand('[data-klacht][aria-checked="true"]')).toBe('solid');
+  await ctx.close();
 });
 
 // Toegankelijkheid in de toestanden die pas na een handeling bestaan. Hier telt ook 'moderate' mee.
 async function axe(page: import('@playwright/test').Page, wat: string) {
   await page.waitForTimeout(150);
-  const uitslag = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  const uitslag = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   const fouten = uitslag.violations.filter((v) => v.impact !== 'minor').map((v) => `${v.id}: ${v.nodes[0]?.target}`);
   expect(fouten, wat).toEqual([]);
 }

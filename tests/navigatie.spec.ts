@@ -34,3 +34,31 @@ test('mobiel menu: actieve pagina gemarkeerd en offerteknop altijd in beeld', as
   await expect(menu.getByRole('link', { name: 'Offerte aanvragen' })).toBeInViewport();
   await expect(page.locator('.mobile-cta')).toBeHidden();
 });
+
+test('menubalk: net boven de grens van het hamburgermenu past alles op één regel', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'alleen op een breed scherm');
+  for (const breedte of [1181, 1200, 1240, 1280, 1366]) {
+    await page.setViewportSize({ width: breedte, height: 800 });
+    for (const pad of ['/', '/contact']) {
+      await page.goto(pad);
+      const hoogtes = await page.locator('#hoofdmenu li:not(.alleen-mobiel) a').evaluateAll((as) => as.map((a) => Math.round(a.getBoundingClientRect().height)));
+      expect(Math.max(...hoogtes), `${pad} op ${breedte} px: geen afgebroken menu-item`).toBeLessThan(45);
+      const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+      expect(over, `${pad} op ${breedte} px: geen overloop`).toBeLessThanOrEqual(0);
+      // Niets in de balk overlapt: telefoon en knop staan rechts van het laatste menu-item
+      const eind = await page.locator('#hoofdmenu li:not(.alleen-mobiel) a').last().evaluate((a) => a.getBoundingClientRect().right);
+      const tel = await page.locator('[data-header] .phone').evaluate((a) => a.getBoundingClientRect().left);
+      expect(tel, `${pad} op ${breedte} px`).toBeGreaterThanOrEqual(eind);
+    }
+  }
+});
+
+test('diepte-effect komt terug nadat het venster even te laag was', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'alleen op een breed scherm');
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveClass(/diepte/);
+  await page.setViewportSize({ width: 1440, height: 420 });
+  await expect(page.locator('html')).not.toHaveClass(/diepte/);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(page.locator('html')).toHaveClass(/diepte/);
+});

@@ -424,4 +424,20 @@ const pad = paginaPad(Astro.url.pathname);
       display: inline-flex;
     }
   }
+  /* Net boven de grens van het hamburgermenu is de balk krap: kleinere tussenruimtes, en een menu-item
+     breekt nooit over twee regels */
+  .nav a:not(.btn) {
+    white-space: nowrap;
+  }
+  @media (min-width: 1181px) and (max-width: 1280px) {
+    .bar {
+      gap: 12px;
+    }
+    .right {
+      gap: 10px;
+    }
+    .nav a:not(.btn) {
+      padding-inline: 8px;
+    }
+  }
 </style>

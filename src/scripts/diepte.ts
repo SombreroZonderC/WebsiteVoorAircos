@@ -47,5 +47,7 @@ export function startDiepte() {
   addEventListener('scroll', plan, { passive: true });
   beweging.addEventListener('change', beoordeel);
   new ResizeObserver(beoordeel).observe(html);
+  // De ResizeObserver ziet alleen de pagina; een hoger of lager venster verandert die niet
+  addEventListener('resize', beoordeel);
   beoordeel();
 }

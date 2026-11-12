@@ -60,6 +60,13 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h) + 16px);
 }
+/* Op een telefoon staat onderaan een vaste belbalk (MobileCta): wat focus krijgt of waar je naartoe springt,
+   mag daar niet achter verdwijnen. */
+@media (max-width: 720px) {
+  html {
+    scroll-padding-bottom: 96px;
+  }
+}
 
 [hidden] {
   display: none !important;
@@ -516,18 +523,36 @@ html.menu-open .mobile-cta {
 }
 
 /* Tekeningen met labels (component zet er <div class="tekening-schuif"> omheen). Op een smal scherm
-   krijgen de labels grotere letters; past de tekening dan nog niet, dan wordt hij niet verder verkleind
-   maar kun je hem opzij schuiven. Zo blijven labels minimaal ongeveer 11 px. */
+   krijgen de labels grotere letters, zodat ze minimaal ongeveer 11 px blijven. Vanaf 360 px breed past
+   elke tekening; alleen op nog smallere schermen wordt hij niet verder verkleind, maar kun je hem opzij
+   schuiven. scripts/tekeningen.ts zet er dan een aanwijzing bij en maakt het vak bedienbaar met de toetsen. */
 @media (max-width: 520px) {
   .tekening-schuif {
     overflow-x: auto;
     overscroll-behavior-x: contain;
   }
   .tekening-schuif > svg {
-    min-width: 330px;
+    min-width: 308px;
   }
-  .tekening-schuif > svg.kaart {
-    min-width: 356px;
+  .tekening-schuif.schuifbaar::after {
+    content: '← schuif opzij →';
+    display: block;
+    position: sticky;
+    left: 0;
+    padding-top: 6px;
+    font: 500 0.75rem var(--font-mono);
+    text-align: center;
+    opacity: 0.75;
+  }
+}
+
+/* Hoog contrast (Windows): kleurvlakken verdwijnen, dus een gekozen optie krijgt een rand */
+@media (forced-colors: active) {
+  [role='radio'][aria-checked='true'],
+  label:has(> input[type='radio']:checked) > .vak,
+  label:has(> input[type='radio']:checked) {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
   }
 }
 
@@ -605,7 +630,9 @@ html.menu-open .mobile-cta {
   figure,
   li,
   details,
-  article {
+  article,
+  .card,
+  [class*='kaart'] {
     break-inside: avoid;
   }
   /* Zonder zijkolom mag de tekst de volle breedte gebruiken */

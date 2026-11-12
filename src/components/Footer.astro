@@ -141,6 +141,12 @@ const year = new Date().getFullYear();
       gap: 36px;
     }
   }
+  /* Ruimte voor de vaste belbalk op een telefoon: de onderste regel mag er niet achter blijven */
+  @media (max-width: 720px) {
+    .footer {
+      padding-bottom: 104px;
+    }
+  }
   /* Op papier heeft een menu geen zin; de regel met bedrijfsnaam en KvK blijft staan */
   @media print {
     .top {

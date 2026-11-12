@@ -36,7 +36,7 @@ const labels: Record<Props['soort'], string> = {
             <rect x="178" y="188" width="34" height="32" rx="3" />
             <circle cx="195" cy="204" r="9" />
             <path class="stroom warm" d="M178 200 H90" />
-            <text x="40" y="248">warmtepomp + cv-ketel</text>
+            <text x="22" y="248">warmtepomp + cv-ketel</text>
   
             <text class="titel" x="270" y="40">all-electric</text>
             <path d="M258 118 L330 60 L402 118 M270 110 V220 H390 V110" />
@@ -47,7 +47,7 @@ const labels: Record<Props['soort'], string> = {
             <rect x="408" y="188" width="34" height="32" rx="3" />
             <circle cx="425" cy="204" r="9" />
             <path class="stroom warm" d="M408 200 H320" />
-            <text x="270" y="248">alleen warmtepomp</text>
+            <text x="462" y="248" text-anchor="end">alleen warmtepomp</text>
           </>
         )
       }
@@ -102,7 +102,7 @@ const labels: Record<Props['soort'], string> = {
             <text x="30" y="190">filter: zelf schoonmaken</text>
             <path class="dun" d="M230 74 H260 Q270 74 270 84 V160 H300" />
             <path class="warm" d="M262 122 l8 -8 a6 6 0 1 1 4 4 l-8 8 z" />
-            <text x="282" y="100">koudemiddel: vakman</text>
+            <text x="470" y="100" text-anchor="end">koudemiddel: vakman</text>
             <rect x="300" y="130" width="120" height="80" rx="4" />
             <circle cx="360" cy="170" r="24" />
             <path class="dun" d="M360 146 v48 M336 170 h48" />
@@ -172,7 +172,8 @@ const labels: Record<Props['soort'], string> = {
             <text x="100" y="210" text-anchor="middle">0</text>
             <text x="270" y="210" text-anchor="middle">350</text>
             <text x="440" y="210" text-anchor="middle">700</text>
-            <text x="24" y="246">1 kg R32 ≈ 675 kg CO₂ · 1 kg R290 ≈ 3 kg CO₂</text>
+            <text x="24" y="234">1 kg R32 ≈ 675 kg CO₂</text>
+            <text x="24" y="254">1 kg R290 ≈ 3 kg CO₂</text>
           </>
         )
       }
@@ -261,13 +262,20 @@ const labels: Record<Props['soort'], string> = {
   /* Smal scherm: grotere letters in de tekening, zodat labels leesbaar blijven (zie .tekening-schuif) */
   @media (max-width: 520px) {
     .illustratie {
-      padding: 12px;
+      padding: 4px;
+    }
+    /* 17 px letters in een tekening van 480 breed: vanaf 312 px zijn ze minimaal 11 px */
+    .tekening-schuif > svg {
+      min-width: 312px;
+    }
+    figcaption {
+      padding: 0 10px 10px;
     }
     text {
-      font-size: 16px;
+      font-size: 17px;
     }
     .titel {
-      font-size: 18px;
+      font-size: 19px;
     }
   }
 </style>

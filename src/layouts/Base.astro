@@ -75,9 +75,11 @@ const schemas = [bedrijfSchema(), ...schema, ...(niveaus ? [kruimelSchema(niveau
     <script>
       import { startDiepte } from '../scripts/diepte';
       import { startReveal } from '../scripts/reveal';
+      import { startTekeningen } from '../scripts/tekeningen';
 
       startDiepte();
       startReveal();
+      startTekeningen();
     </script>
   </body>
 </html>

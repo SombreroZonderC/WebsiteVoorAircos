@@ -69,3 +69,16 @@ test('zonder JavaScript op een smal scherm: de menuknop is een link naar het men
   await menu.getByRole('link', { name: 'Warmtepompen' }).click({ force: true });
   await expect(page).toHaveURL(/\/warmtepompen$/);
 });
+
+test('zonder JavaScript: het formulier wordt echt verstuurd en komt op de bedankpagina uit', async ({ page }) => {
+  const posts: string[] = [];
+  page.on('request', (r) => r.method() === 'POST' && posts.push(r.postData() ?? ''));
+  await page.goto('/contact');
+  await page.locator('#naam').fill('Test Persoon');
+  await page.locator('#email').fill('test@voorbeeld.nl');
+  await page.locator('#bericht').fill('Zonder script verstuurd.');
+  await page.getByRole('button', { name: 'Verstuur aanvraag' }).click({ force: true });
+  await expect(page).toHaveURL(/\/bedankt$/);
+  expect(posts).toHaveLength(1);
+  expect(new URLSearchParams(posts[0]).get('bericht')).toBe('Zonder script verstuurd.');
+});

@@ -8,7 +8,8 @@ export default defineConfig({
   build: { format: 'file' },
   integrations: [
     sitemap({
-      filter: (page) => !['/bedankt', '/404'].some((pad) => page.includes(pad)),
+      // Exact deze twee pagina's, niet elk adres waar toevallig '404' of 'bedankt' in staat
+      filter: (page) => !['/bedankt', '/404'].includes(new URL(page).pathname.replace(/\/$/, '')),
     }),
     beveiligingsheaders(),
   ],
