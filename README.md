@@ -15,6 +15,7 @@ npm run preview   # bekijkt de gebouwde site
 npx astro check   # type- en schemacontrole
 npm test          # Playwright-tests op de gebouwde site (eerst npm run build)
 npm run og        # deelafbeeldingen opnieuw maken (public/images/og/)
+npm run iconen    # pictogrammen opnieuw maken uit public/favicon.svg
 npm run demo      # geanonimiseerde demo (fictief bedrijf) in ../demo-build/pub
 ```
 
@@ -32,7 +33,11 @@ Tests draaien met de vooraf geïnstalleerde Chromium: `PLAYWRIGHT_BROWSERS_PATH=
 | Veelgestelde vragen (één bestand per vraag) | `src/content/faq/*.md` |
 | Reviews | `src/content/reviews/*.yaml` |
 | Over Sjoerd, werkgebied, privacy | `src/content/paginas/*.md` |
-| Schema's (welke velden verplicht zijn) | `src/content.config.ts`, `src/lib/bedrijf.ts` |
+| Schema's (welke velden verplicht zijn) | `src/content.config.ts`, `src/lib/bedrijf.ts`, `src/lib/inhoud.ts`, gedeelde bouwstenen in `src/lib/schemas.ts` |
+| Menu's en kruimelpad (één bron voor header, footer, 404) | `src/lib/navigatie.ts` |
+| Titels, canonical, deelafbeelding, structured data | `src/lib/seo.ts`, `src/lib/schema.ts` |
+| Gedrag in de browser (per onderdeel één module) | `src/scripts/` (`radiogroep`, `contactformulier`, `vragenzoeker`, `diepte`, `reveal`) |
+| Beveiligingsheaders (CSP, HSTS …) | `integrations/beveiligingsheaders.mjs` → `dist/_headers` |
 | Huisstijl (kleuren, letters, basisstijlen) | `src/styles/global.css` |
 | Componenten | `src/components/` |
 | Pagina's / routes | `src/pages/` (elke dienst heeft een eigen pagina: `airconditioning.astro`, `warmtepompen.astro`, `onderhoud.astro`) |
@@ -65,7 +70,10 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
   - contact: gesplitst scherm met keuzetegels (voorgevuld vanaf de dienstpagina's)
 - Navigatie: één header; op mobiel een hamburgermenu met icoon per item, Home bovenaan, actieve pagina oranje gemarkeerd, offerteknop altijd onderin beeld en een lichte gloed bij Airconditioning en Warmtepompen. Subpagina's hebben een zichtbaar kruimelpad (`Kruimelpad.astro`), uit dezelfde bron als de structured data.
 - Kleurdiscipline (focal points): één oranje knop per scherm, neutrale labels, één gloed per scherm, decoratie in inkt. Zie `docs/plan.md` → Kleurdiscipline.
-- Alle interactieve elementen werken zonder JavaScript (je ziet dan de standaardstand of een gewone lijst).
+- Alle interactieve elementen werken zonder JavaScript: keuzeknoppen verdwijnen en alle uitkomsten staan onder elkaar (`data-zonder-js-tonen`).
+- Keuzeknoppen delen één toegankelijk patroon (`src/scripts/radiogroep.ts`: pijltjes, Home/End, één knop in de tabvolgorde).
+- Afdrukken: eigen printstijl (zwart op wit, antwoorden uitgeklapt, bronlinks voluit).
+- Kennisbankartikelen met drie of meer tussenkoppen krijgen automatisch een inhoudsopgave.
 - Achtergrond en beslissingen: [`docs/plan.md`](docs/plan.md). Ontwerprondes: `docs/prototype-ronde-*/` (screenshots).
 
 ## Vindbaarheid
@@ -74,17 +82,40 @@ Dat verschijnt als oranje gestippeld label "Aan te vullen". Alle open vragen sta
 - Eigen deelafbeelding per pagina (`public/images/og/`, gemaakt met `npm run og`)
 - Kennisbank: algemene vakuitleg met bronvermelding en datum 'bijgewerkt'; geen beloftes namens het bedrijf
 - Kennisbank-regel: elk artikel van meer dan twee alinea's heeft minimaal één illustratie (`illustratie` in de frontmatter, tekeningen in `src/components/KennisIllustratie.astro`). Een test bewaakt dit.
-- `sitemap-index.xml` (automatisch), `robots.txt`, `llms.txt` (samenvatting voor AI-assistenten)
+- `sitemap-index.xml` (automatisch), `robots.txt`, `llms.txt` (overzicht voor AI-assistenten) en `llms-full.txt` (volledige tekst van kennisbank en veelgestelde vragen, zonder onafgemaakte antwoorden)
+- RSS-feed van de kennisbank: `/kennisbank/rss.xml`
+- Elke veelgestelde vraag heeft een eigen link (`/veelgestelde-vragen#vraag-…`); een zoekvraag ook (`?q=subsidie`)
+- Titels maximaal 60 tekens en omschrijvingen maximaal 170: afgedwongen in de schema's, de build stopt bij een te lange tekst
 - Elke pagina heeft een eigen titel en omschrijving (in de content-bestanden)
 
 ## Formulier
 
-Het contactformulier (`src/pages/contact.astro`) gebruikt Netlify Forms. Lokaal wordt verzenden nagebootst (je gaat direct naar `/bedankt`).
+Het contactformulier (`src/pages/contact.astro`, gedrag in `src/scripts/contactformulier.ts`) gebruikt Netlify Forms. Lokaal wordt verzenden nagebootst (je gaat direct naar `/bedankt`).
+
+- Eigen foutmeldingen per veld (gekoppeld met `aria-describedby`), focus op het eerste foute veld, één keer versturen.
+- Een half ingevuld formulier blijft bewaard in het tabblad (`sessionStorage`) en wordt gewist bij versturen. Er gaat niets naar een server voordat de bezoeker verstuurt.
+- Voorinvullen vanaf de dienstpagina's (`?onderwerp=`, `?ruimtes=`, `?klacht=`, `?advies=`) werkt alleen met vaste waarden; vrije tekst uit een link wordt nooit overgenomen.
+- Spam: verborgen lokveld (Netlify honeypot) en maximale lengtes. Zonder JavaScript controleert de browser zelf.
+
+## Beveiliging
+
+- `integrations/beveiligingsheaders.mjs` schrijft bij elke build `dist/_headers`: Content-Security-Policy (scripts alleen van de eigen site of met een hash die bij de build hoort; geen `unsafe-inline` of `unsafe-eval` voor scripts), HSTS, `X-Frame-Options: DENY`, `Permissions-Policy`, `Referrer-Policy`, `Cross-Origin-Opener-Policy`.
+- De testserver (`scripts/serve-dist.mjs`) stuurt dezelfde headers mee. Tests en Lighthouse draaien dus onder de policy van de live site; een script dat de policy blokkeert, laat de tests falen.
+- De site laadt niets van andere domeinen (lettertypen staan lokaal), heeft geen cookies en geen trackers. Een test bewaakt dat.
+- Structured data wordt zo geschreven dat tekst uit de inhoud het script-blok niet kan afsluiten (`jsonLd` in `src/lib/seo.ts`).
+- `/.well-known/security.txt` vertelt waar een beveiligingsprobleem gemeld kan worden; de einddatum schuift bij elke build op.
+- CI heeft alleen leesrechten en draait `npm audit`.
+- Let op bij Netlify: zet *Asset optimization* en snippet-injectie uit, anders veranderen de scripts en kloppen de hashes niet meer. Op deploy-previews blokkeert de policy de Netlify-werkbalk; dat is onschuldig.
 
 ## Kwaliteitscontrole
 
-- `tests/site.spec.ts`: elke pagina laadt zonder fouten, heeft één h1, geen ernstige toegankelijkheidsfouten (axe) en geen horizontale scroll; plus de interactieve onderdelen, het mobiele menu, 'minder beweging' en geldige JSON-LD. Desktop en mobiel.
-- `.github/workflows/ci.yml`: bij elke push `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, mediaan van 3 metingen per pagina, `lighthouserc.json`).
+- `tests/`: de lijst met pagina's komt uit de sitemap van de build, dus een nieuwe pagina of een nieuw artikel wordt vanzelf meegetest. Desktop en mobiel.
+  - `paginas.spec.ts`: elke pagina laadt zonder (console)fouten, heeft één h1, geen ernstige toegankelijkheidsfouten (axe), geen horizontale scroll, geldige JSON-LD, labels binnen de tekeningen
+  - `interacties.spec.ts`, `navigatie.spec.ts`, `formulier.spec.ts`, `kennisbank.spec.ts`: de interactieve onderdelen, menu's, het formulier, inhoudsopgave, feed en afdrukken
+  - `zonder-js.spec.ts`: alle inhoud is bereikbaar zonder JavaScript
+  - `beveiliging.spec.ts`: headers, CSP, geen externe verzoeken, geen vrije tekst uit links
+  - `vindbaarheid.spec.ts`: unieke titels en omschrijvingen, canonical, deelafbeelding, alle interne links en ankers, `llms.txt`
+- `.github/workflows/ci.yml`: bij elke push `npm audit`, `astro check`, build, tests en Lighthouse (minimaal 95 per categorie, mediaan van 3 metingen per pagina, `lighthouserc.json`).
 
 ## Demo
 

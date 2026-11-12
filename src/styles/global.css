@@ -329,7 +329,7 @@ p {
 /* Zonder JavaScript: keuzeknoppen doen niets, dus weg ermee; alle uitkomsten staan onder elkaar.
    (!important omdat [hidden] hierboven ook !important is.) */
 .no-js [role='radiogroup'] {
-  display: none;
+  display: none !important;
 }
 .no-js [data-zonder-js-tonen][hidden] {
   display: block !important;
@@ -493,5 +493,115 @@ html.menu-open .mobile-cta {
   .prose th,
   .prose td {
     padding: 8px 8px;
+  }
+}
+
+/* Rustige overgang tussen pagina's (browsers die het ondersteunen), alleen als beweging mag */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.18s;
+  }
+}
+
+/* Afdrukken (artikel, antwoorden, contactgegevens): zwart op wit, zonder menu, knoppen en decoratie */
+@media print {
+  :root {
+    --text-on-dark: #000;
+    --muted-on-dark: #333;
+    --text: #000;
+    --muted: #333;
+    --line-dark: #bbb;
+    /* Geen vaste header op papier, dus ook geen ruimte ervoor */
+    --kop-h: 0px;
+    --kruimel-h: 0px;
+  }
+  body {
+    background: #fff;
+    font-size: 11pt;
+  }
+  .header,
+  .mobile-cta,
+  .skip-link,
+  .kruimelpad,
+  .glow,
+  .btn,
+  form,
+  [role='radiogroup'],
+  [aria-hidden='true']:not(svg) {
+    display: none !important;
+  }
+  .vlak,
+  .footer,
+  .donker,
+  .dark {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .plak,
+  .vlak-inhoud {
+    position: static !important;
+    min-height: 0 !important;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Alles uitgeklapt: antwoorden en keuzepanelen */
+  details > :not(summary),
+  [data-zonder-js-tonen][hidden] {
+    display: block !important;
+  }
+  details::details-content {
+    content-visibility: visible;
+    block-size: auto;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    background: none !important;
+  }
+  figure,
+  li,
+  details {
+    break-inside: avoid;
+  }
+  /* Tekeningen houden hun eigen kleuren (donkere achtergrond met lichte tekst) */
+  figure {
+    --text-on-dark: #eef3f5;
+    --muted-on-dark: #93a6ae;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  * {
+    box-shadow: none !important;
+  }
+  /* Zonder zijkolom mag de tekst de volle breedte gebruiken */
+  .layout,
+  .body {
+    display: block !important;
+  }
+  /* Zijkolommen met alleen een knop of verwijzingen */
+  aside {
+    display: none !important;
+  }
+  a {
+    color: #000;
+  }
+  /* Externe bronnen leesbaar op papier */
+  .prose a[href^='http']::after,
+  .bronnen a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    word-break: break-all;
   }
 }

@@ -46,3 +46,17 @@ test('formulier: velden hebben een maximale lengte en een verborgen lokveld voor
   await expect(lokveld).toHaveAttribute('tabindex', '-1');
   await expect(page.locator('form[name="offerte"]')).toHaveAttribute('netlify-honeypot', 'bot-field');
 });
+
+test('formulier: een concept blijft bewaard na verversen en is weg na versturen', async ({ page }) => {
+  await page.goto('/contact');
+  await page.locator('#naam').fill('Test Persoon');
+  await page.locator('#bericht').fill('Halverwege mijn bericht');
+  await page.reload();
+  await expect(page.locator('#naam')).toHaveValue('Test Persoon');
+  await expect(page.locator('#bericht')).toHaveValue('Halverwege mijn bericht');
+  await page.locator('#email').fill('test@voorbeeld.nl');
+  await page.getByRole('button', { name: 'Verstuur aanvraag' }).click();
+  await expect(page).toHaveURL(/\/bedankt$/);
+  await page.goto('/contact');
+  await expect(page.locator('#bericht')).toHaveValue('');
+});

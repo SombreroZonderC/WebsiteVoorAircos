@@ -34,7 +34,7 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
             <label class="zoek">
               <span class="sr-only">Zoek in de vragen</span>
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-              <input type="search" placeholder="Bijvoorbeeld: geluid, subsidie, onderhoud…" data-zoekveld />
+              <input type="search" name="q" maxlength="80" autocomplete="off" placeholder="Bijvoorbeeld: geluid, subsidie, onderhoud…" data-zoekveld />
             </label>
           </div>
         </section>
@@ -57,6 +57,7 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
           }
         </nav>
 
+        <p class="sr-only" role="status" data-uitkomst></p>
         <p class="geen" data-geen hidden>Geen vragen gevonden. Bel of mail gerust, dan help ik je direct.</p>
 
         <div class="groepen">
@@ -94,47 +95,10 @@ const metItems = groepen.map((g) => ({ ...g, items: alle.filter((f) => f.data.ca
 </Base>
 
 <script>
-  // Zoeken op woorddelen, met een paar synoniemen voor veelgezochte begrippen; tellers lopen mee.
-  const synoniemen: Record<string, string[]> = {
-    kosten: ['kost', 'prijs', 'offerte', 'betalen'],
-    prijs: ['kost', 'prijs', 'offerte'],
-    geluid: ['geluid', 'stil', 'herrie', 'lawaai'],
-    lawaai: ['geluid', 'stil'],
-    subsidie: ['subsidie', 'isde', 'rvo'],
-    onderhoud: ['onderhoud', 'storing', 'service'],
-    storing: ['storing', 'onderhoud'],
-    verwarmen: ['verwarm', 'warmte', 'warmtepomp'],
-    koelen: ['koel', 'airco'],
-    regio: ['regio', 'werkgebied', 'plaats'],
-  };
+  import { startVragenzoeker } from '../scripts/vragenzoeker';
+
   const veld = document.querySelector<HTMLInputElement>('[data-zoekveld]');
-  if (veld) {
-    const items = [...document.querySelectorAll<HTMLDetailsElement>('[data-zoek]')];
-    const groepen = [...document.querySelectorAll<HTMLElement>('[data-groep]')];
-    const tellers = [...document.querySelectorAll<HTMLElement>('[data-teller]')];
-    const geen = document.querySelector<HTMLElement>('[data-geen]')!;
-    const termen = (q: string) =>
-      q.split(/\s+/).filter(Boolean).map((w) => {
-        const stam = w.length > 5 ? w.slice(0, -2) : w;
-        return [stam, ...(synoniemen[w] ?? [])];
-      });
-    veld.addEventListener('input', () => {
-      const q = veld.value.trim().toLowerCase();
-      const t = termen(q);
-      items.forEach((d) => {
-        const tekst = d.dataset.zoek!;
-        const past = !q || t.every((opties) => opties.some((o) => tekst.includes(o)));
-        d.hidden = !past;
-        d.open = Boolean(q) && past;
-      });
-      groepen.forEach((g) => (g.hidden = !g.querySelector('[data-zoek]:not([hidden])')));
-      tellers.forEach((el) => {
-        const n = document.querySelectorAll(`#${el.dataset.teller} [data-zoek]:not([hidden])`).length;
-        el.textContent = `${n} ${n === 1 ? 'vraag' : 'vragen'}`;
-      });
-      geen.hidden = groepen.some((g) => !g.hidden);
-    });
-  }
+  if (veld) startVragenzoeker(veld);
 </script>
 
 <style>

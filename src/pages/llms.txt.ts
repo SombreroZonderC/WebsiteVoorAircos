@@ -34,6 +34,7 @@ export const GET: APIRoute = async () => {
     `- [Over ${bedrijf.eigenaar}](${bedrijf.url}/over-sjoerd)`,
     `- [Werkgebied](${bedrijf.url}/werkgebied)`,
     `- [Contact en offerte](${bedrijf.url}/contact)`,
+    `- [Volledige tekst van kennisbank en veelgestelde vragen](${bedrijf.url}/llms-full.txt)`,
     '',
   ];
 

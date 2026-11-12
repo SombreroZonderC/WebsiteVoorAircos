@@ -109,6 +109,13 @@ Projectenpagina pas als Sjoerd foto's levert.
 - Eigen deelafbeelding per pagina.
 - Geen review-sterren in structured data (Google toont geen sterren voor self-serving reviews).
 
+## Beveiliging en onderhoudbaarheid (toegevoegd 12-11-2026)
+
+- Beveiligingsheaders worden bij de build gegenereerd (`integrations/beveiligingsheaders.mjs`); de tests draaien onder dezelfde Content-Security-Policy als de live site.
+- Eén bron per onderwerp: menu's in `src/lib/navigatie.ts`, structured data en titels in `src/lib/seo.ts`, gedrag per onderdeel in `src/scripts/`.
+- Limieten voor titels (60) en omschrijvingen (170) zitten in de schema's, niet in afspraken.
+- De testlijst met pagina's komt uit de sitemap.
+
 ## Definition of done v1
 
 - Mobile-first, werkt op alle schermbreedtes.

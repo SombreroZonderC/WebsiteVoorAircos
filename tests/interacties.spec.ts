@@ -79,3 +79,20 @@ test('warmtepomp: uitkomst van de check gaat mee naar het contactformulier', asy
   await page.locator('[data-check-cta]').click();
   await expect(page.locator('#bericht')).toHaveValue(/Uit de geschiktheidscheck/);
 });
+
+test('vragen: een link met zoekvraag of anker opent meteen het juiste antwoord', async ({ page }) => {
+  await page.goto('/veelgestelde-vragen?q=subsidie');
+  await expect(page.locator('[data-zoekveld]')).toHaveValue('subsidie');
+  await expect(page.locator('#vraag-warmtepomp-subsidie')).toHaveAttribute('open', '');
+  await expect(page.getByRole('status')).toContainText('gevonden voor “subsidie”');
+  await page.locator('[data-zoekveld]').fill('');
+  await expect(page).not.toHaveURL(/q=/);
+
+  await page.goto('/veelgestelde-vragen#vraag-airco-geluid');
+  const vraag = page.locator('#vraag-airco-geluid');
+  await expect(vraag).toHaveAttribute('open', '');
+  await expect(vraag).toBeInViewport();
+  // Een vraag openen zet het anker in de adresbalk, zodat de link te delen is
+  await page.locator('#vraag-werkgebied summary').click();
+  await expect(page).toHaveURL(/#vraag-werkgebied$/);
+});

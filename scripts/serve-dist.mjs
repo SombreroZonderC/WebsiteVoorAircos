@@ -3,6 +3,7 @@
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, resolve, sep } from 'node:path';
+import { brotliCompressSync, gzipSync } from 'node:zlib';
 
 const root = resolve(process.cwd(), 'dist');
 const port = Number(process.env.PORT ?? 4322);
@@ -39,6 +40,17 @@ async function leesHeaders() {
 }
 const past = (patroon, pad) => (patroon.endsWith('*') ? pad.startsWith(patroon.slice(0, -1)) : pad === patroon);
 
+// Tekstbestanden gecomprimeerd versturen, zoals Netlify doet (anders meet Lighthouse iets anders dan live).
+const comprimeerbaar = /^(text\/|application\/(json|xml|manifest\+json)|image\/svg)/;
+const verpakt = new Map(); // bestand + methode → gecomprimeerde inhoud (dist/ verandert niet tijdens een run)
+function verpak(bestand, inhoud, type, accepteert = '') {
+  const methode = accepteert.includes('br') ? 'br' : accepteert.includes('gzip') ? 'gzip' : null;
+  if (!methode || !comprimeerbaar.test(type) || inhoud.length < 1024) return { inhoud, extra: {} };
+  const sleutel = `${methode}:${bestand}`;
+  if (!verpakt.has(sleutel)) verpakt.set(sleutel, methode === 'br' ? brotliCompressSync(inhoud) : gzipSync(inhoud));
+  return { inhoud: verpakt.get(sleutel), extra: { 'Content-Encoding': methode, Vary: 'Accept-Encoding' } };
+}
+
 const headerRegels = await leesHeaders();
 const headersVoor = (pad) => Object.assign({}, ...headerRegels.filter((r) => past(r.patroon, pad)).map((r) => r.headers));
 const isBestand = async (p) => (await stat(p).catch(() => null))?.isFile() ?? false;
@@ -59,8 +71,10 @@ createServer(async (req, res) => {
     const bestand = pad.includes('\0') ? null : await vind(pad);
     const basis = headersVoor(pad);
     if (bestand) {
-      res.writeHead(200, { ...basis, 'Content-Type': types[extname(bestand)] ?? 'application/octet-stream' });
-      return res.end(await readFile(bestand));
+      const type = types[extname(bestand)] ?? 'application/octet-stream';
+      const { inhoud, extra } = verpak(bestand, await readFile(bestand), type, req.headers['accept-encoding']);
+      res.writeHead(200, { ...basis, ...extra, 'Content-Type': type });
+      return res.end(inhoud);
     }
     res.writeHead(404, { ...basis, 'Content-Type': types['.html'] });
     res.end(await readFile(join(root, '404.html')).catch(() => 'Niet gevonden'));

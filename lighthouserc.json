@@ -1,16 +1,17 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": "./dist",
       "url": [
-        "http://localhost/index.html",
-        "http://localhost/airconditioning.html",
-        "http://localhost/warmtepompen.html",
-        "http://localhost/contact.html",
-        "http://localhost/kennisbank/hybride-of-all-electric.html",
-        "http://localhost/onderhoud.html"
+        "http://localhost:4322/",
+        "http://localhost:4322/airconditioning",
+        "http://localhost:4322/warmtepompen",
+        "http://localhost:4322/contact",
+        "http://localhost:4322/kennisbank/hybride-of-all-electric",
+        "http://localhost:4322/onderhoud"
       ],
-      "numberOfRuns": 3
+      "numberOfRuns": 3,
+      "startServerCommand": "node scripts/serve-dist.mjs",
+      "startServerReadyPattern": "dist op"
     },
     "assert": {
       "assertions": {

@@ -13,7 +13,9 @@ export async function getStaticPaths() {
 }
 
 const { artikel, alle } = Astro.props;
-const { Content } = await render(artikel);
+const { Content, headings } = await render(artikel);
+// Inhoudsopgave uit de tussenkoppen; pas zinvol vanaf drie koppen
+const koppen = headings.filter((h) => h.depth === 2);
 const a = artikel.data;
 const verwant = alle.filter((x) => a.verwant.includes(x.id));
 const datum = a.bijgewerkt.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -51,6 +53,20 @@ const schema = [
             <ul>{a.kernpunten.map((k) => <li>{k}</li>)}</ul>
           </div>
           {a.illustratie && <KennisIllustratie soort={a.illustratie.soort} bijschrift={a.illustratie.bijschrift} />}
+          {
+            koppen.length >= 3 && (
+              <nav class="inhoud" aria-labelledby="inhoud-titel">
+                <h2 id="inhoud-titel">In dit artikel</h2>
+                <ol>
+                  {koppen.map((k) => (
+                    <li>
+                      <a href={`#${k.slug}`}>{k.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )
+          }
           <div class="prose"><Content /></div>
           <div class="bronnen">
             <h2>Bronnen</h2>
@@ -137,6 +153,47 @@ const schema = [
   .kort li + li {
     margin-top: 6px;
   }
+  .inhoud {
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .inhoud h2 {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .inhoud ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: kop;
+    columns: 2;
+    column-gap: 32px;
+  }
+  .inhoud li {
+    counter-increment: kop;
+    break-inside: avoid;
+    padding-block: 5px;
+  }
+  .inhoud li::before {
+    content: counter(kop, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-right: 10px;
+  }
+  .inhoud a {
+    font-weight: 600;
+    text-decoration-color: transparent;
+  }
+  .inhoud a:hover {
+    text-decoration-color: currentColor;
+  }
   .prose :global(h2:first-child) {
     margin-top: 0;
   }
@@ -183,6 +240,9 @@ const schema = [
     }
     .zij {
       position: static;
+    }
+    .inhoud ol {
+      columns: 1;
     }
   }
 </style>

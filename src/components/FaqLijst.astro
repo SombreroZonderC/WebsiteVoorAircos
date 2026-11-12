@@ -1,5 +1,6 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
+import { platteTekst, vraagAnker } from '../lib/tekst';
 
 interface Props {
   items: CollectionEntry<'faq'>[];
@@ -11,7 +12,7 @@ const gerenderd = await Promise.all(items.map(async (item) => ({ item, ...(await
 <div class="faq">
   {
     gerenderd.map(({ item, Content }) => (
-      <details data-zoek={`${item.data.vraag} ${(item.body ?? '').replace(/<[^>]+>/g, '')}`.toLowerCase()}>
+      <details id={vraagAnker(item.id)} data-zoek={platteTekst(`${item.data.vraag} ${item.body ?? ''}`).toLowerCase()}>
         <summary>
           <h3>{item.data.vraag}</h3>
           <span class="plus" aria-hidden="true" />

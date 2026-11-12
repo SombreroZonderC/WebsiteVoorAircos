@@ -189,12 +189,14 @@ def maak_pub(d):
         shutil.rmtree(pub)
     shutil.copytree(f'{d}/dist', pub)
     # _headers: de demo draait vanaf schijf of een willekeurige host, met Google Fonts; de CSP van de echte site past daar niet
-    for f in ('sitemap-0.xml', 'sitemap-index.xml', 'robots.txt', 'llms.txt', '_headers'):
+    for f in ('sitemap-0.xml', 'sitemap-index.xml', 'robots.txt', 'llms.txt', 'llms-full.txt', '_headers', 'site.webmanifest',
+              'favicon.ico', 'apple-touch-icon.png', 'kennisbank/rss.xml'):
         p = os.path.join(pub, f)
         if os.path.exists(p):
             os.remove(p)
-    if os.path.exists(f'{pub}/images/og'):
-        shutil.rmtree(f'{pub}/images/og')
+    for m in ('images/og', '.well-known'):
+        if os.path.exists(f'{pub}/{m}'):
+            shutil.rmtree(f'{pub}/{m}')
     os.rename(f'{pub}/_astro', f'{pub}/assets')
 
     paginas = set()
@@ -228,6 +230,8 @@ def maak_pub(d):
                     return m.group(0)
 
                 s = lees(p)
+                # Verwijzingen naar bestanden die de demo niet meelevert (manifest, feed, extra pictogrammen)
+                s = re.sub(r'<link rel="(?:manifest|alternate|apple-touch-icon)"[^>]*>|<link rel="icon" href="/favicon\.ico"[^>]*>', '', s)
                 s = s.replace('/_astro/', '/assets/')
                 s = re.sub(r'(href|src)="/(assets|images)/', lambda m: f'{m.group(1)}="{pre}{m.group(2)}/', s)
                 s = s.replace('href="/favicon.svg"', f'href="{pre}favicon.svg"')
@@ -240,7 +244,7 @@ def maak_pub(d):
     for dp, _, fs in os.walk(pub):
         for f in fs:
             p = os.path.join(dp, f)
-            if not f.endswith(('.html', '.css', '.js', '.svg', '.txt', '.xml')):
+            if not f.endswith(('.html', '.css', '.js', '.svg', '.txt', '.xml', '.json', '.webmanifest')):
                 continue
             s = lees(p)
             fouten += [f'{f}: {m}' for m in re.findall(r'(?:href|src|action)="/[^"]*"|url\(/[^)]*\)', s)]

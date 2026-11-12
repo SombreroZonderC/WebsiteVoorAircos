@@ -27,6 +27,16 @@ export function voorinvulling(params: URLSearchParams, klachten: Record<string, 
   return null;
 }
 
+const CONCEPT = 'contact-concept';
+function leesConcept(): Record<string, string> {
+  try {
+    const concept: unknown = JSON.parse(sessionStorage.getItem(CONCEPT) ?? '{}');
+    return concept && typeof concept === 'object' ? (concept as Record<string, string>) : {};
+  } catch {
+    return {};
+  }
+}
+
 function foutVan(veld: Veld) {
   const m = meldingen[veld.name] ?? {};
   const v = veld.validity;
@@ -49,6 +59,21 @@ export function startContactformulier(form: HTMLFormElement) {
   });
   const tekst = voorinvulling(params, JSON.parse(form.dataset.klachten ?? '{}'), JSON.parse(form.dataset.adviezen ?? '{}'));
   if (tekst && !bericht.value) bericht.value = tekst;
+
+  // Concept bewaren: wie per ongeluk wegklikt of ververst, is zijn tekst niet kwijt. Blijft in dit tabblad
+  // (sessionStorage), gaat niet naar een server en wordt gewist bij versturen.
+  const bewaard = leesConcept();
+  velden.forEach((veld) => {
+    if (typeof bewaard[veld.name] === 'string' && !veld.value) veld.value = bewaard[veld.name].slice(0, 4000);
+  });
+  form.addEventListener('input', () => {
+    const concept = Object.fromEntries(velden.filter((v) => v.value).map((v) => [v.name, v.value]));
+    try {
+      sessionStorage.setItem(CONCEPT, JSON.stringify(concept));
+    } catch {
+      // Opslag vol of geblokkeerd: dan zonder concept verder
+    }
+  });
 
   // Eigen foutmeldingen in plaats van de ballonnetjes van de browser
   form.noValidate = true;
@@ -80,6 +105,11 @@ export function startContactformulier(form: HTMLFormElement) {
       return;
     }
     if (knop.disabled) return e.preventDefault();
+    try {
+      sessionStorage.removeItem(CONCEPT);
+    } catch {
+      // geen opslag beschikbaar
+    }
     // Niet dubbel versturen. Pas na dit event uitschakelen, anders gaat het formulier niet meer weg.
     setTimeout(() => {
       knop.disabled = true;
